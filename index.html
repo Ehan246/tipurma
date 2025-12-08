@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gift Box</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #ffe6f7, #ffc0cb, #ff9aa2);
+      font-family: Arial, sans-serif;
+    }
+
+    .wrapper {
+      text-align: center;
+      perspective: 1000px;
+    }
+
+    h1 {
+      color: #ffffff;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    }
+
+    form {
+      margin-bottom: 15px;
+    }
+
+    input[type="text"] {
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      margin-right: 5px;
+      min-width: 180px;
+    }
+
+    button {
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      background: #ff4b72;
+      color: #fff;
+      font-weight: bold;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .gift-text {
+      color: #ffffff;
+      margin-bottom: 10px;
+      font-size: 15px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+
+    .gift-box {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transition: transform 0.4s ease;
+    }
+
+    .gift-box:hover {
+      transform: translateY(-5px) scale(1.02);
+    }
+
+    /* Box base */
+    .box {
+      position: absolute;
+      width: 100%;
+      height: 75%;
+      bottom: 0;
+      background: linear-gradient(135deg, #ff5678, #ff2450);
+      border-radius: 8px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+    }
+
+    /* Lid */
+    .lid {
+      position: absolute;
+      width: 110%;
+      height: 40%;
+      top: 0;
+      left: -5%;
+      background: linear-gradient(135deg, #ff7fa0, #ff3f6a);
+      border-radius: 8px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+      transform-origin: bottom center;
+      transition: transform 0.5s ease, top 0.5s ease;
+      z-index: 3;
+    }
+
+    /* Vertical ribbon */
+    .ribbon-vertical {
+      position: absolute;
+      width: 25%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.85);
+      left: 37.5%;
+      top: 0;
+      z-index: 2;
+    }
+
+    /* Horizontal ribbon on lid */
+    .ribbon-horizontal {
+      position: absolute;
+      height: 35%;
+      width: 100%;
+      top: 32.5%;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Bow */
+    .bow {
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 40px;
+      z-index: 4;
+    }
+
+    .bow::before,
+    .bow::after {
+      content: "";
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border-radius: 50% 50% 0 50%;
+      border: 4px solid #ffffff;
+      border-right: none;
+      border-bottom: none;
+    }
+
+    .bow::before {
+      left: 0;
+      transform: rotate(-20deg);
+    }
+
+    .bow::after {
+      right: 0;
+      transform: scaleX(-1) rotate(-20deg);
+    }
+
+    /* Box content (if you ever want text/image again) */
+    .content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 220px;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+    }
+
+    /* Confetti effect (simple) */
+    .sparkles span {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ffffff;
+      opacity: 0;
+      animation: sparkle 1s linear infinite;
+    }
+
+    .sparkles span:nth-child(1) { top: -20px; left: 20px; animation-delay: 0s; }
+    .sparkles span:nth-child(2) { top: -10px; right: 30px; animation-delay: 0.2s; }
+    .sparkles span:nth-child(3) { top: -30px; left: 80px; animation-delay: 0.4s; }
+    .sparkles span:nth-child(4) { top: -25px; right: 70px; animation-delay: 0.6s; }
+    .sparkles span:nth-child(5) { top: -40px; left: 50%; animation-delay: 0.8s; }
+
+    @keyframes sparkle {
+      0% { transform: translateY(0); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translateY(-30px); opacity: 0; }
+    }
+
+    /* OPEN STATE (still used briefly for lid animation, optional) */
+    .gift-box.open .lid {
+      transform: rotateX(-110deg);
+      top: -80px;
+    }
+
+    .hint {
+      margin-top: 15px;
+      color: #ffffff;
+      font-size: 14px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Video section */
+    #video-section {
+      max-width: 90vw;
+    }
+
+    #gift-video {
+      width: 320px;
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+
+    <!-- NAME SECTION -->
+    <div id="name-section">
+      <h1>Enter your name</h1>
+      <form id="name-form">
+        <input type="text" id="name-input" placeholder="Your name..." required />
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+
+    <!-- GIFT SECTION -->
+    <div id="gift-section" class="hidden">
+      <p id="gift-message" class="gift-text"></p>
+
+      <div class="gift-box" id="giftBox">
+        <div class="lid">
+          <div class="ribbon-horizontal"></div>
+        </div>
+        <div class="box">
+          <div class="ribbon-vertical"></div>
+        </div>
+        <div class="bow"></div>
+
+        <div class="sparkles">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+        <!-- content diyechis, but ei version e use kortesi na -->
+        <div class="content"></div>
+      </div>
+
+      <div class="hint">Click the gift box to open 🎀</div>
+    </div>
+
+    <!-- VIDEO ONLY SECTION (box open korar por) -->
+    <div id="video-section" class="hidden">
+      <video
+        id="gift-video"
+        src="haha.mp4"
+        autoplay
+        muted
+        playsinline
+        controls
+      ></video>
+    </div>
+
+  </div>
+
+  <script>
+    const nameForm = document.getElementById("name-form");
+    const nameInput = document.getElementById("name-input");
+    const nameSection = document.getElementById("name-section");
+    const giftSection = document.getElementById("gift-section");
+    const giftMessage = document.getElementById("gift-message");
+    const giftBox = document.getElementById("giftBox");
+    const videoSection = document.getElementById("video-section");
+    const giftVideo = document.getElementById("gift-video");
+
+    // Name submit
+    nameForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = nameInput.value.trim() || "My Love";
+
+      giftMessage.textContent = `{ ${name}, this gift is for you. Open the box }`;
+
+      nameSection.classList.add("hidden");
+      giftSection.classList.remove("hidden");
+    });
+
+    // Box click -> box vanish, only video
+    let opened = false;
+
+    giftBox.addEventListener("click", () => {
+      if (opened) return;
+      opened = true;
+
+      // optional: small lid animation before vanish
+      giftBox.classList.add("open");
+
+      // little delay so lid animation shows quickly
+      setTimeout(() => {
+        giftSection.classList.add("hidden");   // hide message + box + hint
+        videoSection.classList.remove("hidden"); // show video only
+
+        // try to play video (autoplay should work since muted)
+        if (giftVideo.paused) {
+          giftVideo.play().catch(() => {
+            // if browser blocks autoplay with sound, controls visible anyway
+          });
+        }
+      }, 400);
+    });
+  </script>
+</body>
+</html>
