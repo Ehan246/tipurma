@@ -4,11 +4,7 @@
   <meta charset="UTF-8" />
   <title>Gift Box</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       height: 100vh;
@@ -19,10 +15,7 @@
       font-family: Arial, sans-serif;
     }
 
-    .wrapper {
-      text-align: center;
-      perspective: 1000px;
-    }
+    .wrapper { text-align: center; perspective: 1000px; }
 
     h1 {
       color: #ffffff;
@@ -30,9 +23,7 @@
       text-shadow: 0 2px 4px rgba(0,0,0,0.25);
     }
 
-    form {
-      margin-bottom: 15px;
-    }
+    form { margin-bottom: 15px; }
 
     input[type="text"] {
       padding: 8px 10px;
@@ -54,13 +45,7 @@
       box-shadow: 0 3px 8px rgba(0,0,0,0.25);
     }
 
-    button:active {
-      transform: translateY(1px);
-    }
-
-    .hidden {
-      display: none;
-    }
+    .hidden { display: none; }
 
     .gift-text {
       color: #ffffff;
@@ -79,11 +64,8 @@
       transition: transform 0.4s ease;
     }
 
-    .gift-box:hover {
-      transform: translateY(-5px) scale(1.02);
-    }
+    .gift-box:hover { transform: translateY(-5px) scale(1.02); }
 
-    /* Box base */
     .box {
       position: absolute;
       width: 100%;
@@ -92,10 +74,8 @@
       background: linear-gradient(135deg, #ff5678, #ff2450);
       border-radius: 8px;
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
-      overflow: hidden;
     }
 
-    /* Lid */
     .lid {
       position: absolute;
       width: 110%;
@@ -110,18 +90,15 @@
       z-index: 3;
     }
 
-    /* Vertical ribbon */
     .ribbon-vertical {
       position: absolute;
       width: 25%;
       height: 100%;
       background: rgba(255, 255, 255, 0.85);
-      left: 37.5%;
-      top: 0;
+      left: 37.5%; top: 0;
       z-index: 2;
     }
 
-    /* Horizontal ribbon on lid */
     .ribbon-horizontal {
       position: absolute;
       height: 35%;
@@ -130,7 +107,6 @@
       background: rgba(255, 255, 255, 0.9);
     }
 
-    /* Bow */
     .bow {
       position: absolute;
       top: 5px;
@@ -153,30 +129,9 @@
       border-bottom: none;
     }
 
-    .bow::before {
-      left: 0;
-      transform: rotate(-20deg);
-    }
+    .bow::before { left: 0; transform: rotate(-20deg); }
+    .bow::after { right: 0; transform: scaleX(-1) rotate(-20deg); }
 
-    .bow::after {
-      right: 0;
-      transform: scaleX(-1) rotate(-20deg);
-    }
-
-    /* Box content (if you ever want text/image again) */
-    .content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 220px;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
-    }
-
-    /* Confetti effect (simple) */
     .sparkles span {
       position: absolute;
       width: 6px;
@@ -187,49 +142,32 @@
       animation: sparkle 1s linear infinite;
     }
 
-    .sparkles span:nth-child(1) { top: -20px; left: 20px; animation-delay: 0s; }
-    .sparkles span:nth-child(2) { top: -10px; right: 30px; animation-delay: 0.2s; }
-    .sparkles span:nth-child(3) { top: -30px; left: 80px; animation-delay: 0.4s; }
-    .sparkles span:nth-child(4) { top: -25px; right: 70px; animation-delay: 0.6s; }
-    .sparkles span:nth-child(5) { top: -40px; left: 50%; animation-delay: 0.8s; }
-
     @keyframes sparkle {
       0% { transform: translateY(0); opacity: 0; }
       20% { opacity: 1; }
       100% { transform: translateY(-30px); opacity: 0; }
     }
 
-    /* OPEN STATE (still used briefly for lid animation, optional) */
     .gift-box.open .lid {
       transform: rotateX(-110deg);
       top: -80px;
     }
 
-    .hint {
-      margin-top: 15px;
-      color: #ffffff;
-      font-size: 14px;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    }
+    .hint { margin-top: 15px; color: #ffffff; }
 
-    /* Video section */
-    #video-section {
-      max-width: 90vw;
-    }
-
-    #gift-video {
+    #media-section img {
       width: 320px;
       max-width: 100%;
       border-radius: 12px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-      background: #000;
     }
+
+    #gift-audio { margin-top: 15px; width: 320px; }
   </style>
 </head>
 <body>
   <div class="wrapper">
 
-    <!-- NAME SECTION -->
     <div id="name-section">
       <h1>Enter your name</h1>
       <form id="name-form">
@@ -238,40 +176,24 @@
       </form>
     </div>
 
-    <!-- GIFT SECTION -->
     <div id="gift-section" class="hidden">
       <p id="gift-message" class="gift-text"></p>
 
       <div class="gift-box" id="giftBox">
-        <div class="lid">
-          <div class="ribbon-horizontal"></div>
-        </div>
-        <div class="box">
-          <div class="ribbon-vertical"></div>
-        </div>
+        <div class="lid"><div class="ribbon-horizontal"></div></div>
+        <div class="box"><div class="ribbon-vertical"></div></div>
         <div class="bow"></div>
-
-        <div class="sparkles">
-          <span></span><span></span><span></span><span></span><span></span>
-        </div>
-
-        <!-- content diyechis, but ei version e use kortesi na -->
-        <div class="content"></div>
+        <div class="sparkles"><span></span><span></span><span></span><span></span><span></span></div>
       </div>
 
       <div class="hint">Click the gift box to open 🎀</div>
     </div>
 
-    <!-- VIDEO ONLY SECTION (box open korar por) -->
-    <div id="video-section" class="hidden">
-      <video
-        id="gift-video"
-        src="Cute Cat proposing.jpg"
-        autoplay
-        muted
-        playsinline
-        controls
-      ></video>
+    <div id="media-section" class="hidden">
+      <img id="gift-image" src="jk.jpg" alt="Gift Image" />
+      <audio id="gift-audio" controls autoplay>
+        <source src="ai.mp3" type="audio/mpeg" />
+      </audio>
     </div>
 
   </div>
@@ -283,43 +205,32 @@
     const giftSection = document.getElementById("gift-section");
     const giftMessage = document.getElementById("gift-message");
     const giftBox = document.getElementById("giftBox");
-    const videoSection = document.getElementById("video-section");
-    const giftVideo = document.getElementById("gift-video");
+    const mediaSection = document.getElementById("media-section");
+    const giftAudio = document.getElementById("gift-audio");
 
-    // Name submit
     nameForm.addEventListener("submit", function (e) {
       e.preventDefault();
       const name = nameInput.value.trim() || "My Love";
-
       giftMessage.textContent = `{ ${name}, this gift is for you. Open the box }`;
-
       nameSection.classList.add("hidden");
       giftSection.classList.remove("hidden");
     });
 
-    // Box click -> box vanish, only video
     let opened = false;
 
     giftBox.addEventListener("click", () => {
       if (opened) return;
       opened = true;
 
-      // optional: small lid animation before vanish
       giftBox.classList.add("open");
 
-      // little delay so lid animation shows quickly
       setTimeout(() => {
-        giftSection.classList.add("hidden");   // hide message + box + hint
-        videoSection.classList.remove("hidden"); // show video only
-
-        // try to play video (autoplay should work since muted)
-        if (giftVideo.paused) {
-          giftVideo.play().catch(() => {
-            // if browser blocks autoplay with sound, controls visible anyway
-          });
-        }
+        giftSection.classList.add("hidden");
+        mediaSection.classList.remove("hidden");
+        giftAudio.play().catch(() => {});
       }, 400);
     });
   </script>
 </body>
 </html>
+
