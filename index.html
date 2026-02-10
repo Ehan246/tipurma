@@ -3,28 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ItemSalesBD | আপনার প্রিমিয়াম পণ্যের নির্ভরযোগ্য মার্কেটপ্লেস</title>
-    <!-- Firebase SDK -->
+    <title>ItemSalesBD | Premium Digital Marketplace</title>
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary: #10b981;
-            --accent: #f59e0b;
-            --danger: #ef4444;
-            --dark: #0f172a;
-            --light: #f8fafc;
-            --gray: #64748b;
-            --gray-light: #e2e8f0;
-            --border: #cbd5e1;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --primary: #00ff88;
+            --primary-dark: #00cc6a;
+            --secondary: #ff00ff;
+            --accent: #ff6b6b;
+            --dark: #0a0a0a;
+            --darker: #000000;
+            --light: #ffffff;
+            --gray: #888888;
+            --neon-glow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+            --neon-pink: 0 0 10px var(--secondary), 0 0 20px var(--secondary);
+            --shadow: 0 4px 6px rgba(0, 255, 136, 0.2);
             --radius: 10px;
             --transition: all 0.3s ease;
         }
@@ -38,8 +41,10 @@
         body {
             font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
             line-height: 1.6;
-            color: var(--dark);
-            background-color: #ffffff;
+            color: var(--light);
+            background: linear-gradient(135deg, #0a0a0a 0%, #000000 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
         
         .bn {
@@ -56,7 +61,7 @@
         .btn {
             display: inline-block;
             padding: 12px 28px;
-            border-radius: var(--radius);
+            border-radius: 50px;
             font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
@@ -64,54 +69,32 @@
             transition: var(--transition);
             border: none;
             text-align: center;
+            background: var(--primary);
+            color: var(--dark);
+            box-shadow: var(--neon-glow);
         }
         
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .btn-secondary {
-            background-color: var(--secondary);
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #0da271;
-            transform: translateY(-2px);
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary);
         }
         
         .btn-outline {
-            background-color: transparent;
+            background: transparent;
             color: var(--primary);
             border: 2px solid var(--primary);
         }
         
         .btn-outline:hover {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        .btn-small {
-            padding: 8px 16px;
-            font-size: 0.9rem;
-        }
-        
-        .btn-large {
-            padding: 16px 32px;
-            font-size: 1.1rem;
+            background: var(--primary);
+            color: var(--dark);
         }
         
         /* Header */
         header {
-            background-color: white;
-            box-shadow: var(--shadow);
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -121,36 +104,42 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
+            padding: 20px 0;
         }
         
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
             text-decoration: none;
         }
         
         .logo-icon {
-            background-color: var(--primary);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            color: var(--dark);
+            box-shadow: var(--neon-glow);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px var(--primary); }
+            50% { box-shadow: 0 0 20px var(--primary), 0 0 30px var(--primary); }
+            100% { box-shadow: 0 0 10px var(--primary); }
         }
         
         .logo-text {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--dark);
-        }
-        
-        .logo-text span {
-            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .header-actions {
@@ -166,121 +155,91 @@
         
         .search-bar input {
             width: 100%;
-            padding: 10px 15px 10px 40px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
-            font-size: 0.95rem;
+            padding: 12px 20px 12px 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 50px;
+            color: var(--light);
+            font-size: 1rem;
         }
         
         .search-bar i {
             position: absolute;
-            left: 15px;
+            left: 20px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--gray);
-        }
-        
-        .cart-icon {
-            position: relative;
-            font-size: 1.3rem;
-            color: var(--dark);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .cart-icon:hover {
             color: var(--primary);
-        }
-        
-        .cart-count {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background-color: var(--danger);
-            color: white;
-            font-size: 0.7rem;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
         }
         
         .user-menu {
             display: flex;
             align-items: center;
-            gap: 10px;
-            cursor: pointer;
+            gap: 15px;
         }
         
         .user-avatar {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            background-color: var(--primary);
-            color: white;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--dark);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
+            font-weight: 700;
+            box-shadow: var(--neon-glow);
         }
         
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
-            padding: 80px 0 60px;
-            margin-bottom: 40px;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
         }
         
-        .hero-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 40px;
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
+            z-index: -1;
         }
         
         .hero-content {
-            flex: 1;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
         }
         
         .hero-title {
-            font-size: 3rem;
-            color: var(--dark);
+            font-size: 3.5rem;
             margin-bottom: 20px;
-            line-height: 1.2;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
         }
         
         .hero-subtitle {
-            font-size: 1.1rem;
-            color: var(--gray);
-            margin-bottom: 30px;
-            max-width: 600px;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
         }
         
-        .hero-image {
-            flex: 1;
-            text-align: center;
-        }
-        
-        .hero-img {
-            max-width: 100%;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        /* Products Section */
+        /* Products Grid */
         .products-section {
-            padding: 60px 0;
+            padding: 80px 0;
         }
         
         .section-title {
-            font-size: 2rem;
-            margin-bottom: 40px;
-            color: var(--dark);
+            font-size: 2.5rem;
             text-align: center;
+            margin-bottom: 50px;
+            color: var(--primary);
+            text-shadow: var(--neon-glow);
         }
         
         .products-grid {
@@ -290,84 +249,61 @@
         }
         
         .product-card {
-            background-color: white;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
+            padding: 25px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
             transition: var(--transition);
-            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
         }
         
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: var(--neon-glow);
         }
         
         .product-image {
             width: 100%;
             height: 200px;
             object-fit: cover;
-        }
-        
-        .product-info {
-            padding: 25px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            border: 2px solid rgba(0, 255, 136, 0.3);
         }
         
         .product-name {
             font-size: 1.3rem;
-            font-weight: 600;
             margin-bottom: 10px;
-            color: var(--dark);
+            color: var(--primary);
         }
         
         .product-price {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
-            color: var(--primary);
             margin-bottom: 15px;
-        }
-        
-        .product-meta {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            color: var(--gray);
+            color: var(--light);
+            text-shadow: 0 0 10px var(--primary);
         }
         
         .product-stock {
             display: flex;
             align-items: center;
-            gap: 5px;
-        }
-        
-        .stock-high {
-            color: var(--secondary);
-        }
-        
-        .stock-low {
-            color: var(--accent);
-        }
-        
-        .stock-out {
-            color: var(--danger);
-        }
-        
-        .product-actions {
-            display: flex;
             gap: 10px;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.7);
         }
         
-        .product-actions .btn {
-            flex: 1;
-        }
+        .product-stock.high { color: var(--primary); }
+        .product-stock.low { color: var(--accent); }
+        .product-stock.out { color: var(--gray); }
         
         /* Footer */
         footer {
-            background-color: var(--dark);
-            color: white;
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 1px solid rgba(0, 255, 136, 0.2);
             padding: 60px 0 30px;
-            margin-top: 60px;
+            margin-top: 80px;
         }
         
         .footer-grid {
@@ -380,7 +316,7 @@
         .footer-column h3 {
             font-size: 1.3rem;
             margin-bottom: 1.5rem;
-            color: white;
+            color: var(--primary);
         }
         
         .footer-links {
@@ -392,46 +328,21 @@
         }
         
         .footer-links a {
-            color: #adb5bd;
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             transition: var(--transition);
         }
         
         .footer-links a:hover {
-            color: white;
-            padding-left: 5px;
+            color: var(--primary);
+            padding-left: 10px;
         }
         
         .copyright {
             text-align: center;
             padding-top: 30px;
-            border-top: 1px solid #374151;
-            color: #adb5bd;
-            font-size: 0.9rem;
-        }
-        
-        .social-icons {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .social-icons a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: #374151;
-            color: white;
-            border-radius: 50%;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-        
-        .social-icons a:hover {
-            background-color: var(--primary);
-            transform: translateY(-3px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
         }
         
         /* Modal */
@@ -442,10 +353,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.9);
             z-index: 2000;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(5px);
         }
         
         .modal.active {
@@ -453,107 +365,52 @@
         }
         
         .modal-content {
-            background-color: white;
+            background: rgba(20, 20, 20, 0.95);
             border-radius: var(--radius);
+            padding: 40px;
             width: 90%;
             max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .modal-header {
-            padding: 20px 25px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            border: 1px solid var(--primary);
+            box-shadow: var(--neon-glow);
         }
         
         .modal-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
             font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--gray);
-        }
-        
-        .modal-body {
-            padding: 25px;
+            margin-bottom: 20px;
+            color: var(--primary);
         }
         
         .form-group {
             margin-bottom: 20px;
         }
         
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
         .form-control {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--border);
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
             border-radius: var(--radius);
-            font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
+            color: var(--light);
             font-size: 1rem;
-            transition: var(--transition);
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
         
         /* Responsive */
         @media (max-width: 768px) {
-            .hero-container {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .hero-content {
-                text-align: center;
-            }
-            
             .header-container {
                 flex-direction: column;
-                gap: 15px;
-            }
-            
-            .header-actions {
-                width: 100%;
-                justify-content: space-between;
+                gap: 20px;
             }
             
             .search-bar {
                 width: 100%;
-                max-width: 300px;
             }
             
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
-        }
-        
-        @media (max-width: 576px) {
             .hero-title {
-                font-size: 2rem;
+                font-size: 2.5rem;
             }
             
             .products-grid {
                 grid-template-columns: 1fr;
-            }
-            
-            .product-actions {
-                flex-direction: column;
             }
         }
         
@@ -564,24 +421,13 @@
             right: 20px;
             padding: 15px 25px;
             border-radius: var(--radius);
-            color: white;
-            font-weight: 500;
+            color: var(--dark);
+            font-weight: 600;
             z-index: 3000;
             display: none;
             animation: slideIn 0.3s ease;
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .notification.success {
-            background-color: var(--secondary);
-        }
-        
-        .notification.error {
-            background-color: var(--danger);
-        }
-        
-        .notification.info {
-            background-color: var(--primary);
+            box-shadow: var(--neon-glow);
+            background: var(--primary);
         }
         
         @keyframes slideIn {
@@ -605,43 +451,36 @@
         <div class="container header-container">
             <a href="#" class="logo">
                 <div class="logo-icon">
-                    <i class="fas fa-shopping-bag"></i>
+                    <i class="fas fa-bolt"></i>
                 </div>
-                <div class="logo-text">
-                    Item<span>Sales</span>BD
-                </div>
+                <div class="logo-text">ItemSalesBD</div>
             </a>
             
             <div class="header-actions">
                 <div class="search-bar">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="পণ্য খুঁজুন..." class="bn" id="searchInput">
+                    <input type="text" placeholder="Search products..." id="searchInput">
                 </div>
                 
-                <div class="cart-icon" id="cartIcon">
-                    <i class="fas fa-shopping-cart"></i>
-                    <div class="cart-count" id="cartCount">0</div>
-                </div>
-                
-                <div id="authButtons" class="auth-buttons">
-                    <button class="btn btn-primary btn-small" id="loginBtn">
-                        <span class="bn">লগইন</span>
+                <div id="authButtons" style="display: flex; gap: 10px;">
+                    <button class="btn" id="loginBtn">
+                        <i class="fas fa-sign-in-alt"></i> Login
                     </button>
-                    <button class="btn btn-outline btn-small" id="signupBtn">
-                        <span class="bn">সাইন আপ</span>
+                    <button class="btn btn-outline" id="signupBtn">
+                        <i class="fas fa-user-plus"></i> Sign Up
                     </button>
                 </div>
                 
                 <div id="userMenu" class="user-menu" style="display: none;">
                     <div class="user-avatar" id="userAvatar">U</div>
                     <div>
-                        <div id="userName" class="bn" style="font-weight: 500;">গ্রাহক</div>
-                        <div style="font-size: 0.85rem; color: var(--gray);" class="bn">গ্রাহক</div>
+                        <div id="userName" style="font-weight: 600;"></div>
+                        <div style="font-size: 0.9rem; opacity: 0.8;" id="userRole">Customer</div>
                     </div>
-                    <button class="btn btn-primary btn-small" id="goToAdminBtn" style="display: none;">
+                    <button class="btn" id="adminBtn" style="display: none;">
                         <i class="fas fa-cog"></i>
                     </button>
-                    <button class="btn btn-outline btn-small" id="logoutBtn">
+                    <button class="btn btn-outline" id="logoutBtn">
                         <i class="fas fa-sign-out-alt"></i>
                     </button>
                 </div>
@@ -651,27 +490,26 @@
     
     <!-- Hero Section -->
     <section class="hero">
-        <div class="container hero-container">
-            <div class="hero-content">
-                <h1 class="hero-title bn" id="websiteTitle">আপনার পণ্যের বিশ্বস্ত মার্কেটপ্লেস</h1>
-                <p class="hero-subtitle bn" id="websiteDescription">বাংলাদেশের সেরা অনলাইন মার্কেটপ্লেস যেখানে আপনি পাবেন সকল ধরনের প্রিমিয়াম পণ্য এক জায়গায়।</p>
-                <a href="#products" class="btn btn-primary btn-large bn">
-                    <i class="fas fa-shopping-bag"></i> এখনই কিনুন
-                </a>
-            </div>
-            <div class="hero-image">
-                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="ItemSalesBD Products" class="hero-img" id="heroImage">
+        <div class="container hero-content">
+            <h1 class="hero-title">Premium Digital Products Marketplace</h1>
+            <p class="hero-subtitle">Buy and sell premium accounts, subscriptions, and digital goods securely</p>
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 40px;">
+                <button class="btn" onclick="document.getElementById('productsGrid').scrollIntoView()">
+                    <i class="fas fa-shopping-cart"></i> Shop Now
+                </button>
+                <button class="btn btn-outline" onclick="showAuthModal()">
+                    <i class="fas fa-rocket"></i> Start Selling
+                </button>
             </div>
         </div>
     </section>
     
     <!-- Products Section -->
-    <section class="products-section" id="productsSection">
+    <section class="products-section">
         <div class="container">
-            <h2 class="section-title bn" id="productsTitle">জনপ্রিয় পণ্য সমূহ</h2>
-            
+            <h2 class="section-title">Hot Products</h2>
             <div class="products-grid" id="productsGrid">
-                <div class="loading bn">পণ্য লোড হচ্ছে...</div>
+                <!-- Products will load here -->
             </div>
         </div>
     </section>
@@ -681,58 +519,29 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-column">
-                    <h3 class="bn" id="footerTitle">ItemSalesBD</h3>
-                    <p class="bn" style="color: #adb5bd; margin-bottom: 20px;" id="footerDescription">বাংলাদেশের সেরা অনলাইন মার্কেটপ্লেস যেখানে আপনি পাবেন সকল ধরনের প্রিমিয়াম পণ্য এক জায়গায়।</p>
-                    <div class="social-icons">
-                        <a href="#" id="facebookLink"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" id="instagramLink"><i class="fab fa-instagram"></i></a>
-                        <a href="#" id="whatsappLink"><i class="fab fa-whatsapp"></i></a>
-                        <a href="#" id="telegramLink"><i class="fab fa-telegram"></i></a>
-                    </div>
+                    <h3>ItemSalesBD</h3>
+                    <p style="opacity: 0.8; margin-bottom: 20px;">Your trusted digital marketplace for premium products and services.</p>
                 </div>
-                
                 <div class="footer-column">
-                    <h3 class="bn">দ্রুত লিংক</h3>
+                    <h3>Quick Links</h3>
                     <ul class="footer-links">
-                        <li><a href="#" class="bn">হোম</a></li>
-                        <li><a href="#products" class="bn">পণ্য</a></li>
-                        <li><a href="#" class="bn">অফার</a></li>
-                        <li><a href="#" class="bn">যোগাযোগ</a></li>
-                        <li><a href="admin.html" class="bn">অ্যাডমিন</a></li>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Products</a></li>
+                        <li><a href="#">How to Buy</a></li>
+                        <li><a href="admin.html">Admin Panel</a></li>
                     </ul>
                 </div>
-                
                 <div class="footer-column">
-                    <h3 class="bn">সাহায্য</h3>
+                    <h3>Support</h3>
                     <ul class="footer-links">
-                        <li><a href="#" class="bn">FAQ</a></li>
-                        <li><a href="#" class="bn">সাপোর্ট</a></li>
-                        <li><a href="#" class="bn">রিটার্ন পলিসি</a></li>
-                        <li><a href="#" class="bn">প্রাইভেসি পলিসি</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Refund Policy</a></li>
                     </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h3 class="bn">যোগাযোগ</h3>
-                    <div style="color: #adb5bd;">
-                        <p class="bn" style="margin-bottom: 10px;">
-                            <i class="fas fa-envelope" style="margin-right: 10px; color: var(--primary);"></i>
-                            <span id="contactEmail">support@itemsalesbd.com</span>
-                        </p>
-                        <p class="bn" style="margin-bottom: 10px;">
-                            <i class="fas fa-phone" style="margin-right: 10px; color: var(--primary);"></i>
-                            <span id="contactPhone">০১৭১২-৩৪৫৬৭৮</span>
-                        </p>
-                        <p class="bn">
-                            <i class="fas fa-clock" style="margin-right: 10px; color: var(--primary);"></i>
-                            ২৪/৭ সাপোর্ট
-                        </p>
-                    </div>
                 </div>
             </div>
-            
             <div class="copyright">
-                <p class="bn">&copy; <span id="currentYear">২০২৩</span> ItemSalesBD. সকল অধিকার সংরক্ষিত।</p>
+                &copy; 2024 ItemSalesBD. All rights reserved.
             </div>
         </div>
     </footer>
@@ -740,37 +549,25 @@
     <!-- Auth Modal -->
     <div class="modal" id="authModal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title bn">লগইন / সাইন আপ</h3>
-                <button class="modal-close" id="closeModalBtn">&times;</button>
+            <h2 class="modal-title">Login / Sign Up</h2>
+            <div class="form-group">
+                <input type="email" id="authEmail" class="form-control" placeholder="Email">
             </div>
-            
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label bn" for="authEmail">ইমেইল</label>
-                    <input type="email" class="form-control" id="authEmail" placeholder="your@email.com" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label bn" for="authPassword">পাসওয়ার্ড</label>
-                    <input type="password" class="form-control" id="authPassword" placeholder="********" required>
-                </div>
-                
-                <div style="display: flex; gap: 15px; margin-top: 30px;">
-                    <button class="btn btn-primary" style="flex: 1;" id="submitLoginBtn">
-                        <span class="bn">লগইন</span>
-                    </button>
-                    <button class="btn btn-secondary" style="flex: 1;" id="submitSignupBtn">
-                        <span class="bn">সাইন আপ</span>
-                    </button>
-                </div>
+            <div class="form-group">
+                <input type="password" id="authPassword" class="form-control" placeholder="Password">
             </div>
+            <div style="display: flex; gap: 10px; margin-top: 30px;">
+                <button class="btn" style="flex: 1;" id="modalLoginBtn">Login</button>
+                <button class="btn btn-outline" style="flex: 1;" id="modalSignupBtn">Sign Up</button>
+            </div>
+            <button style="background: none; border: none; color: var(--primary); margin-top: 20px; cursor: pointer;" onclick="closeAuthModal()">
+                Close
+            </button>
         </div>
     </div>
     
-    <!-- Firebase Configuration -->
     <script>
-        // Firebase Configuration
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyDTyjzVYkwyeayKjZjfFNWHpLZJB5XOo1A",
             authDomain: "itemsalesbd.firebaseapp.com",
@@ -780,294 +577,57 @@
             appId: "1:390468845332:web:7350cfdf25f23151688c01",
             measurementId: "G-1REJXDEMSD"
         };
-
+        
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
         
-        // DOM Elements
+        // Elements
+        const notification = document.getElementById('notification');
         const authModal = document.getElementById('authModal');
-        const loginBtn = document.getElementById('loginBtn');
-        const signupBtn = document.getElementById('signupBtn');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const userMenu = document.getElementById('userMenu');
         const authButtons = document.getElementById('authButtons');
+        const userMenu = document.getElementById('userMenu');
         const userName = document.getElementById('userName');
         const userAvatar = document.getElementById('userAvatar');
-        const goToAdminBtn = document.getElementById('goToAdminBtn');
-        const submitLoginBtn = document.getElementById('submitLoginBtn');
-        const submitSignupBtn = document.getElementById('submitSignupBtn');
+        const userRole = document.getElementById('userRole');
+        const adminBtn = document.getElementById('adminBtn');
         const productsGrid = document.getElementById('productsGrid');
-        const notification = document.getElementById('notification');
-        const searchInput = document.getElementById('searchInput');
-        const cartCount = document.getElementById('cartCount');
-        const currentYear = document.getElementById('currentYear');
         
-        // Website content elements
-        const websiteTitle = document.getElementById('websiteTitle');
-        const websiteDescription = document.getElementById('websiteDescription');
-        const productsTitle = document.getElementById('productsTitle');
-        const footerTitle = document.getElementById('footerTitle');
-        const footerDescription = document.getElementById('footerDescription');
-        const contactEmail = document.getElementById('contactEmail');
-        const contactPhone = document.getElementById('contactPhone');
-        const heroImage = document.getElementById('heroImage');
-        const socialLinks = ['facebookLink', 'instagramLink', 'whatsappLink', 'telegramLink'];
-        
-        // Variables
-        let currentUser = null;
-        let cartItems = [];
-        let websiteData = {};
-        
-        // Notification function
-        function showNotification(message, type = 'info') {
+        // Notification
+        function showNotification(message) {
             notification.textContent = message;
-            notification.className = 'notification ' + type;
             notification.style.display = 'block';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
+            setTimeout(() => notification.style.display = 'none', 3000);
         }
         
-        // Update current year
-        currentYear.textContent = new Date().getFullYear();
-        
-        // Load website data from Firebase
-        async function loadWebsiteData() {
-            try {
-                const doc = await db.collection('settings').doc('website').get();
-                if (doc.exists) {
-                    websiteData = doc.data();
-                    
-                    // Update website content
-                    if (websiteData.title) websiteTitle.textContent = websiteData.title;
-                    if (websiteData.description) websiteDescription.textContent = websiteData.description;
-                    if (websiteData.productsTitle) productsTitle.textContent = websiteData.productsTitle;
-                    if (websiteData.footerTitle) footerTitle.textContent = websiteData.footerTitle;
-                    if (websiteData.footerDescription) footerDescription.textContent = websiteData.footerDescription;
-                    if (websiteData.contactEmail) contactEmail.textContent = websiteData.contactEmail;
-                    if (websiteData.contactPhone) contactPhone.textContent = websiteData.contactPhone;
-                    if (websiteData.heroImage) heroImage.src = websiteData.heroImage;
-                    
-                    // Update social links
-                    socialLinks.forEach(link => {
-                        if (websiteData[link]) {
-                            document.getElementById(link).href = websiteData[link];
-                        }
-                    });
-                }
-            } catch (error) {
-                console.log('Using default website data');
-            }
+        // Auth Modal
+        function showAuthModal() {
+            authModal.classList.add('active');
         }
         
-        // Load products from Firebase
-        async function loadProducts() {
-            try {
-                const productsSnapshot = await db.collection('products').where('stock', '>', 0).get();
-                
-                if (productsSnapshot.empty) {
-                    productsGrid.innerHTML = '<div class="loading bn">কোনো পণ্য পাওয়া যায়নি</div>';
-                    return;
-                }
-                
-                const products = [];
-                productsSnapshot.forEach(doc => {
-                    products.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
-                });
-                
-                renderProducts(products);
-            } catch (error) {
-                console.error('Error loading products:', error);
-                productsGrid.innerHTML = '<div class="loading bn">পণ্য লোড করতে সমস্যা</div>';
-            }
+        function closeAuthModal() {
+            authModal.classList.remove('active');
         }
         
-        // Render products
-        function renderProducts(products) {
-            productsGrid.innerHTML = '';
-            
-            products.forEach(product => {
-                const stockClass = product.stock === 0 ? 'stock-out' : 
-                                 product.stock <= 5 ? 'stock-low' : 'stock-high';
-                
-                const stockText = product.stock === 0 ? 'স্টক আউট' : 
-                                `স্টক: ${product.stock} টি`;
-                
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-                productCard.innerHTML = `
-                    <img src="${product.image || 'https://via.placeholder.com/300x200?text=No+Image'}" alt="${product.name}" class="product-image">
-                    <div class="product-info">
-                        <h3 class="product-name bn">${product.name}</h3>
-                        <div class="product-price bn">৳ ${product.price}</div>
-                        
-                        <div class="product-meta">
-                            <div class="bn">${product.category || 'সাধারণ'}</div>
-                            <div class="product-stock ${stockClass} bn">
-                                <i class="fas fa-box"></i> ${stockText}
-                            </div>
-                        </div>
-                        
-                        ${product.description ? `<p class="bn" style="color: var(--gray); margin-bottom: 20px; font-size: 0.9rem;">${product.description}</p>` : ''}
-                        
-                        <div class="product-actions">
-                            <button class="btn btn-primary btn-small bn" onclick="viewProduct('${product.id}')">
-                                <i class="fas fa-eye"></i> বিস্তারিত
-                            </button>
-                            <button class="btn btn-secondary btn-small bn" onclick="addToCart('${product.id}')" ${product.stock === 0 ? 'disabled style="opacity: 0.6;"' : ''}>
-                                <i class="fas fa-cart-plus"></i> কার্টে যোগ
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                productsGrid.appendChild(productCard);
-            });
-        }
-        
-        // Product search functionality
-        searchInput.addEventListener('input', async function() {
-            const searchTerm = this.value.toLowerCase();
-            
-            try {
-                const productsSnapshot = await db.collection('products').get();
-                const allProducts = [];
-                
-                productsSnapshot.forEach(doc => {
-                    allProducts.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
-                });
-                
-                const filteredProducts = allProducts.filter(product => 
-                    product.name.toLowerCase().includes(searchTerm) ||
-                    (product.description && product.description.toLowerCase().includes(searchTerm)) ||
-                    (product.category && product.category.toLowerCase().includes(searchTerm))
-                );
-                
-                renderProducts(filteredProducts);
-            } catch (error) {
-                console.error('Error searching products:', error);
-            }
-        });
-        
-        // Add to cart function
-        window.addToCart = function(productId) {
-            if (!currentUser) {
-                showNotification('কার্টে পণ্য যোগ করতে লগইন করুন!', 'error');
-                authModal.classList.add('active');
-                return;
-            }
-            
-            db.collection('products').doc(productId).get().then(doc => {
-                if (doc.exists) {
-                    const product = doc.data();
-                    cartItems.push({
-                        id: productId,
-                        name: product.name,
-                        price: product.price,
-                        image: product.image
-                    });
-                    
-                    cartCount.textContent = cartItems.length;
-                    showNotification(`${product.name} কার্টে যোগ করা হয়েছে!`, 'success');
-                }
-            }).catch(error => {
-                showNotification('পণ্য যোগ করতে সমস্যা!', 'error');
-            });
-        };
-        
-        // View product details
-        window.viewProduct = function(productId) {
-            db.collection('products').doc(productId).get().then(doc => {
-                if (doc.exists) {
-                    const product = doc.data();
-                    alert(`পণ্য বিস্তারিত:\n\nনাম: ${product.name}\nদাম: ৳${product.price}\nস্টক: ${product.stock} টি\nবিবরণ: ${product.description || 'নেই'}`);
-                }
-            });
-        };
-        
-        // Auth State Listener
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                currentUser = user;
-                
-                try {
-                    const userDoc = await db.collection('users').doc(user.uid).get();
-                    if (userDoc.exists) {
-                        const userData = userDoc.data();
-                        userName.textContent = userData.name || user.email;
-                        userAvatar.textContent = userData.name ? userData.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase();
-                        
-                        // Show admin button if user is admin
-                        if (userData.role === 'admin') {
-                            goToAdminBtn.style.display = 'block';
-                            goToAdminBtn.onclick = () => {
-                                window.location.href = 'admin.html';
-                            };
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error getting user data:', error);
-                }
-                
-                // Update UI
-                authButtons.style.display = 'none';
-                userMenu.style.display = 'flex';
-                
-                // Close modal
-                authModal.classList.remove('active');
-                
-                showNotification('সফলভাবে লগইন করা হয়েছে!', 'success');
-            } else {
-                currentUser = null;
-                
-                // Update UI
-                authButtons.style.display = 'flex';
-                userMenu.style.display = 'none';
-                goToAdminBtn.style.display = 'none';
-            }
-        });
-        
-        // Login function
-        submitLoginBtn.addEventListener('click', async () => {
+        // Login
+        document.getElementById('modalLoginBtn').addEventListener('click', async () => {
             const email = document.getElementById('authEmail').value;
             const password = document.getElementById('authPassword').value;
-            
-            if (!email || !password) {
-                showNotification('ইমেইল এবং পাসওয়ার্ড দিন!', 'error');
-                return;
-            }
             
             try {
                 await auth.signInWithEmailAndPassword(email, password);
+                closeAuthModal();
+                showNotification('Login successful!');
             } catch (error) {
-                showNotification('লগইনে সমস্যা: ' + error.message, 'error');
+                showNotification('Login failed: ' + error.message);
             }
         });
         
-        // Signup function
-        submitSignupBtn.addEventListener('click', async () => {
+        // Sign Up
+        document.getElementById('modalSignupBtn').addEventListener('click', async () => {
             const email = document.getElementById('authEmail').value;
             const password = document.getElementById('authPassword').value;
-            
-            if (!email || !password) {
-                showNotification('ইমেইল এবং পাসওয়ার্ড দিন!', 'error');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showNotification('পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে!', 'error');
-                return;
-            }
             
             try {
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
@@ -1080,76 +640,154 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                showNotification('অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!', 'success');
+                closeAuthModal();
+                showNotification('Account created successfully!');
             } catch (error) {
-                showNotification('সাইন আপে সমস্যা: ' + error.message, 'error');
+                showNotification('Sign up failed: ' + error.message);
             }
         });
         
-        // Logout function
-        logoutBtn.addEventListener('click', async () => {
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
             try {
                 await auth.signOut();
-                cartItems = [];
-                cartCount.textContent = '0';
-                showNotification('সফলভাবে লগআউট হয়েছে!', 'success');
+                showNotification('Logged out successfully!');
             } catch (error) {
-                showNotification('লগআউটে সমস্যা: ' + error.message, 'error');
+                showNotification('Logout failed: ' + error.message);
             }
         });
         
-        // Open auth modal
-        loginBtn.addEventListener('click', () => {
-            authModal.classList.add('active');
+        // Admin Button
+        adminBtn.addEventListener('click', () => {
+            window.location.href = 'admin.html';
         });
         
-        signupBtn.addEventListener('click', () => {
-            authModal.classList.add('active');
-        });
-        
-        // Close modal
-        closeModalBtn.addEventListener('click', () => {
-            authModal.classList.remove('active');
-        });
-        
-        authModal.addEventListener('click', (e) => {
-            if (e.target === authModal) {
-                authModal.classList.remove('active');
+        // Load Products
+        async function loadProducts() {
+            try {
+                const snapshot = await db.collection('products').where('stock', '>', 0).get();
+                productsGrid.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    productsGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--primary);">No products found</div>';
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const product = doc.data();
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    
+                    const stockClass = product.stock > 10 ? 'high' : product.stock > 0 ? 'low' : 'out';
+                    const stockText = product.stock > 10 ? 'In Stock' : product.stock > 0 ? 'Low Stock' : 'Out of Stock';
+                    
+                    card.innerHTML = `
+                        <img src="${product.image || 'https://via.placeholder.com/300x200?text=No+Image'}" 
+                             class="product-image" 
+                             alt="${product.name}">
+                        <h3 class="product-name">${product.name}</h3>
+                        <div class="product-price">$${product.price}</div>
+                        <div class="product-stock ${stockClass}">
+                            <i class="fas fa-box"></i> ${stockText} (${product.stock})
+                        </div>
+                        <button class="btn" onclick="buyProduct('${doc.id}')" ${product.stock === 0 ? 'disabled' : ''}>
+                            <i class="fas fa-cart-plus"></i> Buy Now
+                        </button>
+                    `;
+                    
+                    productsGrid.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error loading products:', error);
+                productsGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--accent);">Error loading products</div>';
             }
-        });
+        }
         
-        // Cart icon click
-        document.getElementById('cartIcon').addEventListener('click', () => {
-            if (cartItems.length === 0) {
-                showNotification('আপনার কার্ট খালি!', 'info');
+        // Buy Product
+        window.buyProduct = async function(productId) {
+            if (!auth.currentUser) {
+                showNotification('Please login to buy products');
+                showAuthModal();
                 return;
             }
             
-            let cartDetails = 'আপনার কার্ট:\n\n';
-            let total = 0;
-            
-            cartItems.forEach((item, index) => {
-                cartDetails += `${index + 1}. ${item.name} - ৳${item.price}\n`;
-                total += item.price;
-            });
-            
-            cartDetails += `\nমোট: ৳${total}`;
-            
-            if (confirm(cartDetails + '\n\nঅর্ডার কনফার্ম করতে চান?')) {
-                // Process order
-                cartItems.forEach(item => {
-                    // Here you would save the order to Firebase
-                    console.log('Order placed for:', item);
+            try {
+                const productDoc = await db.collection('products').doc(productId).get();
+                const product = productDoc.data();
+                
+                if (product.stock < 1) {
+                    showNotification('Product out of stock!');
+                    return;
+                }
+                
+                // Create order
+                await db.collection('orders').add({
+                    productId: productId,
+                    productName: product.name,
+                    price: product.price,
+                    userId: auth.currentUser.uid,
+                    userName: auth.currentUser.email,
+                    status: 'pending',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                cartItems = [];
-                cartCount.textContent = '0';
-                showNotification('অর্ডার সফলভাবে প্লেস করা হয়েছে!', 'success');
+                // Update stock
+                await db.collection('products').doc(productId).update({
+                    stock: product.stock - 1
+                });
+                
+                showNotification(`Order placed for ${product.name}!`);
+                loadProducts();
+            } catch (error) {
+                showNotification('Error placing order: ' + error.message);
+            }
+        };
+        
+        // Auth State Listener
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                // Hide auth buttons, show user menu
+                authButtons.style.display = 'none';
+                userMenu.style.display = 'flex';
+                
+                // Get user data
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    userName.textContent = userData.name || user.email;
+                    userAvatar.textContent = (userData.name || user.email).charAt(0).toUpperCase();
+                    userRole.textContent = userData.role === 'admin' ? 'Admin' : 'Customer';
+                    
+                    // Show admin button if admin
+                    if (userData.role === 'admin') {
+                        adminBtn.style.display = 'block';
+                    }
+                }
+            } else {
+                // Show auth buttons, hide user menu
+                authButtons.style.display = 'flex';
+                userMenu.style.display = 'none';
+            }
+        });
+        
+        // Search
+        document.getElementById('searchInput').addEventListener('input', async (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            // Implement search functionality
+        });
+        
+        // Login/Signup buttons
+        document.getElementById('loginBtn').addEventListener('click', showAuthModal);
+        document.getElementById('signupBtn').addEventListener('click', showAuthModal);
+        
+        // Close modal on outside click
+        authModal.addEventListener('click', (e) => {
+            if (e.target === authModal) {
+                closeAuthModal();
             }
         });
         
         // Initial load
-        loadWebsiteData();
         loadProducts();
     </script>
 </body>
