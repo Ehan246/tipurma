@@ -4,29 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ItemSalesBD | Admin Panel</title>
+    
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --primary: #00ff88;
-            --primary-dark: #00cc6a;
-            --secondary: #ff00ff;
-            --accent: #ff6b6b;
             --dark: #0a0a0a;
             --light: #ffffff;
-            --gray: #888888;
-            --neon-glow: 0 0 10px var(--primary), 0 0 20px var(--primary);
-            --radius: 10px;
-            --transition: all 0.3s ease;
+            --neon-glow: 0 0 10px var(--primary);
         }
         
         * {
@@ -42,193 +34,99 @@
             min-height: 100vh;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* Admin Layout */
         .admin-container {
             display: flex;
             min-height: 100vh;
         }
         
         /* Sidebar */
-        .admin-sidebar {
+        .sidebar {
             width: 250px;
             background: rgba(0, 0, 0, 0.9);
             border-right: 1px solid rgba(0, 255, 136, 0.2);
-            padding: 30px 0;
+            padding: 20px;
         }
         
-        .admin-logo {
-            padding: 0 20px 30px;
-            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
-            margin-bottom: 30px;
-        }
-        
-        .admin-logo h2 {
+        .logo {
             color: var(--primary);
-            font-size: 1.8rem;
+            font-size: 1.5rem;
+            margin-bottom: 30px;
             text-shadow: var(--neon-glow);
         }
         
-        .admin-nav {
+        .nav-menu {
             list-style: none;
         }
         
-        .admin-nav li {
-            margin-bottom: 5px;
+        .nav-menu li {
+            margin-bottom: 10px;
         }
         
-        .admin-nav a {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px 20px;
+        .nav-menu a {
+            display: block;
+            padding: 12px 15px;
             color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
-            transition: var(--transition);
-            border-left: 4px solid transparent;
+            border-radius: 5px;
+            transition: all 0.3s;
         }
         
-        .admin-nav a:hover,
-        .admin-nav a.active {
+        .nav-menu a:hover,
+        .nav-menu a.active {
             background: rgba(0, 255, 136, 0.1);
             color: var(--primary);
-            border-left-color: var(--primary);
         }
         
         /* Main Content */
-        .admin-main {
+        .main-content {
             flex: 1;
             padding: 30px;
         }
         
-        .admin-header {
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: var(--radius);
-            border: 1px solid rgba(0, 255, 136, 0.2);
         }
         
-        .admin-title {
-            color: var(--primary);
-            font-size: 1.8rem;
-        }
-        
-        .admin-user {
+        .user-info {
             display: flex;
             align-items: center;
             gap: 15px;
         }
         
-        .admin-user-avatar {
+        .avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: var(--dark);
+            background: linear-gradient(135deg, var(--primary), #00cc6a);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-        }
-        
-        /* Sections */
-        .admin-section {
-            display: none;
-        }
-        
-        .admin-section.active {
-            display: block;
-        }
-        
-        .section-title {
-            color: var(--primary);
-            margin-bottom: 20px;
-            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--dark);
         }
         
         /* Stats Cards */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
         
         .stat-card {
-            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(255, 0, 255, 0.1));
-            border-radius: var(--radius);
-            padding: 25px;
+            background: rgba(0, 255, 136, 0.1);
             border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 10px;
+            padding: 20px;
         }
         
-        .stat-card h3 {
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
             color: var(--primary);
-            margin-bottom: 10px;
-        }
-        
-        .stat-card .number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--light);
-        }
-        
-        /* Forms */
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--primary);
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            border-radius: var(--radius);
-            color: var(--light);
-            font-size: 1rem;
-        }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-        
-        /* Buttons */
-        .btn {
-            padding: 12px 24px;
-            background: var(--primary);
-            color: var(--dark);
-            border: none;
-            border-radius: var(--radius);
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
-            box-shadow: 0 0 10px var(--primary);
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 20px var(--primary);
-        }
-        
-        .btn-danger {
-            background: var(--accent);
-            box-shadow: 0 0 10px var(--accent);
         }
         
         /* Tables */
@@ -243,7 +141,6 @@
             padding: 15px;
             text-align: left;
             color: var(--primary);
-            border-bottom: 2px solid rgba(0, 255, 136, 0.3);
         }
         
         .data-table td {
@@ -251,223 +148,150 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .data-table tr:hover {
-            background: rgba(0, 255, 136, 0.05);
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
         }
         
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 5px;
+            color: var(--light);
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
             background: var(--primary);
             color: var(--dark);
-            border-radius: var(--radius);
-            box-shadow: var(--neon-glow);
-            z-index: 1000;
-            display: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
         }
         
-        /* Responsive */
-        @media (max-width: 768px) {
-            .admin-container {
-                flex-direction: column;
-            }
-            
-            .admin-sidebar {
-                width: 100%;
-                padding: 20px;
-            }
-            
-            .admin-nav {
-                display: flex;
-                overflow-x: auto;
-                gap: 10px;
-            }
-            
-            .admin-nav li {
-                margin-bottom: 0;
-            }
-            
-            .admin-nav a {
-                padding: 10px 15px;
-                border-left: none;
-                border-bottom: 3px solid transparent;
-                white-space: nowrap;
-            }
-            
-            .admin-nav a.active {
-                border-bottom-color: var(--primary);
-                border-left: none;
-            }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-            }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--primary);
+        }
+        
+        /* Error Message */
+        .error-message {
+            text-align: center;
+            padding: 40px;
+            color: #ff6b6b;
         }
     </style>
 </head>
 <body>
-    <!-- Notification -->
-    <div class="notification" id="notification"></div>
-    
-    <!-- Admin Container -->
     <div class="admin-container">
         <!-- Sidebar -->
-        <aside class="admin-sidebar">
-            <div class="admin-logo">
-                <h2>ItemSalesBD Admin</h2>
-            </div>
-            
-            <ul class="admin-nav">
-                <li><a href="#" class="active" data-section="dashboard"><i class="fas fa-dashboard"></i> Dashboard</a></li>
-                <li><a href="#" data-section="products"><i class="fas fa-box"></i> Products</a></li>
-                <li><a href="#" data-section="orders"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-                <li><a href="#" data-section="users"><i class="fas fa-users"></i> Users</a></li>
-                <li><a href="#" data-section="settings"><i class="fas fa-cog"></i> Settings</a></li>
+        <div class="sidebar">
+            <div class="logo">ItemSalesBD Admin</div>
+            <ul class="nav-menu">
+                <li><a href="#dashboard" class="active" data-section="dashboard"><i class="fas fa-dashboard"></i> Dashboard</a></li>
+                <li><a href="#products" data-section="products"><i class="fas fa-box"></i> Products</a></li>
+                <li><a href="#orders" data-section="orders"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                <li><a href="#users" data-section="users"><i class="fas fa-users"></i> Users</a></li>
+                <li><a href="#settings" data-section="settings"><i class="fas fa-cog"></i> Settings</a></li>
                 <li><a href="index.html"><i class="fas fa-home"></i> View Site</a></li>
                 <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
-        </aside>
+        </div>
         
         <!-- Main Content -->
-        <main class="admin-main">
+        <div class="main-content">
             <!-- Header -->
-            <div class="admin-header">
-                <h1 class="admin-title" id="pageTitle">Dashboard</h1>
-                <div class="admin-user">
-                    <div class="admin-user-avatar" id="adminAvatar">A</div>
+            <div class="header">
+                <h1 id="pageTitle">Dashboard</h1>
+                <div class="user-info">
+                    <div class="avatar" id="adminAvatar">A</div>
                     <div>
-                        <div id="adminName">Admin</div>
-                        <div style="font-size: 0.9rem; opacity: 0.7;">Administrator</div>
+                        <div id="adminName">Loading...</div>
+                        <div style="font-size: 0.9rem; opacity: 0.7;" id="adminRole">Admin</div>
                     </div>
                 </div>
             </div>
             
-            <!-- Dashboard Section -->
-            <section id="dashboard" class="admin-section active">
+            <!-- Content Sections -->
+            <div id="dashboard" class="content-section">
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <h3>Total Products</h3>
-                        <div class="number" id="totalProducts">0</div>
+                        <div class="stat-number" id="totalProducts">0</div>
+                        <div>Total Products</div>
                     </div>
                     <div class="stat-card">
-                        <h3>Total Orders</h3>
-                        <div class="number" id="totalOrders">0</div>
+                        <div class="stat-number" id="totalOrders">0</div>
+                        <div>Total Orders</div>
                     </div>
                     <div class="stat-card">
-                        <h3>Total Users</h3>
-                        <div class="number" id="totalUsers">0</div>
+                        <div class="stat-number" id="totalUsers">0</div>
+                        <div>Total Users</div>
                     </div>
                     <div class="stat-card">
-                        <h3>Revenue</h3>
-                        <div class="number" id="totalRevenue">$0</div>
+                        <div class="stat-number" id="totalRevenue">$0</div>
+                        <div>Total Revenue</div>
                     </div>
                 </div>
                 
-                <h2 class="section-title">Quick Actions</h2>
-                <div style="display: flex; gap: 15px; margin-top: 20px;">
-                    <button class="btn" onclick="switchSection('products')">
-                        <i class="fas fa-plus"></i> Add Product
-                    </button>
-                    <button class="btn" onclick="switchSection('orders')">
-                        <i class="fas fa-eye"></i> View Orders
-                    </button>
-                </div>
-            </section>
+                <h2>Recent Orders</h2>
+                <div id="recentOrders" class="loading">Loading orders...</div>
+            </div>
             
-            <!-- Products Section -->
-            <section id="products" class="admin-section">
-                <h2 class="section-title">Manage Products</h2>
-                
-                <div class="form-group">
-                    <button class="btn" onclick="showAddProductForm()">
-                        <i class="fas fa-plus"></i> Add New Product
-                    </button>
-                </div>
-                
-                <div id="addProductForm" style="display: none; background: rgba(0,0,0,0.3); padding: 20px; border-radius: var(--radius); margin-bottom: 30px;">
-                    <h3 style="color: var(--primary); margin-bottom: 20px;">Add New Product</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Product Name</label>
-                            <input type="text" id="productName" class="form-control" placeholder="e.g., Netflix Premium">
-                        </div>
-                        <div class="form-group">
-                            <label>Price ($)</label>
-                            <input type="number" id="productPrice" class="form-control" placeholder="e.g., 20">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Stock Quantity</label>
-                            <input type="number" id="productStock" class="form-control" placeholder="e.g., 10">
-                        </div>
-                        <div class="form-group">
-                            <label>Category</label>
-                            <select id="productCategory" class="form-control">
-                                <option value="streaming">Streaming</option>
-                                <option value="gaming">Gaming</option>
-                                <option value="software">Software</option>
-                                <option value="accounts">Accounts</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Image URL</label>
-                        <input type="text" id="productImage" class="form-control" placeholder="https://example.com/image.jpg">
-                    </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea id="productDescription" class="form-control" rows="3" placeholder="Product description..."></textarea>
-                    </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn" onclick="addProduct()">Save Product</button>
-                        <button class="btn btn-danger" onclick="hideAddProductForm()">Cancel</button>
-                    </div>
-                </div>
-                
+            <div id="products" class="content-section" style="display: none;">
+                <h2>Manage Products</h2>
+                <button class="btn" onclick="addProduct()" style="margin-bottom: 20px;">
+                    <i class="fas fa-plus"></i> Add New Product
+                </button>
                 <table class="data-table">
                     <thead>
                         <tr>
                             <th>Name</th>
                             <th>Price</th>
                             <th>Stock</th>
-                            <th>Category</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="productsTable">
-                        <!-- Products will load here -->
+                        <tr>
+                            <td colspan="4" class="loading">Loading products...</td>
+                        </tr>
                     </tbody>
                 </table>
-            </section>
+            </div>
             
-            <!-- Orders Section -->
-            <section id="orders" class="admin-section">
-                <h2 class="section-title">Manage Orders</h2>
+            <div id="orders" class="content-section" style="display: none;">
+                <h2>Manage Orders</h2>
                 <table class="data-table">
                     <thead>
                         <tr>
                             <th>Order ID</th>
                             <th>Product</th>
                             <th>Customer</th>
-                            <th>Price</th>
+                            <th>Amount</th>
                             <th>Status</th>
                             <th>Date</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="ordersTable">
-                        <!-- Orders will load here -->
+                        <tr>
+                            <td colspan="6" class="loading">Loading orders...</td>
+                        </tr>
                     </tbody>
                 </table>
-            </section>
+            </div>
             
-            <!-- Users Section -->
-            <section id="users" class="admin-section">
-                <h2 class="section-title">Manage Users</h2>
+            <div id="users" class="content-section" style="display: none;">
+                <h2>Manage Users</h2>
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -479,489 +303,452 @@
                         </tr>
                     </thead>
                     <tbody id="usersTable">
-                        <!-- Users will load here -->
+                        <tr>
+                            <td colspan="5" class="loading">Loading users...</td>
+                        </tr>
                     </tbody>
                 </table>
-            </section>
+            </div>
             
-            <!-- Settings Section -->
-            <section id="settings" class="admin-section">
-                <h2 class="section-title">Website Settings</h2>
+            <div id="settings" class="content-section" style="display: none;">
+                <h2>Website Settings</h2>
                 <div class="form-group">
                     <label>Website Title</label>
-                    <input type="text" id="siteTitle" class="form-control" placeholder="ItemSalesBD">
+                    <input type="text" id="siteTitle" class="form-control" value="ItemSalesBD">
                 </div>
                 <div class="form-group">
                     <label>Welcome Message</label>
-                    <textarea id="siteWelcome" class="form-control" rows="3" placeholder="Welcome to our marketplace..."></textarea>
+                    <textarea id="siteDescription" class="form-control" rows="3">Your Premium Digital Marketplace</textarea>
                 </div>
                 <div class="form-group">
                     <label>Contact Email</label>
-                    <input type="email" id="contactEmail" class="form-control" placeholder="support@itemsalesbd.com">
+                    <input type="email" id="contactEmail" class="form-control" value="support@itemsalesbd.com">
                 </div>
-                <div class="form-group">
-                    <button class="btn" onclick="saveSettings()">Save Settings</button>
-                </div>
-            </section>
-        </main>
+                <button class="btn" onclick="saveSettings()">Save Settings</button>
+            </div>
+            
+            <div id="errorSection" class="error-message" style="display: none;">
+                <h2>Access Denied!</h2>
+                <p>Only administrators can access this panel.</p>
+                <p>Please login with an admin account.</p>
+                <button class="btn" onclick="window.location.href='index.html'">Go to Homepage</button>
+            </div>
+        </div>
     </div>
-    
+
     <script>
-        // Firebase Config
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDTyjzVYkwyeayKjZjfFNWHpLZJB5XOo1A",
             authDomain: "itemsalesbd.firebaseapp.com",
+            databaseURL: "https://itemsalesbd-default-rtdb.asia-south1.firebasedatabase.app",
             projectId: "itemsalesbd",
             storageBucket: "itemsalesbd.firebasestorage.app",
             messagingSenderId: "390468845332",
             appId: "1:390468845332:web:7350cfdf25f23151688c01",
             measurementId: "G-1REJXDEMSD"
         };
-        
+
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const db = firebase.firestore();
+        const database = firebase.database();
         
-        // Elements
-        const notification = document.getElementById('notification');
-        const adminName = document.getElementById('adminName');
-        const adminAvatar = document.getElementById('adminAvatar');
-        const navLinks = document.querySelectorAll('.admin-nav a[data-section]');
-        const sections = document.querySelectorAll('.admin-section');
-        const pageTitle = document.getElementById('pageTitle');
+        // Global Variables
+        let currentUser = null;
+        let isAdmin = false;
         
-        // Notification
-        function showNotification(message) {
-            notification.textContent = message;
-            notification.style.display = 'block';
-            setTimeout(() => notification.style.display = 'none', 3000);
-        }
-        
-        // Switch sections
-        function switchSection(sectionId) {
-            // Update active nav
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.dataset.section === sectionId) {
-                    link.classList.add('active');
-                }
-            });
-            
-            // Show active section
-            sections.forEach(section => {
-                section.classList.remove('active');
-                if (section.id === sectionId) {
-                    section.classList.add('active');
-                    pageTitle.textContent = document.querySelector(`[data-section="${sectionId}"]`).textContent;
-                    loadSectionData(sectionId);
-                }
-            });
-        }
-        
-        // Load section data
-        async function loadSectionData(sectionId) {
+        // Check Admin Access
+        async function checkAdminAccess(userId) {
             try {
-                switch(sectionId) {
-                    case 'dashboard':
-                        await loadDashboardStats();
-                        break;
-                    case 'products':
-                        await loadProducts();
-                        break;
-                    case 'orders':
-                        await loadOrders();
-                        break;
-                    case 'users':
-                        await loadUsers();
-                        break;
-                    case 'settings':
-                        await loadSettings();
-                        break;
+                const userRef = database.ref('users/' + userId);
+                const snapshot = await userRef.once('value');
+                
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    return userData.role === 'admin';
                 }
+                return false;
             } catch (error) {
-                console.error('Error loading section:', error);
-                showNotification('Error loading data');
+                console.error('Error checking admin access:', error);
+                return false;
             }
         }
         
-        // Load dashboard stats
-        async function loadDashboardStats() {
+        // Load Dashboard Data
+        async function loadDashboard() {
             try {
-                // Products count
-                const productsSnapshot = await db.collection('products').get();
-                document.getElementById('totalProducts').textContent = productsSnapshot.size;
+                // Load products count
+                const productsSnapshot = await database.ref('products').once('value');
+                document.getElementById('totalProducts').textContent = productsSnapshot.numChildren();
                 
-                // Orders count
-                const ordersSnapshot = await db.collection('orders').get();
-                document.getElementById('totalOrders').textContent = ordersSnapshot.size;
+                // Load orders count
+                const ordersSnapshot = await database.ref('orders').once('value');
+                document.getElementById('totalOrders').textContent = ordersSnapshot.numChildren();
                 
-                // Users count
-                const usersSnapshot = await db.collection('users').get();
-                document.getElementById('totalUsers').textContent = usersSnapshot.size;
+                // Load users count
+                const usersSnapshot = await database.ref('users').once('value');
+                document.getElementById('totalUsers').textContent = usersSnapshot.numChildren();
                 
                 // Calculate revenue
                 let revenue = 0;
-                ordersSnapshot.forEach(doc => {
-                    const order = doc.data();
-                    revenue += order.price || 0;
+                ordersSnapshot.forEach(order => {
+                    const orderData = order.val();
+                    revenue += orderData.price || 0;
                 });
                 document.getElementById('totalRevenue').textContent = '$' + revenue;
                 
+                // Load recent orders
+                const recentOrdersDiv = document.getElementById('recentOrders');
+                if (ordersSnapshot.numChildren() === 0) {
+                    recentOrdersDiv.innerHTML = '<p>No orders yet</p>';
+                } else {
+                    let html = '<table class="data-table">';
+                    html += '<tr><th>Product</th><th>Customer</th><th>Amount</th><th>Status</th></tr>';
+                    
+                    let count = 0;
+                    ordersSnapshot.forEach(order => {
+                        if (count < 5) {
+                            const orderData = order.val();
+                            html += `<tr>
+                                <td>${orderData.productName || 'Unknown'}</td>
+                                <td>${orderData.userName || 'Unknown'}</td>
+                                <td>$${orderData.price || 0}</td>
+                                <td>${orderData.status || 'pending'}</td>
+                            </tr>`;
+                            count++;
+                        }
+                    });
+                    
+                    html += '</table>';
+                    recentOrdersDiv.innerHTML = html;
+                }
             } catch (error) {
-                console.error('Error loading stats:', error);
+                console.error('Error loading dashboard:', error);
             }
         }
         
-        // Load products
+        // Load Products
         async function loadProducts() {
             try {
-                const snapshot = await db.collection('products').get();
+                const snapshot = await database.ref('products').once('value');
                 const tbody = document.getElementById('productsTable');
-                tbody.innerHTML = '';
                 
-                if (snapshot.empty) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No products found</td></tr>';
+                if (!snapshot.exists() || snapshot.numChildren() === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4">No products found</td></tr>';
                     return;
                 }
                 
-                snapshot.forEach(doc => {
-                    const product = doc.data();
-                    const row = document.createElement('tr');
-                    
-                    row.innerHTML = `
-                        <td>${product.name}</td>
-                        <td>$${product.price}</td>
-                        <td>${product.stock}</td>
-                        <td>${product.category || 'Uncategorized'}</td>
+                let html = '';
+                snapshot.forEach(product => {
+                    const productData = product.val();
+                    html += `<tr>
+                        <td>${productData.name}</td>
+                        <td>$${productData.price}</td>
+                        <td>${productData.stock}</td>
                         <td>
-                            <button class="btn" style="padding: 5px 10px; font-size: 0.9rem;" onclick="editProduct('${doc.id}')">
+                            <button class="btn" onclick="editProduct('${product.key}', ${productData.stock})" style="padding: 5px 10px; margin-right: 5px;">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.9rem;" onclick="deleteProduct('${doc.id}')">
+                            <button class="btn" style="background: #ff6b6b; padding: 5px 10px;" onclick="deleteProduct('${product.key}')">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </td>
-                    `;
-                    
-                    tbody.appendChild(row);
+                    </tr>`;
                 });
+                
+                tbody.innerHTML = html;
             } catch (error) {
                 console.error('Error loading products:', error);
-                showNotification('Error loading products');
             }
         }
         
-        // Load orders
+        // Load Orders
         async function loadOrders() {
             try {
-                const snapshot = await db.collection('orders').orderBy('createdAt', 'desc').get();
+                const snapshot = await database.ref('orders').once('value');
                 const tbody = document.getElementById('ordersTable');
-                tbody.innerHTML = '';
                 
-                if (snapshot.empty) {
-                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">No orders found</td></tr>';
+                if (!snapshot.exists() || snapshot.numChildren() === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6">No orders found</td></tr>';
                     return;
                 }
                 
-                snapshot.forEach(doc => {
-                    const order = doc.data();
-                    const date = order.createdAt ? order.createdAt.toDate().toLocaleDateString() : 'N/A';
+                let html = '';
+                snapshot.forEach(order => {
+                    const orderData = order.val();
+                    const date = orderData.createdAt ? new Date(orderData.createdAt).toLocaleDateString() : 'N/A';
                     
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${doc.id.substring(0, 8)}...</td>
-                        <td>${order.productName || 'Unknown'}</td>
-                        <td>${order.userName || 'Unknown'}</td>
-                        <td>$${order.price || 0}</td>
+                    html += `<tr>
+                        <td>${order.key.substring(0, 8)}...</td>
+                        <td>${orderData.productName || 'Unknown'}</td>
+                        <td>${orderData.userName || 'Unknown'}</td>
+                        <td>$${orderData.price || 0}</td>
                         <td>
-                            <select onchange="updateOrderStatus('${doc.id}', this.value)" style="background: rgba(0,0,0,0.5); color: white; border: 1px solid var(--primary); padding: 5px; border-radius: 5px;">
-                                <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
-                                <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>Completed</option>
-                                <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                            <select onchange="updateOrderStatus('${order.key}', this.value)" 
+                                    style="background: rgba(0,0,0,0.5); color: white; border: 1px solid var(--primary); padding: 5px; border-radius: 5px;">
+                                <option value="pending" ${orderData.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="processing" ${orderData.status === 'processing' ? 'selected' : ''}>Processing</option>
+                                <option value="completed" ${orderData.status === 'completed' ? 'selected' : ''}>Completed</option>
+                                <option value="cancelled" ${orderData.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
                             </select>
                         </td>
                         <td>${date}</td>
-                        <td>
-                            <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.9rem;" onclick="deleteOrder('${doc.id}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    `;
-                    
-                    tbody.appendChild(row);
+                    </tr>`;
                 });
+                
+                tbody.innerHTML = html;
             } catch (error) {
                 console.error('Error loading orders:', error);
             }
         }
         
-        // Load users
+        // Load Users
         async function loadUsers() {
             try {
-                const snapshot = await db.collection('users').get();
+                const snapshot = await database.ref('users').once('value');
                 const tbody = document.getElementById('usersTable');
-                tbody.innerHTML = '';
                 
-                if (snapshot.empty) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">No users found</td></tr>';
+                if (!snapshot.exists() || snapshot.numChildren() === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5">No users found</td></tr>';
                     return;
                 }
                 
-                snapshot.forEach(doc => {
-                    const user = doc.data();
-                    const date = user.createdAt ? user.createdAt.toDate().toLocaleDateString() : 'N/A';
+                let html = '';
+                snapshot.forEach(user => {
+                    const userData = user.val();
+                    const date = userData.createdAt ? new Date(userData.createdAt).toLocaleDateString() : 'N/A';
                     
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${user.email}</td>
-                        <td>${user.name || 'No Name'}</td>
+                    html += `<tr>
+                        <td>${userData.email}</td>
+                        <td>${userData.name || 'No Name'}</td>
                         <td>
-                            <select onchange="updateUserRole('${doc.id}', this.value)" style="background: rgba(0,0,0,0.5); color: white; border: 1px solid var(--primary); padding: 5px; border-radius: 5px;">
-                                <option value="customer" ${user.role === 'customer' ? 'selected' : ''}>Customer</option>
-                                <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+                            <select onchange="updateUserRole('${user.key}', this.value)" 
+                                    style="background: rgba(0,0,0,0.5); color: white; border: 1px solid var(--primary); padding: 5px; border-radius: 5px;">
+                                <option value="customer" ${userData.role === 'customer' ? 'selected' : ''}>Customer</option>
+                                <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>Admin</option>
                             </select>
                         </td>
                         <td>${date}</td>
                         <td>
-                            <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.9rem;" onclick="deleteUser('${doc.id}')">
+                            <button class="btn" style="background: #ff6b6b; padding: 5px 10px;" onclick="deleteUser('${user.key}')">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </td>
-                    `;
-                    
-                    tbody.appendChild(row);
+                    </tr>`;
                 });
+                
+                tbody.innerHTML = html;
             } catch (error) {
                 console.error('Error loading users:', error);
             }
         }
         
-        // Load settings
-        async function loadSettings() {
-            try {
-                const doc = await db.collection('settings').doc('website').get();
-                if (doc.exists) {
-                    const settings = doc.data();
-                    document.getElementById('siteTitle').value = settings.title || '';
-                    document.getElementById('siteWelcome').value = settings.welcome || '';
-                    document.getElementById('contactEmail').value = settings.contactEmail || '';
-                }
-            } catch (error) {
-                console.error('Error loading settings:', error);
-            }
-        }
-        
-        // Product functions
-        function showAddProductForm() {
-            document.getElementById('addProductForm').style.display = 'block';
-        }
-        
-        function hideAddProductForm() {
-            document.getElementById('addProductForm').style.display = 'none';
-        }
-        
-        async function addProduct() {
-            const name = document.getElementById('productName').value;
-            const price = parseFloat(document.getElementById('productPrice').value);
-            const stock = parseInt(document.getElementById('productStock').value);
-            const category = document.getElementById('productCategory').value;
-            const image = document.getElementById('productImage').value;
-            const description = document.getElementById('productDescription').value;
+        // Product Functions
+        window.addProduct = function() {
+            const name = prompt('Enter product name:');
+            if (!name) return;
             
-            if (!name || !price || !stock) {
-                showNotification('Please fill all required fields');
-                return;
-            }
+            const price = prompt('Enter price (USD):');
+            if (!price) return;
             
-            try {
-                await db.collection('products').add({
-                    name: name,
-                    price: price,
-                    stock: stock,
-                    category: category,
-                    image: image,
-                    description: description,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                // Clear form
-                document.getElementById('productName').value = '';
-                document.getElementById('productPrice').value = '';
-                document.getElementById('productStock').value = '';
-                document.getElementById('productImage').value = '';
-                document.getElementById('productDescription').value = '';
-                
-                hideAddProductForm();
-                showNotification('Product added successfully!');
+            const stock = prompt('Enter stock quantity:');
+            if (!stock) return;
+            
+            const category = prompt('Enter category (optional):');
+            const image = prompt('Enter image URL (optional):');
+            const description = prompt('Enter description (optional):');
+            
+            const productId = database.ref('products').push().key;
+            
+            database.ref('products/' + productId).set({
+                name: name,
+                price: parseFloat(price),
+                stock: parseInt(stock),
+                category: category || 'general',
+                image: image || '',
+                description: description || '',
+                createdAt: Date.now()
+            })
+            .then(() => {
+                alert('Product added successfully!');
                 loadProducts();
-                loadDashboardStats();
-            } catch (error) {
-                showNotification('Error adding product: ' + error.message);
-            }
-        }
+                loadDashboard();
+            })
+            .catch(error => {
+                alert('Error adding product: ' + error.message);
+            });
+        };
         
-        async function editProduct(productId) {
-            const newPrice = prompt('Enter new price:');
-            if (!newPrice) return;
-            
-            const newStock = prompt('Enter new stock quantity:');
+        window.editProduct = function(productId, currentStock) {
+            const newStock = prompt('Enter new stock quantity:', currentStock);
             if (!newStock) return;
             
-            try {
-                await db.collection('products').doc(productId).update({
-                    price: parseFloat(newPrice),
-                    stock: parseInt(newStock),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                showNotification('Product updated!');
+            database.ref('products/' + productId).update({
+                stock: parseInt(newStock),
+                updatedAt: Date.now()
+            })
+            .then(() => {
+                alert('Product updated!');
                 loadProducts();
-            } catch (error) {
-                showNotification('Error updating product');
-            }
-        }
+            })
+            .catch(error => {
+                alert('Error updating product');
+            });
+        };
         
-        async function deleteProduct(productId) {
+        window.deleteProduct = function(productId) {
             if (!confirm('Are you sure you want to delete this product?')) return;
             
-            try {
-                await db.collection('products').doc(productId).delete();
-                showNotification('Product deleted!');
-                loadProducts();
-                loadDashboardStats();
-            } catch (error) {
-                showNotification('Error deleting product');
-            }
-        }
-        
-        // Order functions
-        async function updateOrderStatus(orderId, status) {
-            try {
-                await db.collection('orders').doc(orderId).update({
-                    status: status,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            database.ref('products/' + productId).remove()
+                .then(() => {
+                    alert('Product deleted!');
+                    loadProducts();
+                    loadDashboard();
+                })
+                .catch(error => {
+                    alert('Error deleting product');
                 });
-                showNotification('Order status updated!');
-            } catch (error) {
-                showNotification('Error updating order');
-            }
-        }
+        };
         
-        async function deleteOrder(orderId) {
-            if (!confirm('Delete this order?')) return;
-            
-            try {
-                await db.collection('orders').doc(orderId).delete();
-                showNotification('Order deleted!');
+        // Order Functions
+        window.updateOrderStatus = function(orderId, status) {
+            database.ref('orders/' + orderId).update({
+                status: status,
+                updatedAt: Date.now()
+            })
+            .then(() => {
+                console.log('Order status updated!');
                 loadOrders();
-                loadDashboardStats();
-            } catch (error) {
-                showNotification('Error deleting order');
-            }
-        }
+            })
+            .catch(error => {
+                alert('Error updating order');
+            });
+        };
         
-        // User functions
-        async function updateUserRole(userId, role) {
-            try {
-                await db.collection('users').doc(userId).update({
-                    role: role,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                showNotification('User role updated!');
-            } catch (error) {
-                showNotification('Error updating user');
-            }
-        }
+        // User Functions
+        window.updateUserRole = function(userId, role) {
+            database.ref('users/' + userId).update({
+                role: role,
+                updatedAt: Date.now()
+            })
+            .then(() => {
+                console.log('User role updated!');
+                loadUsers();
+            })
+            .catch(error => {
+                alert('Error updating user');
+            });
+        };
         
-        async function deleteUser(userId) {
+        window.deleteUser = function(userId) {
             if (!confirm('Delete this user?')) return;
             
-            try {
-                await db.collection('users').doc(userId).delete();
-                showNotification('User deleted!');
-                loadUsers();
-                loadDashboardStats();
-            } catch (error) {
-                showNotification('Error deleting user');
-            }
-        }
+            database.ref('users/' + userId).remove()
+                .then(() => {
+                    alert('User deleted!');
+                    loadUsers();
+                    loadDashboard();
+                })
+                .catch(error => {
+                    alert('Error deleting user');
+                });
+        };
         
-        // Settings functions
-        async function saveSettings() {
+        // Settings Functions
+        window.saveSettings = function() {
             const settings = {
                 title: document.getElementById('siteTitle').value,
-                welcome: document.getElementById('siteWelcome').value,
+                description: document.getElementById('siteDescription').value,
                 contactEmail: document.getElementById('contactEmail').value,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                updatedAt: Date.now()
             };
             
-            try {
-                await db.collection('settings').doc('website').set(settings, { merge: true });
-                showNotification('Settings saved!');
-            } catch (error) {
-                showNotification('Error saving settings');
-            }
-        }
+            database.ref('settings').set(settings)
+                .then(() => {
+                    alert('Settings saved!');
+                })
+                .catch(error => {
+                    alert('Error saving settings');
+                });
+        };
         
-        // Navigation click handlers
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
+        // Navigation
+        document.querySelectorAll('.nav-menu a[data-section]').forEach(link => {
+            link.addEventListener('click', function(e) {
                 e.preventDefault();
-                const sectionId = link.dataset.section;
-                switchSection(sectionId);
+                
+                // Update active link
+                document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show selected section
+                const sectionId = this.getAttribute('data-section');
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                document.getElementById(sectionId).style.display = 'block';
+                document.getElementById('pageTitle').textContent = this.textContent.trim();
+                
+                // Load section data
+                if (sectionId === 'dashboard') loadDashboard();
+                else if (sectionId === 'products') loadProducts();
+                else if (sectionId === 'orders') loadOrders();
+                else if (sectionId === 'users') loadUsers();
             });
         });
         
         // Logout
-        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            try {
-                await auth.signOut();
-                window.location.href = 'index.html';
-            } catch (error) {
-                showNotification('Logout error');
-            }
+            auth.signOut()
+                .then(() => {
+                    window.location.href = 'index.html';
+                })
+                .catch(error => {
+                    console.error('Logout error:', error);
+                });
         });
         
-        // Auth state listener
+        // Auth State Listener
         auth.onAuthStateChanged(async (user) => {
             if (!user) {
-                // Not logged in, redirect to main site
+                // Not logged in
                 window.location.href = 'index.html';
                 return;
             }
             
-            try {
-                const userDoc = await db.collection('users').doc(user.uid).get();
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    
-                    // Check if user is admin
-                    if (userData.role !== 'admin') {
-                        showNotification('Access denied. Admins only.');
-                        setTimeout(() => {
-                            window.location.href = 'index.html';
-                        }, 2000);
-                        return;
-                    }
-                    
-                    // Update admin info
-                    adminName.textContent = userData.name || user.email;
-                    adminAvatar.textContent = (userData.name || user.email).charAt(0).toUpperCase();
-                    
-                    // Load initial data
-                    loadDashboardStats();
-                    loadProducts();
-                    loadOrders();
-                    loadUsers();
-                    loadSettings();
-                }
-            } catch (error) {
-                console.error('Auth error:', error);
-                showNotification('Authentication error');
+            currentUser = user;
+            
+            // Check if user is admin
+            isAdmin = await checkAdminAccess(user.uid);
+            
+            if (!isAdmin) {
+                // Show error message
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                document.getElementById('errorSection').style.display = 'block';
+                return;
             }
+            
+            // User is admin, show admin panel
+            document.getElementById('adminName').textContent = user.email;
+            document.getElementById('adminAvatar').textContent = user.email.charAt(0).toUpperCase();
+            
+            // Load initial data
+            loadDashboard();
         });
+        
+        // Initialize
+        window.onload = function() {
+            // Check if user is logged in
+            const user = auth.currentUser;
+            if (!user) {
+                window.location.href = 'index.html';
+            }
+        };
     </script>
 </body>
 </html>
