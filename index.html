@@ -1,236 +1,1506 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Gift Box</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle at top, #ffe6f7, #ffc0cb, #ff9aa2);
-      font-family: Arial, sans-serif;
-    }
-
-    .wrapper { text-align: center; perspective: 1000px; }
-
-    h1 {
-      color: #ffffff;
-      margin-bottom: 10px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.25);
-    }
-
-    form { margin-bottom: 15px; }
-
-    input[type="text"] {
-      padding: 8px 10px;
-      border-radius: 6px;
-      border: none;
-      outline: none;
-      margin-right: 5px;
-      min-width: 180px;
-    }
-
-    button {
-      padding: 8px 14px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      background: #ff4b72;
-      color: #fff;
-      font-weight: bold;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
-    }
-
-    .hidden { display: none; }
-
-    .gift-text {
-      color: #ffffff;
-      margin-bottom: 10px;
-      font-size: 15px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.25);
-    }
-
-    .gift-box {
-      position: relative;
-      width: 200px;
-      height: 200px;
-      margin: 0 auto;
-      cursor: pointer;
-      transform-style: preserve-3d;
-      transition: transform 0.4s ease;
-    }
-
-    .gift-box:hover { transform: translateY(-5px) scale(1.02); }
-
-    .box {
-      position: absolute;
-      width: 100%;
-      height: 75%;
-      bottom: 0;
-      background: linear-gradient(135deg, #ff5678, #ff2450);
-      border-radius: 8px;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
-    }
-
-    .lid {
-      position: absolute;
-      width: 110%;
-      height: 40%;
-      top: 0;
-      left: -5%;
-      background: linear-gradient(135deg, #ff7fa0, #ff3f6a);
-      border-radius: 8px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
-      transform-origin: bottom center;
-      transition: transform 0.5s ease, top 0.5s ease;
-      z-index: 3;
-    }
-
-    .ribbon-vertical {
-      position: absolute;
-      width: 25%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.85);
-      left: 37.5%; top: 0;
-      z-index: 2;
-    }
-
-    .ribbon-horizontal {
-      position: absolute;
-      height: 35%;
-      width: 100%;
-      top: 32.5%;
-      background: rgba(255, 255, 255, 0.9);
-    }
-
-    .bow {
-      position: absolute;
-      top: 5px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 40px;
-      z-index: 4;
-    }
-
-    .bow::before,
-    .bow::after {
-      content: "";
-      position: absolute;
-      width: 30px;
-      height: 30px;
-      border-radius: 50% 50% 0 50%;
-      border: 4px solid #ffffff;
-      border-right: none;
-      border-bottom: none;
-    }
-
-    .bow::before { left: 0; transform: rotate(-20deg); }
-    .bow::after { right: 0; transform: scaleX(-1) rotate(-20deg); }
-
-    .sparkles span {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #ffffff;
-      opacity: 0;
-      animation: sparkle 1s linear infinite;
-    }
-
-    @keyframes sparkle {
-      0% { transform: translateY(0); opacity: 0; }
-      20% { opacity: 1; }
-      100% { transform: translateY(-30px); opacity: 0; }
-    }
-
-    .gift-box.open .lid {
-      transform: rotateX(-110deg);
-      top: -80px;
-    }
-
-    .hint { margin-top: 15px; color: #ffffff; }
-
-    #media-section img {
-      width: 320px;
-      max-width: 100%;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-    }
-
-    #gift-audio { margin-top: 15px; width: 320px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homesalesbd | আপনার ঘরের সবচেয়ে ভালো জিনিস</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --border: #cbd5e1;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #ffffff;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        
+        .bn {
+            font-family: 'Noto Sans Bengali', sans-serif;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition);
+            border: none;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-success {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #0da271;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-large {
+            padding: 16px 32px;
+            font-size: 1.1rem;
+        }
+        
+        /* Header */
+        header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            background-color: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .logo-text span {
+            color: var(--primary);
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
+            font-size: 0.95rem;
+        }
+        
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+        
+        .cart-icon {
+            position: relative;
+            font-size: 1.3rem;
+            color: var(--dark);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .cart-icon:hover {
+            color: var(--primary);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        /* Navigation */
+        .main-nav {
+            background-color: var(--light);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 8px 0;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+        
+        .nav-promo {
+            background-color: var(--accent);
+            color: #7c2d12;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        /* Hero Banner */
+        .hero {
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+            padding: 60px 0;
+            margin-bottom: 40px;
+        }
+        
+        .hero-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+        
+        .hero-content {
+            flex: 1;
+        }
+        
+        .hero-title {
+            font-size: 2.8rem;
+            color: var(--dark);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+        
+        .hero-image {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .hero-img {
+            max-width: 100%;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* Categories */
+        .categories {
+            padding: 40px 0;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--dark);
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .category-card {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+        
+        .category-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .category-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        /* Products */
+        .products {
+            padding: 40px 0;
+            background-color: var(--light);
+        }
+        
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: var(--accent);
+            color: #7c2d12;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+            height: 60px;
+            overflow: hidden;
+        }
+        
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .product-old-price {
+            font-size: 1rem;
+            color: var(--gray);
+            text-decoration: line-through;
+            margin-bottom: 15px;
+        }
+        
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+        
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .product-stock {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .stock-high {
+            color: var(--secondary);
+        }
+        
+        .stock-low {
+            color: var(--accent);
+        }
+        
+        .stock-out {
+            color: var(--danger);
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .product-actions .btn {
+            flex: 1;
+        }
+        
+        /* Featured Products */
+        .featured {
+            padding: 60px 0;
+        }
+        
+        /* Cart Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-body {
+            padding: 25px;
+        }
+        
+        .cart-items {
+            margin-bottom: 30px;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+            gap: 20px;
+        }
+        
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: var(--radius);
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .cart-item-price {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--gray-light);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        .cart-summary {
+            background-color: var(--light);
+            padding: 20px;
+            border-radius: var(--radius);
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .summary-total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            border-top: 2px solid var(--border);
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 60px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #495057;
+            color: #adb5bd;
+            font-size: 0.9rem;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #495057;
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .social-icons a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .contact-info div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #adb5bd;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .hero-content {
+                text-align: center;
+            }
+            
+            .hero-subtitle {
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .search-bar {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .categories-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="wrapper">
-
-    <div id="name-section">
-      <h1>Enter your name</h1>
-      <form id="name-form">
-        <input type="text" id="name-input" placeholder="Your name..." required />
-        <button type="submit">Submit</button>
-      </form>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="logo-text">
+                    Home<span>sales</span>bd
+                </div>
+            </a>
+            
+            <div class="header-actions">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="পণ্য খুঁজুন..." class="bn">
+                </div>
+                
+                <div class="cart-icon" id="cartIcon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <div class="cart-count" id="cartCount">3</div>
+                </div>
+                
+                <div class="user-menu" id="userMenu">
+                    <div class="user-avatar">
+                        <span class="bn">রা</span>
+                    </div>
+                    <div>
+                        <div class="bn" style="font-weight: 500;">রাহুল আহমেদ</div>
+                        <div style="font-size: 0.85rem; color: var(--gray);" class="bn">গ্রাহক</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <ul class="nav-links">
+                <li><a href="#" class="active bn">হোম</a></li>
+                <li><a href="#" class="bn">সব পণ্য</a></li>
+                <li><a href="#" class="bn">ফার্নিচার</a></li>
+                <li><a href="#" class="bn">ইলেকট্রনিক্স</a></li>
+                <li><a href="#" class="bn">গৃহস্থালি যন্ত্রপাতি</a></li>
+                <li><a href="#" class="bn">অফার</a></li>
+                <li><a href="#" class="bn">আমাদের সম্পর্কে</a></li>
+            </ul>
+            
+            <div class="nav-promo bn">
+                <i class="fas fa-bolt"></i> আজকের ডিল দেখুন
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Banner -->
+    <section class="hero">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title bn">আপনার স্বপ্নের ঘর গড়ুন আমাদের পণ্য দিয়ে</h1>
+                <p class="hero-subtitle bn">বাংলাদেশের সেরা হোম ও লাইফস্টাইল পণ্যের অনলাইন মার্কেটপ্লেস। আসবাবপত্র থেকে শুরু করে ইলেকট্রনিক্স যন্ত্রপাতি - সবকিছু এক জায়গায়।</p>
+                <a href="#products" class="btn btn-primary btn-large bn">
+                    <i class="fas fa-shopping-bag"></i> এখনই কিনুন
+                </a>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1615529328331-f8917597711f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Modern Home Interior" class="hero-img">
+            </div>
+        </div>
+    </section>
+    
+    <!-- Categories -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="section-title bn">ক্যাটেগরি ব্রাউজ করুন</h2>
+            <div class="categories-grid">
+                <div class="category-card" onclick="filterCategory('all')">
+                    <div class="category-icon">
+                        <i class="fas fa-th-large"></i>
+                    </div>
+                    <div class="category-name bn">সব পণ্য</div>
+                </div>
+                
+                <div class="category-card" onclick="filterCategory('furniture')">
+                    <div class="category-icon">
+                        <i class="fas fa-couch"></i>
+                    </div>
+                    <div class="category-name bn">ফার্নিচার</div>
+                </div>
+                
+                <div class="category-card" onclick="filterCategory('electronics')">
+                    <div class="category-icon">
+                        <i class="fas fa-tv"></i>
+                    </div>
+                    <div class="category-name bn">ইলেকট্রনিক্স</div>
+                </div>
+                
+                <div class="category-card" onclick="filterCategory('appliances')">
+                    <div class="category-icon">
+                        <i class="fas fa-blender"></i>
+                    </div>
+                    <div class="category-name bn">গৃহস্থালি যন্ত্র</div>
+                </div>
+                
+                <div class="category-card" onclick="filterCategory('decor')">
+                    <div class="category-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <div class="category-name bn">ঘর সাজানোর সামগ্রী</div>
+                </div>
+                
+                <div class="category-card" onclick="filterCategory('lighting')">
+                    <div class="category-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="category-name bn">লাইটিং</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Products -->
+    <section class="products" id="products">
+        <div class="container">
+            <div class="products-header">
+                <h2 class="section-title bn">সবচেয়ে জনপ্রিয় পণ্য</h2>
+                <div>
+                    <select class="form-control" style="padding: 10px 15px; border-radius: var(--radius); border: 1px solid var(--border);">
+                        <option class="bn" value="popular">সবচেয়ে জনপ্রিয়</option>
+                        <option class="bn" value="new">নতুন পণ্য</option>
+                        <option class="bn" value="low-high">দাম: কম থেকে বেশি</option>
+                        <option class="bn" value="high-low">দাম: বেশি থেকে কম</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="products-grid" id="productsGrid">
+                <!-- Product cards will be dynamically added here -->
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="#" class="btn btn-outline btn-large bn">
+                    <i class="fas fa-eye"></i> সব পণ্য দেখুন
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Featured Products -->
+    <section class="featured">
+        <div class="container">
+            <h2 class="section-title bn" style="text-align: center;">আজকের বিশেষ অফার</h2>
+            <p class="bn" style="text-align: center; color: var(--gray); margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">সীমিত সময়ের জন্য বিশেষ ডিসকাউন্টে পাচ্ছেন সেরা কিছু পণ্য</p>
+            
+            <div class="products-grid" id="featuredProducts">
+                <!-- Featured products will be dynamically added here -->
+            </div>
+        </div>
+    </section>
+    
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title bn">আপনার কার্ট</h3>
+                <button class="modal-close" id="closeCartBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="cart-items" id="cartItems">
+                    <!-- Cart items will be dynamically added here -->
+                </div>
+                
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span class="bn">সাবটোটাল</span>
+                        <span class="bn" id="subtotal">৳ ১,২৫,৬৪৯</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="bn">ডেলিভারি চার্জ</span>
+                        <span class="bn">৳ ২০০</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="bn">ডিসকাউন্ট</span>
+                        <span class="bn" style="color: var(--secondary);">- ৳ ৫,০০০</span>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span class="bn">মোট</span>
+                        <span class="bn" id="totalAmount">৳ ১,২০,৮৪৯</span>
+                    </div>
+                    
+                    <div style="margin-top: 25px;">
+                        <button class="btn btn-primary btn-large" style="width: 100%;" onclick="checkout()">
+                            <span class="bn">চেকআউট করুন</span>
+                        </button>
+                        <button class="btn btn-outline" style="width: 100%; margin-top: 15px;" onclick="closeCart()">
+                            <span class="bn">কার্টে থাকা পণ্য যোগ করুন</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div id="gift-section" class="hidden">
-      <p id="gift-message" class="gift-text"></p>
-
-      <div class="gift-box" id="giftBox">
-        <div class="lid"><div class="ribbon-horizontal"></div></div>
-        <div class="box"><div class="ribbon-vertical"></div></div>
-        <div class="bow"></div>
-        <div class="sparkles"><span></span><span></span><span></span><span></span><span></span></div>
-      </div>
-
-      <div class="hint">Click the gift box to open 🎀</div>
-    </div>
-
-    <div id="media-section" class="hidden">
-      <img id="gift-image" src="jk.jpg" alt="Gift Image" />
-      <audio id="gift-audio" controls autoplay>
-        <source src="ai.mp3" type="audio/mpeg" />
-      </audio>
-    </div>
-
-  </div>
-
-  <script>
-    const nameForm = document.getElementById("name-form");
-    const nameInput = document.getElementById("name-input");
-    const nameSection = document.getElementById("name-section");
-    const giftSection = document.getElementById("gift-section");
-    const giftMessage = document.getElementById("gift-message");
-    const giftBox = document.getElementById("giftBox");
-    const mediaSection = document.getElementById("media-section");
-    const giftAudio = document.getElementById("gift-audio");
-
-    nameForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-      const name = nameInput.value.trim() || "My Love";
-      giftMessage.textContent = `{ ${name}, this gift is for you. Open the box }`;
-      nameSection.classList.add("hidden");
-      giftSection.classList.remove("hidden");
-    });
-
-    let opened = false;
-
-    giftBox.addEventListener("click", () => {
-      if (opened) return;
-      opened = true;
-
-      giftBox.classList.add("open");
-
-      setTimeout(() => {
-        giftSection.classList.add("hidden");
-        mediaSection.classList.remove("hidden");
-        giftAudio.play().catch(() => {});
-      }, 400);
-    });
-  </script>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3 class="bn">Homesalesbd</h3>
+                    <p class="bn" style="color: #adb5bd; margin-bottom: 20px;">বাংলাদেশের সেরা হোম ও লাইফস্টাইল পণ্যের অনলাইন মার্কেটপ্লেস। আসবাবপত্র থেকে শুরু করে ইলেকট্রনিক্স যন্ত্রপাতি - সবকিছু এক জায়গায়।</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3 class="bn">দ্রুত লিংক</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" class="bn">হোম</a></li>
+                        <li><a href="#" class="bn">সব পণ্য</a></li>
+                        <li><a href="#" class="bn">আজকের অফার</a></li>
+                        <li><a href="#" class="bn">নতুন পণ্য</a></li>
+                        <li><a href="#" class="bn">ব্র্যান্ডসমূহ</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3 class="bn">গ্রাহক সহায়তা</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" class="bn">আমার অর্ডার</a></li>
+                        <li><a href="#" class="bn">ট্র্যাক অর্ডার</a></li>
+                        <li><a href="#" class="bn">রিটার্ন পলিসি</a></li>
+                        <li><a href="#" class="bn">প্রাইভেসি পলিসি</a></li>
+                        <li><a href="#" class="bn">সাহায্য কেন্দ্র</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3 class="bn">যোগাযোগ করুন</h3>
+                    <div class="contact-info">
+                        <div>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span class="bn">ধানমন্ডি, ঢাকা - ১২০৯</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-phone"></i>
+                            <span class="bn">০৯৬৩৮-১১১-২২২</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-envelope"></i>
+                            <span>support@homesalesbd.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p class="bn">&copy; ২০২৩ Homesalesbd. সকল অধিকার সংরক্ষিত।</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Product data
+        const products = [
+            {
+                id: 1,
+                name: "স্মার্ট LED টিভি ৪৫ ইঞ্চি",
+                price: "৫৫,৯৯৯",
+                oldPrice: "৬৫,৯৯৯",
+                stock: 15,
+                image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                category: "electronics",
+                rating: 4.5,
+                featured: true
+            },
+            {
+                id: 2,
+                name: "কমফোর্টার সোফা সেট",
+                price: "৩৪,৫০০",
+                oldPrice: "৪০,০০০",
+                stock: 8,
+                image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                category: "furniture",
+                rating: 4.2,
+                featured: true
+            },
+            {
+                id: 3,
+                name: "ব্লেন্ডার ও জুসার মেশিন",
+                price: "৪,২০০",
+                oldPrice: "৫,৫০০",
+                stock: 22,
+                image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                category: "appliances",
+                rating: 4.7,
+                featured: false
+            },
+            {
+                id: 4,
+                name: "ডাইনিং টেবিল সেট",
+                price: "২৮,৭৫০",
+                oldPrice: "৩২,০০০",
+                stock: 5,
+                image: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                category: "furniture",
+                rating: 4.3,
+                featured: true
+            },
+            {
+                id: 5,
+                name: "এয়ার কন্ডিশনার ১.৫ টন",
+                price: "৬৮,৯০০",
+                oldPrice: "৭৫,০০০",
+                stock: 3,
+                image: "https://images.unsplash.com/photo-1562157873-818bc0726f68?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                category: "appliances",
+                rating: 4.6,
+                featured: false
+            },
+            {
+                id: 6,
+                name: "ডিজাইনার ওয়াল ক্লক",
+                price: "২,৪৫০",
+                oldPrice: "৩,২০০",
+                stock: 0,
+                image: "https://images.unsplash.com/photo-1514327605112-b887c0e61c0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                category: "decor",
+                rating: 4.1,
+                featured: false
+            },
+            {
+                id: 7,
+                name: "স্মার্ট ফ্রিজ ৩৫০ লিটার",
+                price: "৮৯,৯৯৯",
+                oldPrice: "৯৯,৯৯৯",
+                stock: 12,
+                image: "https://images.unsplash.com/photo-1571175443880-49e1d1b7c1e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                category: "appliances",
+                rating: 4.8,
+                featured: true
+            },
+            {
+                id: 8,
+                name: "স্টাডি টেবিল ও চেয়ার সেট",
+                price: "১২,৫০০",
+                oldPrice: "১৫,০০০",
+                stock: 18,
+                image: "https://images.unsplash.com/photo-1518458028785-8fbcd101ebb9?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                category: "furniture",
+                rating: 4.4,
+                featured: false
+            }
+        ];
+        
+        // Cart data
+        const cartItems = [
+            {
+                id: 1,
+                name: "স্মার্ট LED টিভি ৪৫ ইঞ্চি",
+                price: 55999,
+                quantity: 1,
+                image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 4,
+                name: "ডাইনিং টেবিল সেট",
+                price: 28750,
+                quantity: 1,
+                image: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            },
+            {
+                id: 3,
+                name: "ব্লেন্ডার ও জুসার মেশিন",
+                price: 4200,
+                quantity: 2,
+                image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+            }
+        ];
+        
+        // DOM Elements
+        const productsGrid = document.getElementById('productsGrid');
+        const featuredProducts = document.getElementById('featuredProducts');
+        const cartIcon = document.getElementById('cartIcon');
+        const cartModal = document.getElementById('cartModal');
+        const closeCartBtn = document.getElementById('closeCartBtn');
+        const cartItemsContainer = document.getElementById('cartItems');
+        const cartCount = document.getElementById('cartCount');
+        const userMenu = document.getElementById('userMenu');
+        
+        // Render products
+        function renderProducts(filterCategory = 'all') {
+            productsGrid.innerHTML = '';
+            
+            let filteredProducts = products;
+            if (filterCategory !== 'all') {
+                filteredProducts = products.filter(product => product.category === filterCategory);
+            }
+            
+            filteredProducts.forEach(product => {
+                const stockClass = product.stock === 0 ? 'stock-out' : 
+                                 product.stock <= 5 ? 'stock-low' : 'stock-high';
+                
+                const stockText = product.stock === 0 ? 'স্টক আউট' : 
+                                `স্টক: ${product.stock}`;
+                
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    ${product.oldPrice ? '<div class="product-badge bn">১৫% ছাড়</div>' : ''}
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name bn">${product.name}</h3>
+                        
+                        <div class="product-rating">
+                            ${getStarRating(product.rating)}
+                            <span style="color: var(--gray); font-size: 0.9rem;">(${product.rating})</span>
+                        </div>
+                        
+                        <div class="product-price bn">৳ ${product.price}</div>
+                        ${product.oldPrice ? `<div class="product-old-price bn">৳ ${product.oldPrice}</div>` : ''}
+                        
+                        <div class="product-meta">
+                            <div class="bn">${getCategoryName(product.category)}</div>
+                            <div class="product-stock ${stockClass} bn">
+                                <i class="fas fa-box"></i> ${stockText}
+                            </div>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn btn-primary btn-small bn" onclick="viewProduct(${product.id})">
+                                <i class="fas fa-eye"></i> বিস্তারিত
+                            </button>
+                            <button class="btn btn-success btn-small bn" onclick="addToCart(${product.id})" ${product.stock === 0 ? 'disabled style="opacity: 0.6;"' : ''}>
+                                <i class="fas fa-cart-plus"></i> কার্টে যুক্ত
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                productsGrid.appendChild(productCard);
+            });
+        }
+        
+        // Render featured products
+        function renderFeaturedProducts() {
+            featuredProducts.innerHTML = '';
+            
+            const featured = products.filter(product => product.featured);
+            
+            featured.forEach(product => {
+                const stockClass = product.stock === 0 ? 'stock-out' : 
+                                 product.stock <= 5 ? 'stock-low' : 'stock-high';
+                
+                const stockText = product.stock === 0 ? 'স্টক আউট' : 
+                                `স্টক: ${product.stock}`;
+                
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <div class="product-badge bn" style="background-color: var(--danger);">বিশেষ অফার</div>
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name bn">${product.name}</h3>
+                        
+                        <div class="product-rating">
+                            ${getStarRating(product.rating)}
+                            <span style="color: var(--gray); font-size: 0.9rem;">(${product.rating})</span>
+                        </div>
+                        
+                        <div class="product-price bn">৳ ${product.price}</div>
+                        <div class="product-old-price bn">৳ ${product.oldPrice}</div>
+                        
+                        <div class="product-meta">
+                            <div class="bn">${getCategoryName(product.category)}</div>
+                            <div class="product-stock ${stockClass} bn">
+                                <i class="fas fa-box"></i> ${stockText}
+                            </div>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn btn-primary btn-small bn" onclick="viewProduct(${product.id})">
+                                <i class="fas fa-eye"></i> বিস্তারিত
+                            </button>
+                            <button class="btn btn-success btn-small bn" onclick="addToCart(${product.id})" ${product.stock === 0 ? 'disabled style="opacity: 0.6;"' : ''}>
+                                <i class="fas fa-cart-plus"></i> কিনুন
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                featuredProducts.appendChild(productCard);
+            });
+        }
+        
+        // Render cart items
+        function renderCart() {
+            cartItemsContainer.innerHTML = '';
+            
+            if (cartItems.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div style="text-align: center; padding: 40px 0;">
+                        <i class="fas fa-shopping-cart" style="font-size: 3rem; color: var(--gray-light); margin-bottom: 20px;"></i>
+                        <p class="bn">আপনার কার্ট খালি</p>
+                    </div>
+                `;
+                cartCount.textContent = '0';
+                return;
+            }
+            
+            let subtotal = 0;
+            
+            cartItems.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <div class="cart-item-name bn">${item.name}</div>
+                        <div class="cart-item-price bn">৳ ${item.price.toLocaleString('bn-BD')}</div>
+                        <div class="cart-item-quantity">
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="bn">${item.quantity} টি</span>
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="cart-item-remove" onclick="removeFromCart(${item.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                
+                cartItemsContainer.appendChild(cartItem);
+            });
+            
+            // Update cart count
+            const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
+            // Update subtotal and total
+            document.getElementById('subtotal').textContent = `৳ ${subtotal.toLocaleString('bn-BD')}`;
+            
+            const delivery = 200;
+            const discount = 5000;
+            const total = subtotal + delivery - discount;
+            
+            document.getElementById('totalAmount').textContent = `৳ ${total.toLocaleString('bn-BD')}`;
+        }
+        
+        // Helper functions
+        function getCategoryName(category) {
+            const categories = {
+                'electronics': 'ইলেকট্রনিক্স',
+                'furniture': 'ফার্নিচার',
+                'kitchen': 'রান্নাঘর',
+                'decor': 'ঘর সাজানোর সামগ্রী',
+                'appliances': 'গৃহস্থালি যন্ত্রপাতি',
+                'lighting': 'লাইটিং'
+            };
+            
+            return categories[category] || category;
+        }
+        
+        function getStarRating(rating) {
+            let stars = '';
+            const fullStars = Math.floor(rating);
+            const halfStar = rating % 1 >= 0.5;
+            
+            for (let i = 1; i <= 5; i++) {
+                if (i <= fullStars) {
+                    stars += '<i class="fas fa-star"></i>';
+                } else if (i === fullStars + 1 && halfStar) {
+                    stars += '<i class="fas fa-star-half-alt"></i>';
+                } else {
+                    stars += '<i class="far fa-star"></i>';
+                }
+            }
+            
+            return stars;
+        }
+        
+        // Product actions
+        function filterCategory(category) {
+            renderProducts(category);
+        }
+        
+        function viewProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                alert(`পণ্য বিস্তারিত:\n\nনাম: ${product.name}\nদাম: ৳ ${product.price}\nস্টক: ${product.stock} টি\nরেটিং: ${product.rating}/5`);
+            }
+        }
+        
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            
+            if (!product) {
+                alert('পণ্যটি খুঁজে পাওয়া যায়নি!');
+                return;
+            }
+            
+            if (product.stock === 0) {
+                alert('দুঃখিত, এই পণ্যটি স্টক আউট!');
+                return;
+            }
+            
+            // Check if product already in cart
+            const existingItem = cartItems.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cartItems.push({
+                    id: product.id,
+                    name: product.name,
+                    price: parseInt(product.price.replace(/,/g, '')),
+                    quantity: 1,
+                    image: product.image
+                });
+            }
+            
+            // Update cart UI
+            renderCart();
+            
+            // Show success message
+            alert(`${product.name} কার্টে যোগ করা হয়েছে!`);
+        }
+        
+        function updateQuantity(id, change) {
+            const item = cartItems.find(item => item.id === id);
+            
+            if (!item) return;
+            
+            item.quantity += change;
+            
+            if (item.quantity <= 0) {
+                removeFromCart(id);
+            } else {
+                renderCart();
+            }
+        }
+        
+        function removeFromCart(id) {
+            const index = cartItems.findIndex(item => item.id === id);
+            
+            if (index !== -1) {
+                const itemName = cartItems[index].name;
+                cartItems.splice(index, 1);
+                renderCart();
+                alert(`${itemName} কার্ট থেকে সরানো হয়েছে!`);
+            }
+        }
+        
+        // Cart modal functions
+        function openCart() {
+            cartModal.classList.add('active');
+            renderCart();
+        }
+        
+        function closeCart() {
+            cartModal.classList.remove('active');
+        }
+        
+        function checkout() {
+            alert('চেকআউট পেজে রিডাইরেক্ট করা হচ্ছে...\n\nমোট অর্ডার: ' + cartItems.length + 'টি পণ্য\nমোট মূল্য: ৳ ১,২০,৮৪৯');
+            closeCart();
+        }
+        
+        // User menu
+        function openUserMenu() {
+            alert('গ্রাহক প্রোফাইল:\n\nনাম: রাহুল আহমেদ\nইমেইল: rahul@example.com\nফোন: ০১৭১২৩৪৫৬৭৮\n\nআপনার অর্ডার দেখতে অর্ডার হিস্ট্রি পেজে যান।');
+        }
+        
+        // Event Listeners
+        cartIcon.addEventListener('click', openCart);
+        closeCartBtn.addEventListener('click', closeCart);
+        userMenu.addEventListener('click', openUserMenu);
+        
+        // Close modal when clicking outside
+        cartModal.addEventListener('click', (e) => {
+            if (e.target === cartModal) {
+                closeCart();
+            }
+        });
+        
+        // Initial render
+        renderProducts();
+        renderFeaturedProducts();
+        renderCart();
+    </script>
 </body>
 </html>
-
