@@ -77,6 +77,7 @@
             text-decoration: none;
             transition: all 0.3s;
             border-left: 4px solid transparent;
+            cursor: pointer;
         }
         
         .nav-menu a:hover {
@@ -133,6 +134,12 @@
         /* Sections */
         .content-section {
             display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         .content-section.active {
@@ -255,43 +262,39 @@
             margin-bottom: 20px;
         }
         
-        /* Responsive */
-        @media (max-width: 768px) {
-            .admin-container {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                padding: 20px;
-            }
-            
-            .nav-menu {
-                display: flex;
-                overflow-x: auto;
-                gap: 10px;
-            }
-            
-            .nav-menu li {
-                margin-bottom: 0;
-            }
-            
-            .nav-menu a {
-                padding: 10px 15px;
-                border-left: none;
-                border-bottom: 3px solid transparent;
-                white-space: nowrap;
-            }
-            
-            .nav-menu a.active {
-                border-bottom-color: var(--primary);
-                border-left: none;
-            }
+        /* Auth Check */
+        .auth-check {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-check.active {
+            display: flex;
         }
     </style>
 </head>
 <body>
-    <div class="admin-container">
+    <!-- Auth Check Overlay -->
+    <div class="auth-check active" id="authCheck">
+        <div style="text-align: center;">
+            <div style="font-size: 2rem; color: var(--primary); margin-bottom: 20px;">
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
+            <h2>Checking Authentication...</h2>
+            <p>Please wait while we verify your admin access</p>
+        </div>
+    </div>
+    
+    <!-- Main Admin Panel -->
+    <div class="admin-container" id="adminPanel" style="display: none;">
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="logo">
@@ -299,13 +302,13 @@
             </div>
             
             <ul class="nav-menu">
-                <li><a href="#" class="active" onclick="showSection('dashboard', this)"><i class="fas fa-dashboard"></i> Dashboard</a></li>
-                <li><a href="#" onclick="showSection('products', this)"><i class="fas fa-box"></i> Products</a></li>
-                <li><a href="#" onclick="showSection('orders', this)"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-                <li><a href="#" onclick="showSection('users', this)"><i class="fas fa-users"></i> Users</a></li>
-                <li><a href="#" onclick="showSection('settings', this)"><i class="fas fa-cog"></i> Settings</a></li>
-                <li><a href="index.html"><i class="fas fa-home"></i> View Site</a></li>
-                <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li><a class="active" data-section="dashboard"><i class="fas fa-dashboard"></i> Dashboard</a></li>
+                <li><a data-section="products"><i class="fas fa-box"></i> Products</a></li>
+                <li><a data-section="orders"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                <li><a data-section="users"><i class="fas fa-users"></i> Users</a></li>
+                <li><a data-section="settings"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="index.html" onclick="return confirm('Go to homepage?')"><i class="fas fa-home"></i> View Site</a></li>
+                <li><a id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </div>
         
@@ -346,21 +349,6 @@
                 
                 <h2 style="margin: 30px 0 15px; color: var(--primary);">Recent Orders</h2>
                 <div id="recentOrders" class="loading">Loading orders...</div>
-                
-                <div style="margin-top: 40px;">
-                    <h2 style="color: var(--primary); margin-bottom: 15px;">Quick Actions</h2>
-                    <div style="display: flex; gap: 15px;">
-                        <button class="btn" onclick="showSection('products')">
-                            <i class="fas fa-plus"></i> Add Product
-                        </button>
-                        <button class="btn" onclick="showSection('orders')">
-                            <i class="fas fa-eye"></i> View Orders
-                        </button>
-                        <button class="btn" onclick="showSection('settings')">
-                            <i class="fas fa-cog"></i> Settings
-                        </button>
-                    </div>
-                </div>
             </div>
             
             <!-- Products Section -->
@@ -470,11 +458,10 @@
             
             <!-- Error Section -->
             <div id="errorSection" class="error-section" style="display: none;">
-                <h2>Access Denied!</h2>
-                <p>Only administrators can access this panel.</p>
-                <p>Please login with an admin account.</p>
+                <h2>Session Expired!</h2>
+                <p>Your session has expired. Please login again.</p>
                 <button class="btn" onclick="window.location.href='index.html'" style="margin-top: 20px;">
-                    Go to Homepage
+                    Go to Login
                 </button>
             </div>
         </div>
@@ -501,29 +488,44 @@
         // Global Variables
         let currentUser = null;
         let isAdmin = false;
+        let authChecked = false;
         
-        // Navigation Functions - FIXED
-        function showSection(sectionId, linkElement = null) {
-            // Prevent default behavior
-            if (linkElement) {
-                linkElement.preventDefault && linkElement.preventDefault();
+        // Show/Hide Loading
+        function showLoading(show) {
+            document.getElementById('authCheck').style.display = show ? 'flex' : 'none';
+            document.getElementById('adminPanel').style.display = show ? 'none' : 'block';
+        }
+        
+        // Check Admin Access
+        async function checkAdminAccess(userId) {
+            try {
+                console.log('Checking admin access for:', userId);
+                const userRef = database.ref('users/' + userId);
+                const snapshot = await userRef.once('value');
+                
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    console.log('User data:', userData);
+                    return userData.role === 'admin';
+                }
+                console.log('User not found in database');
+                return false;
+            } catch (error) {
+                console.error('Error checking admin access:', error);
+                return false;
             }
-            
+        }
+        
+        // Navigation Function
+        function showSection(sectionId) {
             // Update active navigation
             const navLinks = document.querySelectorAll('.nav-menu a');
             navLinks.forEach(link => {
                 link.classList.remove('active');
-            });
-            
-            if (linkElement) {
-                linkElement.classList.add('active');
-            } else {
-                // Find and activate the corresponding nav link
-                const targetLink = document.querySelector(`.nav-menu a[onclick*="${sectionId}"]`);
-                if (targetLink) {
-                    targetLink.classList.add('active');
+                if (link.getAttribute('data-section') === sectionId) {
+                    link.classList.add('active');
                 }
-            }
+            });
             
             // Hide all sections
             const sections = document.querySelectorAll('.content-section');
@@ -538,11 +540,14 @@
                 
                 // Update page title
                 const pageTitle = document.getElementById('pageTitle');
-                if (sectionId === 'dashboard') pageTitle.textContent = 'Dashboard';
-                else if (sectionId === 'products') pageTitle.textContent = 'Products';
-                else if (sectionId === 'orders') pageTitle.textContent = 'Orders';
-                else if (sectionId === 'users') pageTitle.textContent = 'Users';
-                else if (sectionId === 'settings') pageTitle.textContent = 'Settings';
+                const titles = {
+                    'dashboard': 'Dashboard',
+                    'products': 'Products',
+                    'orders': 'Orders',
+                    'users': 'Users',
+                    'settings': 'Settings'
+                };
+                pageTitle.textContent = titles[sectionId] || sectionId;
                 
                 // Load section data
                 loadSectionData(sectionId);
@@ -552,56 +557,34 @@
         // Load section data
         async function loadSectionData(sectionId) {
             try {
-                switch(sectionId) {
-                    case 'dashboard':
-                        await loadDashboard();
-                        break;
-                    case 'products':
-                        await loadProducts();
-                        break;
-                    case 'orders':
-                        await loadOrders();
-                        break;
-                    case 'users':
-                        await loadUsers();
-                        break;
-                    case 'settings':
-                        await loadSettings();
-                        break;
+                if (sectionId === 'dashboard') {
+                    await loadDashboard();
+                } else if (sectionId === 'products') {
+                    await loadProducts();
+                } else if (sectionId === 'orders') {
+                    await loadOrders();
+                } else if (sectionId === 'users') {
+                    await loadUsers();
+                } else if (sectionId === 'settings') {
+                    await loadSettings();
                 }
             } catch (error) {
                 console.error('Error loading section data:', error);
             }
         }
         
-        // Check if user is admin
-        async function checkAdminAccess(userId) {
-            try {
-                const userRef = database.ref('users/' + userId);
-                const snapshot = await userRef.once('value');
-                
-                if (snapshot.exists()) {
-                    const userData = snapshot.val();
-                    return userData.role === 'admin';
-                }
-                return false;
-            } catch (error) {
-                console.error('Error checking admin access:', error);
-                return false;
-            }
-        }
-        
         // Load dashboard data
         async function loadDashboard() {
             try {
-                // Load counts
-                const productsSnapshot = await database.ref('products').once('value');
+                const [productsSnapshot, ordersSnapshot, usersSnapshot] = await Promise.all([
+                    database.ref('products').once('value'),
+                    database.ref('orders').once('value'),
+                    database.ref('users').once('value')
+                ]);
+                
+                // Update counts
                 document.getElementById('totalProducts').textContent = productsSnapshot.numChildren();
-                
-                const ordersSnapshot = await database.ref('orders').once('value');
                 document.getElementById('totalOrders').textContent = ordersSnapshot.numChildren();
-                
-                const usersSnapshot = await database.ref('users').once('value');
                 document.getElementById('totalUsers').textContent = usersSnapshot.numChildren();
                 
                 // Calculate revenue
@@ -620,22 +603,26 @@
                     let html = '<table class="data-table">';
                     html += '<tr><th>Product</th><th>Customer</th><th>Amount</th><th>Status</th></tr>';
                     
-                    let count = 0;
+                    let ordersArray = [];
                     ordersSnapshot.forEach(order => {
-                        if (count < 5) {
-                            const orderData = order.val();
-                            html += `<tr>
-                                <td>${orderData.productName || 'Unknown'}</td>
-                                <td>${orderData.userName || 'Unknown'}</td>
-                                <td>$${orderData.price || 0}</td>
-                                <td><span style="padding: 4px 8px; border-radius: 4px; background: ${
-                                    orderData.status === 'completed' ? 'rgba(0,255,136,0.2)' :
-                                    orderData.status === 'pending' ? 'rgba(255,107,107,0.2)' :
-                                    'rgba(255,255,255,0.1)'
-                                };">${orderData.status || 'pending'}</span></td>
-                            </tr>`;
-                            count++;
-                        }
+                        ordersArray.push({ key: order.key, ...order.val() });
+                    });
+                    
+                    // Sort by date (newest first)
+                    ordersArray.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                    
+                    // Show only 5 most recent
+                    ordersArray.slice(0, 5).forEach(order => {
+                        html += `<tr>
+                            <td>${order.productName || 'Unknown'}</td>
+                            <td>${order.userName || 'Unknown'}</td>
+                            <td>$${order.price || 0}</td>
+                            <td><span style="padding: 4px 8px; border-radius: 4px; background: ${
+                                order.status === 'completed' ? 'rgba(0,255,136,0.2)' :
+                                order.status === 'pending' ? 'rgba(255,107,107,0.2)' :
+                                'rgba(255,255,255,0.1)'
+                            };">${order.status || 'pending'}</span></td>
+                        </tr>`;
                     });
                     
                     html += '</table>';
@@ -785,16 +772,16 @@
             }
         }
         
-        // Add product function
+        // Add product
         async function addProduct() {
             const name = prompt('Enter product name:');
             if (!name) return;
             
             const price = prompt('Enter price (USD):');
-            if (!price) return;
+            if (!price || isNaN(price)) return;
             
             const stock = prompt('Enter stock quantity:');
-            if (!stock) return;
+            if (!stock || isNaN(stock)) return;
             
             const category = prompt('Enter category (optional):', 'general');
             const image = prompt('Enter image URL (optional):');
@@ -823,7 +810,7 @@
         // Edit product
         async function editProduct(productId) {
             const newStock = prompt('Enter new stock quantity:');
-            if (!newStock) return;
+            if (!newStock || isNaN(newStock)) return;
             
             try {
                 await database.ref('products/' + productId).update({
@@ -859,7 +846,6 @@
                     status: status,
                     updatedAt: Date.now()
                 });
-                console.log('Order status updated');
             } catch (error) {
                 alert('Error updating order');
             }
@@ -886,7 +872,6 @@
                     role: role,
                     updatedAt: Date.now()
                 });
-                console.log('User role updated');
             } catch (error) {
                 alert('Error updating user');
             }
@@ -924,36 +909,43 @@
             }
         }
         
-        // Logout
-        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
-            e.preventDefault();
-            try {
-                await auth.signOut();
-                window.location.href = 'index.html';
-            } catch (error) {
-                console.error('Logout error:', error);
-            }
-        });
-        
-        // Auth state listener
-        auth.onAuthStateChanged(async (user) => {
-            if (!user) {
-                // Not logged in
-                window.location.href = 'index.html';
-                return;
-            }
+        // Setup navigation
+        function setupNavigation() {
+            // Navigation click handlers
+            document.querySelectorAll('.nav-menu a[data-section]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('data-section');
+                    showSection(sectionId);
+                });
+            });
             
+            // Logout handler
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to logout?')) {
+                    auth.signOut()
+                        .then(() => {
+                            window.location.href = 'index.html';
+                        })
+                        .catch(error => {
+                            console.error('Logout error:', error);
+                        });
+                }
+            });
+        }
+        
+        // Initialize admin panel
+        async function initializeAdminPanel(user) {
             currentUser = user;
             
             // Check if user is admin
             isAdmin = await checkAdminAccess(user.uid);
             
             if (!isAdmin) {
-                // Show error message
-                document.querySelectorAll('.content-section').forEach(section => {
-                    section.style.display = 'none';
-                });
+                showLoading(false);
                 document.getElementById('errorSection').style.display = 'block';
+                document.getElementById('adminPanel').style.display = 'none';
                 return;
             }
             
@@ -961,24 +953,40 @@
             document.getElementById('adminName').textContent = user.email;
             document.getElementById('adminAvatar').textContent = user.email.charAt(0).toUpperCase();
             
+            // Setup navigation
+            setupNavigation();
+            
+            // Hide loading, show admin panel
+            showLoading(false);
+            
             // Load initial data
             loadDashboard();
+        }
+        
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check current auth state
+            const unsubscribe = auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    console.log('User logged in:', user.email);
+                    await initializeAdminPanel(user);
+                } else {
+                    console.log('No user logged in');
+                    showLoading(false);
+                    window.location.href = 'index.html';
+                }
+                unsubscribe(); // Unsubscribe after first check
+            });
         });
         
-        // Prevent navigation with hash URLs
-        window.addEventListener('hashchange', function(e) {
-            e.preventDefault();
-            return false;
-        });
-        
-        // Initial load
-        window.onload = function() {
-            // Check if user is logged in
-            const user = auth.currentUser;
-            if (!user) {
-                window.location.href = 'index.html';
+        // Handle auth state changes (for session management)
+        auth.onAuthStateChanged(async (user) => {
+            if (!user && currentUser) {
+                // User logged out
+                document.getElementById('errorSection').style.display = 'block';
+                document.getElementById('adminPanel').style.display = 'none';
             }
-        };
+        });
     </script>
 </body>
 </html>
