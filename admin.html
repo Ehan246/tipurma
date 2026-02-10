@@ -466,527 +466,149 @@
             </div>
         </div>
     </div>
+<script>
+/* ===============================
+   Firebase Init
+================================ */
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const database = firebase.database();
 
-    <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDTyjzVYkwyeayKjZjfFNWHpLZJB5XOo1A",
-            authDomain: "itemsalesbd.firebaseapp.com",
-            databaseURL: "https://itemsalesbd-default-rtdb.asia-south1.firebasedatabase.app",
-            projectId: "itemsalesbd",
-            storageBucket: "itemsalesbd.firebasestorage.app",
-            messagingSenderId: "390468845332",
-            appId: "1:390468845332:web:7350cfdf25f23151688c01",
-            measurementId: "G-1REJXDEMSD"
+let currentUser = null;
+
+/* ===============================
+   Loading Overlay
+================================ */
+function showLoading(show) {
+    const overlay = document.getElementById('authCheck');
+    const panel = document.getElementById('adminPanel');
+
+    if (show) {
+        overlay.classList.add('active');
+        panel.style.display = 'none';
+    } else {
+        overlay.classList.remove('active');
+        panel.style.display = 'flex';
+    }
+}
+
+/* ===============================
+   SAFE Admin Check
+================================ */
+async function checkAdminAccess(uid) {
+    try {
+        const ref = database.ref('users/' + uid);
+
+        const snap = await new Promise((resolve, reject) => {
+            ref.once(
+                'value',
+                resolve,
+                error => reject(error)
+            );
+        });
+
+        if (!snap.exists()) {
+            console.error('❌ USER NODE NOT FOUND');
+            return false;
+        }
+
+        const data = snap.val();
+        console.log('✅ USER DATA:', data);
+
+        return data.role === 'admin';
+
+    } catch (err) {
+        console.error('🔥 ADMIN CHECK FAILED:', err);
+        alert('Firebase permission error.\nCheck Realtime Database Rules.');
+        return false;
+    }
+}
+
+/* ===============================
+   Navigation
+================================ */
+function setupNavigation() {
+    document.querySelectorAll('.nav-menu a[data-section]').forEach(link => {
+        link.onclick = e => {
+            e.preventDefault();
+            showSection(link.dataset.section);
         };
+    });
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const database = firebase.database();
-        
-        // Global Variables
-        let currentUser = null;
-        let isAdmin = false;
-        let authChecked = false;
-        
-        // Show/Hide Loading
-        function showLoading(show) {
-            document.getElementById('authCheck').style.display = show ? 'flex' : 'none';
-            document.getElementById('adminPanel').style.display = show ? 'none' : 'block';
-        }
-        
-        // Check Admin Access
-        async function checkAdminAccess(userId) {
-            try {
-                console.log('Checking admin access for:', userId);
-                const userRef = database.ref('users/' + userId);
-                const snapshot = await userRef.once('value');
-                
-                if (snapshot.exists()) {
-                    const userData = snapshot.val();
-                    console.log('User data:', userData);
-                    return userData.role === 'admin';
-                }
-                console.log('User not found in database');
-                return false;
-            } catch (error) {
-                console.error('Error checking admin access:', error);
-                return false;
-            }
-        }
-        
-        // Navigation Function
-        function showSection(sectionId) {
-            // Update active navigation
-            const navLinks = document.querySelectorAll('.nav-menu a');
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('data-section') === sectionId) {
-                    link.classList.add('active');
-                }
-            });
-            
-            // Hide all sections
-            const sections = document.querySelectorAll('.content-section');
-            sections.forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            // Show target section
-            const targetSection = document.getElementById(sectionId);
-            if (targetSection) {
-                targetSection.classList.add('active');
-                
-                // Update page title
-                const pageTitle = document.getElementById('pageTitle');
-                const titles = {
-                    'dashboard': 'Dashboard',
-                    'products': 'Products',
-                    'orders': 'Orders',
-                    'users': 'Users',
-                    'settings': 'Settings'
-                };
-                pageTitle.textContent = titles[sectionId] || sectionId;
-                
-                // Load section data
-                loadSectionData(sectionId);
-            }
-        }
-        
-        // Load section data
-        async function loadSectionData(sectionId) {
-            try {
-                if (sectionId === 'dashboard') {
-                    await loadDashboard();
-                } else if (sectionId === 'products') {
-                    await loadProducts();
-                } else if (sectionId === 'orders') {
-                    await loadOrders();
-                } else if (sectionId === 'users') {
-                    await loadUsers();
-                } else if (sectionId === 'settings') {
-                    await loadSettings();
-                }
-            } catch (error) {
-                console.error('Error loading section data:', error);
-            }
-        }
-        
-        // Load dashboard data
-        async function loadDashboard() {
-            try {
-                const [productsSnapshot, ordersSnapshot, usersSnapshot] = await Promise.all([
-                    database.ref('products').once('value'),
-                    database.ref('orders').once('value'),
-                    database.ref('users').once('value')
-                ]);
-                
-                // Update counts
-                document.getElementById('totalProducts').textContent = productsSnapshot.numChildren();
-                document.getElementById('totalOrders').textContent = ordersSnapshot.numChildren();
-                document.getElementById('totalUsers').textContent = usersSnapshot.numChildren();
-                
-                // Calculate revenue
-                let revenue = 0;
-                ordersSnapshot.forEach(order => {
-                    const orderData = order.val();
-                    revenue += orderData.price || 0;
-                });
-                document.getElementById('totalRevenue').textContent = '$' + revenue;
-                
-                // Load recent orders
-                const recentOrdersDiv = document.getElementById('recentOrders');
-                if (ordersSnapshot.numChildren() === 0) {
-                    recentOrdersDiv.innerHTML = '<p style="color: var(--gray);">No orders yet</p>';
-                } else {
-                    let html = '<table class="data-table">';
-                    html += '<tr><th>Product</th><th>Customer</th><th>Amount</th><th>Status</th></tr>';
-                    
-                    let ordersArray = [];
-                    ordersSnapshot.forEach(order => {
-                        ordersArray.push({ key: order.key, ...order.val() });
-                    });
-                    
-                    // Sort by date (newest first)
-                    ordersArray.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-                    
-                    // Show only 5 most recent
-                    ordersArray.slice(0, 5).forEach(order => {
-                        html += `<tr>
-                            <td>${order.productName || 'Unknown'}</td>
-                            <td>${order.userName || 'Unknown'}</td>
-                            <td>$${order.price || 0}</td>
-                            <td><span style="padding: 4px 8px; border-radius: 4px; background: ${
-                                order.status === 'completed' ? 'rgba(0,255,136,0.2)' :
-                                order.status === 'pending' ? 'rgba(255,107,107,0.2)' :
-                                'rgba(255,255,255,0.1)'
-                            };">${order.status || 'pending'}</span></td>
-                        </tr>`;
-                    });
-                    
-                    html += '</table>';
-                    recentOrdersDiv.innerHTML = html;
-                }
-            } catch (error) {
-                console.error('Error loading dashboard:', error);
-            }
-        }
-        
-        // Load products
-        async function loadProducts() {
-            try {
-                const snapshot = await database.ref('products').once('value');
-                const tbody = document.getElementById('productsTable');
-                
-                if (!snapshot.exists()) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: var(--gray);">No products found</td></tr>';
-                    return;
-                }
-                
-                let html = '';
-                snapshot.forEach(product => {
-                    const productData = product.val();
-                    html += `<tr>
-                        <td>${productData.name}</td>
-                        <td>$${productData.price}</td>
-                        <td>${productData.stock}</td>
-                        <td>${productData.category || 'General'}</td>
-                        <td>
-                            <button class="btn btn-small" onclick="editProduct('${product.key}')" style="margin-right: 5px;">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-small btn-danger" onclick="deleteProduct('${product.key}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>`;
-                });
-                
-                tbody.innerHTML = html;
-            } catch (error) {
-                console.error('Error loading products:', error);
-            }
-        }
-        
-        // Load orders
-        async function loadOrders() {
-            try {
-                const snapshot = await database.ref('orders').once('value');
-                const tbody = document.getElementById('ordersTable');
-                
-                if (!snapshot.exists()) {
-                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--gray);">No orders found</td></tr>';
-                    return;
-                }
-                
-                let html = '';
-                snapshot.forEach(order => {
-                    const orderData = order.val();
-                    const date = orderData.createdAt ? new Date(orderData.createdAt).toLocaleDateString() : 'N/A';
-                    
-                    html += `<tr>
-                        <td>${order.key.substring(0, 8)}...</td>
-                        <td>${orderData.productName || 'Unknown'}</td>
-                        <td>${orderData.userName || 'Unknown'}</td>
-                        <td>$${orderData.price || 0}</td>
-                        <td>
-                            <select onchange="updateOrderStatus('${order.key}', this.value)" 
-                                    style="background: rgba(0,0,0,0.5); color: white; border: 1px solid var(--primary); padding: 5px; border-radius: 5px;">
-                                <option value="pending" ${orderData.status === 'pending' ? 'selected' : ''}>Pending</option>
-                                <option value="processing" ${orderData.status === 'processing' ? 'selected' : ''}>Processing</option>
-                                <option value="completed" ${orderData.status === 'completed' ? 'selected' : ''}>Completed</option>
-                                <option value="cancelled" ${orderData.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
-                            </select>
-                        </td>
-                        <td>${date}</td>
-                        <td>
-                            <button class="btn btn-small btn-danger" onclick="deleteOrder('${order.key}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>`;
-                });
-                
-                tbody.innerHTML = html;
-            } catch (error) {
-                console.error('Error loading orders:', error);
-            }
-        }
-        
-        // Load users
-        async function loadUsers() {
-            try {
-                const snapshot = await database.ref('users').once('value');
-                const tbody = document.getElementById('usersTable');
-                
-                if (!snapshot.exists()) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: var(--gray);">No users found</td></tr>';
-                    return;
-                }
-                
-                let html = '';
-                snapshot.forEach(user => {
-                    const userData = user.val();
-                    const date = userData.createdAt ? new Date(userData.createdAt).toLocaleDateString() : 'N/A';
-                    
-                    html += `<tr>
-                        <td>${userData.email}</td>
-                        <td>${userData.name || 'No Name'}</td>
-                        <td>
-                            <select onchange="updateUserRole('${user.key}', this.value)" 
-                                    style="background: rgba(0,0,0,0.5); color: white; border: 1px solid var(--primary); padding: 5px; border-radius: 5px;">
-                                <option value="customer" ${userData.role === 'customer' ? 'selected' : ''}>Customer</option>
-                                <option value="admin" ${userData.role === 'admin' ? 'selected' : ''}>Admin</option>
-                            </select>
-                        </td>
-                        <td>${date}</td>
-                        <td>
-                            <button class="btn btn-small btn-danger" onclick="deleteUser('${user.key}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>`;
-                });
-                
-                tbody.innerHTML = html;
-            } catch (error) {
-                console.error('Error loading users:', error);
-            }
-        }
-        
-        // Load settings
-        async function loadSettings() {
-            try {
-                const snapshot = await database.ref('settings').once('value');
-                if (snapshot.exists()) {
-                    const settings = snapshot.val();
-                    document.getElementById('siteTitle').value = settings.title || 'ItemSalesBD';
-                    document.getElementById('siteDescription').value = settings.description || 'Your Premium Digital Marketplace';
-                    document.getElementById('contactEmail').value = settings.contactEmail || 'support@itemsalesbd.com';
-                    document.getElementById('contactPhone').value = settings.contactPhone || '+8801712345678';
-                    document.getElementById('heroImage').value = settings.heroImage || '';
-                }
-            } catch (error) {
-                console.error('Error loading settings:', error);
-            }
-        }
-        
-        // Add product
-        async function addProduct() {
-            const name = prompt('Enter product name:');
-            if (!name) return;
-            
-            const price = prompt('Enter price (USD):');
-            if (!price || isNaN(price)) return;
-            
-            const stock = prompt('Enter stock quantity:');
-            if (!stock || isNaN(stock)) return;
-            
-            const category = prompt('Enter category (optional):', 'general');
-            const image = prompt('Enter image URL (optional):');
-            const description = prompt('Enter description (optional):');
-            
-            try {
-                const productRef = database.ref('products').push();
-                await productRef.set({
-                    name: name,
-                    price: parseFloat(price),
-                    stock: parseInt(stock),
-                    category: category || 'general',
-                    image: image || '',
-                    description: description || '',
-                    createdAt: Date.now()
-                });
-                
-                alert('Product added successfully!');
-                loadProducts();
-                loadDashboard();
-            } catch (error) {
-                alert('Error adding product: ' + error.message);
-            }
-        }
-        
-        // Edit product
-        async function editProduct(productId) {
-            const newStock = prompt('Enter new stock quantity:');
-            if (!newStock || isNaN(newStock)) return;
-            
-            try {
-                await database.ref('products/' + productId).update({
-                    stock: parseInt(newStock),
-                    updatedAt: Date.now()
-                });
-                
-                alert('Product updated!');
-                loadProducts();
-            } catch (error) {
-                alert('Error updating product');
-            }
-        }
-        
-        // Delete product
-        async function deleteProduct(productId) {
-            if (!confirm('Are you sure you want to delete this product?')) return;
-            
-            try {
-                await database.ref('products/' + productId).remove();
-                alert('Product deleted!');
-                loadProducts();
-                loadDashboard();
-            } catch (error) {
-                alert('Error deleting product');
-            }
-        }
-        
-        // Update order status
-        async function updateOrderStatus(orderId, status) {
-            try {
-                await database.ref('orders/' + orderId).update({
-                    status: status,
-                    updatedAt: Date.now()
-                });
-            } catch (error) {
-                alert('Error updating order');
-            }
-        }
-        
-        // Delete order
-        async function deleteOrder(orderId) {
-            if (!confirm('Delete this order?')) return;
-            
-            try {
-                await database.ref('orders/' + orderId).remove();
-                alert('Order deleted!');
-                loadOrders();
-                loadDashboard();
-            } catch (error) {
-                alert('Error deleting order');
-            }
-        }
-        
-        // Update user role
-        async function updateUserRole(userId, role) {
-            try {
-                await database.ref('users/' + userId).update({
-                    role: role,
-                    updatedAt: Date.now()
-                });
-            } catch (error) {
-                alert('Error updating user');
-            }
-        }
-        
-        // Delete user
-        async function deleteUser(userId) {
-            if (!confirm('Delete this user?')) return;
-            
-            try {
-                await database.ref('users/' + userId).remove();
-                alert('User deleted!');
-                loadUsers();
-                loadDashboard();
-            } catch (error) {
-                alert('Error deleting user');
-            }
-        }
-        
-        // Save settings
-        async function saveSettings() {
-            try {
-                await database.ref('settings').set({
-                    title: document.getElementById('siteTitle').value,
-                    description: document.getElementById('siteDescription').value,
-                    contactEmail: document.getElementById('contactEmail').value,
-                    contactPhone: document.getElementById('contactPhone').value,
-                    heroImage: document.getElementById('heroImage').value,
-                    updatedAt: Date.now()
-                });
-                
-                alert('Settings saved successfully!');
-            } catch (error) {
-                alert('Error saving settings: ' + error.message);
-            }
-        }
-        
-        // Setup navigation
-        function setupNavigation() {
-            // Navigation click handlers
-            document.querySelectorAll('.nav-menu a[data-section]').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const sectionId = this.getAttribute('data-section');
-                    showSection(sectionId);
-                });
-            });
-            
-            // Logout handler
-            document.getElementById('logoutBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                if (confirm('Are you sure you want to logout?')) {
-                    auth.signOut()
-                        .then(() => {
-                            window.location.href = 'index.html';
-                        })
-                        .catch(error => {
-                            console.error('Logout error:', error);
-                        });
-                }
+    document.getElementById('logoutBtn').onclick = () => {
+        if (confirm('Are you sure you want to logout?')) {
+            auth.signOut().then(() => {
+                location.href = 'index.html';
             });
         }
-        
-        // Initialize admin panel
-        async function initializeAdminPanel(user) {
-            currentUser = user;
-            
-            // Check if user is admin
-            isAdmin = await checkAdminAccess(user.uid);
-            
-            if (!isAdmin) {
-                showLoading(false);
-                document.getElementById('errorSection').style.display = 'block';
-                document.getElementById('adminPanel').style.display = 'none';
-                return;
-            }
-            
-            // User is admin
-            document.getElementById('adminName').textContent = user.email;
-            document.getElementById('adminAvatar').textContent = user.email.charAt(0).toUpperCase();
-            
-            // Setup navigation
-            setupNavigation();
-            
-            // Hide loading, show admin panel
+    };
+}
+
+/* ===============================
+   Auth Bootstrap (ONE TIME)
+================================ */
+document.addEventListener('DOMContentLoaded', () => {
+    auth.onAuthStateChanged(async user => {
+        if (!user) {
+            location.href = 'index.html';
+            return;
+        }
+
+        showLoading(true);
+
+        const isAdmin = await checkAdminAccess(user.uid);
+
+        if (!isAdmin) {
             showLoading(false);
-            
-            // Load initial data
-            loadDashboard();
+            document.getElementById('errorSection').style.display = 'block';
+            return;
         }
-        
-        // Check authentication on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check current auth state
-            const unsubscribe = auth.onAuthStateChanged(async (user) => {
-                if (user) {
-                    console.log('User logged in:', user.email);
-                    await initializeAdminPanel(user);
-                } else {
-                    console.log('No user logged in');
-                    showLoading(false);
-                    window.location.href = 'index.html';
-                }
-                unsubscribe(); // Unsubscribe after first check
-            });
+
+        // ✅ Admin verified
+        currentUser = user;
+        document.getElementById('adminName').textContent = user.email;
+        document.getElementById('adminAvatar').textContent =
+            user.email.charAt(0).toUpperCase();
+
+        setupNavigation();
+        showLoading(false);
+        loadDashboard();
+    });
+});
+
+/* ===============================
+   Dashboard Fix (Revenue NaN safe)
+================================ */
+async function loadDashboard() {
+    try {
+        const [productsSnap, ordersSnap, usersSnap] = await Promise.all([
+            database.ref('products').once('value'),
+            database.ref('orders').once('value'),
+            database.ref('users').once('value')
+        ]);
+
+        document.getElementById('totalProducts').textContent =
+            productsSnap.exists() ? productsSnap.numChildren() : 0;
+
+        document.getElementById('totalOrders').textContent =
+            ordersSnap.exists() ? ordersSnap.numChildren() : 0;
+
+        document.getElementById('totalUsers').textContent =
+            usersSnap.exists() ? usersSnap.numChildren() : 0;
+
+        let revenue = 0;
+        ordersSnap.forEach(o => {
+            revenue += Number(o.val().price) || 0;
         });
-        
-        // Handle auth state changes (for session management)
-        auth.onAuthStateChanged(async (user) => {
-            if (!user && currentUser) {
-                // User logged out
-                document.getElementById('errorSection').style.display = 'block';
-                document.getElementById('adminPanel').style.display = 'none';
-            }
-        });
-    </script>
+
+        document.getElementById('totalRevenue').textContent = '$' + revenue;
+
+    } catch (err) {
+        console.error('Dashboard load error:', err);
+    }
+}
+</script>
+
+   
 </body>
 </html>
