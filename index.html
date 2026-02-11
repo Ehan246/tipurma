@@ -1,43 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>ItemSalesBD | Shop</title>
+<title>ItemSalesBD</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Firebase v8 -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
 <style>
-body {
+body{
     background:#0a0a0a;
     color:#00ff88;
-    font-family:Arial, sans-serif;
-    padding:20px;
+    font-family:Arial;
+    padding:30px;
 }
-.product {
-    border:1px solid #00ff88;
-    padding:15px;
-    margin:15px 0;
-}
-button {
-    background:#00ff88;
-    border:none;
-    padding:8px 15px;
-    cursor:pointer;
+input,button{
+    padding:8px;
+    margin:6px 0;
 }
 </style>
 </head>
-
 <body>
 
-<h1>ItemSalesBD</h1>
-<div id="products">Loading products...</div>
+<h1>ItemSalesBD Login System</h1>
 
-<script>
-/* Firebase Config */
+<input id="email" placeholder="Email"><br>
+<input id="password" type="password" placeholder="Password"><br>
+
+<button id="signupBtn">Signup</button>
+<button id="loginBtn">Login</button>
+<button id="logoutBtn">Logout</button>
+
+<h3 id="status"></h3>
+
+<script type="module">
+
+// Firebase imports
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } 
+from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getDatabase, ref, set } 
+from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDTyjzVYkwyeayKjZjfFNWHpLZJB5XOo1A",
   authDomain: "itemsalesbd.firebaseapp.com",
@@ -45,56 +48,66 @@ const firebaseConfig = {
   projectId: "itemsalesbd",
   storageBucket: "itemsalesbd.firebasestorage.app",
   messagingSenderId: "390468845332",
-  appId: "1:390468845332:web:7350cfdf25f23151688c01"
+  appId: "1:390468845332:web:7350cfdf25f23151688c01",
+  measurementId: "G-1REJXDEMSD"
 };
-firebase.initializeApp(firebaseConfig);
 
-const auth = firebase.auth();
-const db = firebase.database();
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
 
-/* Auto anonymous login */
-auth.signInAnonymously();
+// Elements
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+const statusText = document.getElementById("status");
 
-/* Load products */
-function loadProducts() {
-    const box = document.getElementById('products');
-    db.ref('products').once('value').then(snap => {
-        if (!snap.exists()) {
-            box.innerHTML = 'No products';
-            return;
-        }
-        let html = '';
-        snap.forEach(p => {
-            const d = p.val();
-            html += `
-            <div class="product">
-                <h3>${d.name}</h3>
-                <p>Price: $${d.price}</p>
-                <button onclick="buy('${p.key}')">Buy</button>
-            </div>`;
-        });
-        box.innerHTML = html;
-    });
-}
+// Signup
+document.getElementById("signupBtn").onclick = async () => {
+    try {
+        const userCred = await createUserWithEmailAndPassword(
+            auth,
+            email.value,
+            password.value
+        );
 
-/* Buy */
-function buy(id) {
-    const user = auth.currentUser;
-    db.ref('products/' + id).once('value').then(snap => {
-        const p = snap.val();
-        db.ref('orders').push({
-            productId: id,
-            productName: p.name,
-            price: p.price,
-            userId: user.uid,
-            status: 'pending',
+        // Save user role as customer
+        await set(ref(db, 'users/' + userCred.user.uid), {
+            email: email.value,
+            role: "customer",
             createdAt: Date.now()
         });
-        alert('Order placed');
-    });
-}
 
-loadProducts();
+        alert("Account created!");
+    } catch (err) {
+        alert(err.message);
+    }
+};
+
+// Login
+document.getElementById("loginBtn").onclick = async () => {
+    try {
+        await signInWithEmailAndPassword(auth, email.value, password.value);
+        alert("Logged in!");
+    } catch (err) {
+        alert(err.message);
+    }
+};
+
+// Logout
+document.getElementById("logoutBtn").onclick = () => {
+    signOut(auth);
+};
+
+// Auth state
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        statusText.innerText = "Logged in as: " + user.email;
+    } else {
+        statusText.innerText = "Not logged in";
+    }
+});
+
 </script>
 
 </body>
