@@ -1,8 +1,23 @@
-// firebase-app.js
-// Firebase v9+ (Modular Version)
+// firebase-config.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-import { getDatabase, ref, set, push, update, remove, onValue, get, runTransaction } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+import { 
+    getAuth, 
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+import { 
+    getDatabase, 
+    ref, 
+    set, 
+    push, 
+    update, 
+    remove, 
+    onValue, 
+    get,
+    runTransaction 
+} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDTyjzVYkwyeayKjZjfFNWHpLZJB5XOo1A",
@@ -15,24 +30,15 @@ const firebaseConfig = {
     measurementId: "G-1REJXDEMSD"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// Export for use in other files
 export { 
-    auth, 
-    db, 
-    signInAnonymously, 
-    onAuthStateChanged, 
+    auth, db,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
     signOut,
-    ref, 
-    set, 
-    push, 
-    update, 
-    remove, 
-    onValue, 
-    get, 
-    runTransaction 
+    onAuthStateChanged,
+    ref, set, push, update, remove, onValue, get, runTransaction
 };
