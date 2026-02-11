@@ -1,1117 +1,223 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVORA FASHION - Premium Lifestyle Brand</title>
+    <title>ItemsalesBD - আপনার পছন্দের প্রোডাক্ট কিনুন</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="firebase-config.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #1a1a2e;
-            --secondary: #0f3460;
-            --accent: #e94560;
-            --gold: #ffd700;
-            --dark: #16213e;
-            --light: #f1f1f1;
-            --white: #ffffff;
-            --gray: #888888;
-            --gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--white);
-            color: var(--dark);
-        }
-
-        /* Navigation */
-        .navbar {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 28px;
-            font-weight: 900;
-            font-family: 'Playfair Display', serif;
-            color: var(--primary);
+        .user-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
-
-        .logo i {
-            color: var(--accent);
-            font-size: 32px;
+        .user-name {
+            font-weight: 600;
+            color: #2563eb;
         }
-
-        .logo span {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 40px;
-        }
-
-        .nav-link {
-            text-decoration: none;
-            color: var(--dark);
+        .logout-btn {
+            background: none;
+            border: 1px solid #dc2626;
+            color: #dc2626;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
             font-weight: 500;
-            transition: all 0.3s;
-            position: relative;
         }
-
-        .nav-link:hover {
-            color: var(--accent);
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent);
-            transition: all 0.3s;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .nav-icons {
-            display: flex;
-            gap: 25px;
-            align-items: center;
-        }
-
-        .nav-icon {
-            font-size: 20px;
-            color: var(--dark);
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .nav-icon:hover {
-            color: var(--accent);
-        }
-
-        .cart-count {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background: var(--accent);
+        .logout-btn:hover {
+            background: #dc2626;
             color: white;
-            font-size: 12px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Hero Banner */
-        .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 600px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-pattern {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('data:image/svg+xml;utf8,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M30 0L60 30L30 60L0 30L30 0Z" fill="rgba(255,255,255,0.03)"/></svg>');
-            background-size: 60px 60px;
-        }
-
-        .hero-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 30px;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-left {
-            flex: 1;
-            color: white;
-        }
-
-        .hero-tagline {
-            font-size: 18px;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            margin-bottom: 20px;
-            opacity: 0.9;
-        }
-
-        .hero-title {
-            font-size: 64px;
-            font-weight: 800;
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 20px;
-            line-height: 1.1;
-        }
-
-        .hero-title span {
-            color: var(--gold);
-            display: block;
-        }
-
-        .hero-desc {
-            font-size: 18px;
-            margin-bottom: 30px;
-            opacity: 0.9;
-            max-width: 600px;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 20px;
-        }
-
-        .btn {
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-            border: 2px solid var(--accent);
-        }
-
-        .btn-primary:hover {
-            background: transparent;
-            color: white;
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-        }
-
-        .btn-outline:hover {
-            background: white;
-            color: var(--accent);
-        }
-
-        .hero-right {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            position: relative;
-        }
-
-        .price-tag {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
-            background: white;
-            padding: 15px 25px;
-            border-radius: 50px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .old-price {
-            color: var(--gray);
-            text-decoration: line-through;
-            font-size: 14px;
-        }
-
-        .new-price {
-            color: var(--accent);
-            font-weight: 700;
-            font-size: 24px;
-        }
-
-        .save-badge {
-            background: var(--accent);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        /* Categories */
-        .categories {
-            padding: 80px 0;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .section-title {
-            font-size: 36px;
-            font-family: 'Playfair Display', serif;
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-
-        .section-subtitle {
-            color: var(--gray);
-            font-size: 18px;
-        }
-
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 30px;
-            padding: 0 30px;
-        }
-
-        .category-card {
-            background: var(--white);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .category-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-
-        .category-image {
-            height: 250px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 60px;
-        }
-
-        .category-content {
-            padding: 25px;
-            text-align: center;
-        }
-
-        .category-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: var(--dark);
-        }
-
-        .category-count {
-            color: var(--gray);
-            font-size: 14px;
-        }
-
-        /* Products Grid - AVORA Style */
-        .products-section {
-            padding: 80px 0;
-            background: #f8f9fa;
-        }
-
-        .products-header {
-            max-width: 1400px;
-            margin: 0 auto 40px;
-            padding: 0 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .products-title {
-            font-size: 28px;
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .view-all {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .products-grid {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 30px;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 30px;
-        }
-
-        .product-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-
-        .product-badge {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: var(--accent);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 25px;
-            font-size: 12px;
-            font-weight: 600;
-            z-index: 2;
-        }
-
-        .product-badge.save {
-            background: var(--gold);
-            color: var(--dark);
-        }
-
-        .product-image {
-            height: 300px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 50px;
-            position: relative;
-        }
-
-        .product-actions {
-            position: absolute;
-            bottom: -50px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            padding: 20px;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            transition: all 0.3s;
-        }
-
-        .product-card:hover .product-actions {
-            bottom: 0;
-        }
-
-        .product-action-btn {
-            width: 45px;
-            height: 45px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--dark);
-            font-size: 18px;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .product-action-btn:hover {
-            background: var(--accent);
-            color: white;
-        }
-
-        .product-content {
-            padding: 25px;
-        }
-
-        .product-category {
-            color: var(--gray);
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-
-        .product-name {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--dark);
-            margin-bottom: 10px;
-        }
-
-        .product-price {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .current-price {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .old-price {
-            color: var(--gray);
-            text-decoration: line-through;
-            font-size: 16px;
-        }
-
-        .product-rating {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-
-        .stars {
-            color: var(--gold);
-            font-size: 14px;
-        }
-
-        .reviews {
-            color: var(--gray);
-            font-size: 13px;
-        }
-
-        .btn-add-cart {
-            width: 100%;
-            padding: 14px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-add-cart:hover {
-            background: var(--primary);
-        }
-
-        /* Promo Banner - AVORA Style */
-        .promo-banner {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            padding: 80px 0;
-            margin: 60px 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .promo-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 30px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .promo-card {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.3s;
-        }
-
-        .promo-card:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-5px);
-        }
-
-        .promo-info {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .promo-tag {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0.9;
-        }
-
-        .promo-amount {
-            font-size: 28px;
-            font-weight: 800;
-        }
-
-        .promo-original {
-            text-decoration: line-through;
-            opacity: 0.7;
-            font-size: 16px;
-        }
-
-        .promo-icon {
-            font-size: 48px;
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--primary);
-            color: white;
-            padding: 80px 0 20px;
-        }
-
-        .footer-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 30px;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 50px;
-        }
-
-        .footer-logo {
-            font-size: 28px;
-            font-weight: 900;
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .footer-social a {
-            color: white;
-            font-size: 20px;
-            transition: all 0.3s;
-        }
-
-        .footer-social a:hover {
-            color: var(--gold);
-        }
-
-        .footer-col h3 {
-            font-size: 18px;
-            margin-bottom: 25px;
-            position: relative;
-        }
-
-        .footer-col h3::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background: var(--accent);
-        }
-
-        .footer-col a {
-            color: rgba(255,255,255,0.7);
-            text-decoration: none;
-            display: block;
-            margin-bottom: 12px;
-            transition: all 0.3s;
-        }
-
-        .footer-col a:hover {
-            color: white;
-            padding-left: 5px;
-        }
-
-        .footer-bottom {
-            max-width: 1400px;
-            margin: 60px auto 0;
-            padding: 20px 30px 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            text-align: center;
-            color: rgba(255,255,255,0.5);
-            font-size: 14px;
-        }
-
-        @media (max-width: 1200px) {
-            .products-grid,
-            .category-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            .promo-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 992px) {
-            .hero-title {
-                font-size: 48px;
-            }
-            .products-grid,
-            .category-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .footer-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-            }
-            .hero-content {
-                flex-direction: column;
-                text-align: center;
-            }
-            .hero-title span {
-                display: inline;
-            }
-            .hero-buttons {
-                justify-content: center;
-            }
-            .products-grid,
-            .category-grid {
-                grid-template-columns: 1fr;
-            }
-            .promo-container {
-                grid-template-columns: 1fr;
-            }
-            .footer-container {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
+    <!-- নেভিগেশন -->
     <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <i class="fas fa-crown"></i>
-                <span>AVORA</span>
-            </div>
-            
-            <div class="nav-menu">
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="products.html" class="nav-link">Shop</a>
-                <a href="#new" class="nav-link">New Arrivals</a>
-                <a href="#sale" class="nav-link">Sale</a>
-                <a href="#brands" class="nav-link">Brands</a>
-            </div>
-            
-            <div class="nav-icons">
-                <a href="#" class="nav-icon"><i class="fas fa-search"></i></a>
-                <a href="#" class="nav-icon"><i class="fas fa-heart"></i></a>
-                <a href="cart.html" class="nav-icon">
-                    <i class="fas fa-shopping-bag"></i>
-                    <span class="cart-count">3</span>
-                </a>
-                <a href="#" class="nav-icon"><i class="fas fa-user"></i></a>
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <span>ItemsalesBD</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <!-- ডাইনামিক লোড হবে -->
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section - AVORA Style -->
-    <section class="hero">
-        <div class="hero-pattern"></div>
-        <div class="hero-content">
-            <div class="hero-left">
-                <p class="hero-tagline">PREMIUM COLLECTION 2026</p>
-                <h1 class="hero-title">
-                    Define Your<br>
-                    <span>Style</span>
-                </h1>
-                <p class="hero-desc">
-                    Discover the latest trends in fashion with AVORA. 
-                    Premium quality products at exclusive prices.
-                </p>
-                <div class="hero-buttons">
-                    <a href="products.html" class="btn btn-primary">
-                        <i class="fas fa-shopping-bag"></i> Shop Now
-                    </a>
-                    <a href="#" class="btn btn-outline">
-                        <i class="fas fa-play"></i> Watch Video
-                    </a>
-                </div>
+    <!-- প্রোডাক্ট সেকশন -->
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin: 30px 0;">
+            <h1 style="color: #333;">সকল প্রোডাক্ট</h1>
+            <div id="cartInfo" style="display: none;">
+                <i class="fas fa-shopping-cart" style="color: #2563eb; font-size: 24px;"></i>
             </div>
-            <div class="hero-right">
-                <div class="price-tag">
-                    <div>
-                        <div class="old-price">£2,699</div>
-                        <div class="new-price">£1,500</div>
-                    </div>
-                    <span class="save-badge">Save £1,199</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Categories -->
-    <section class="categories">
-        <div class="section-header">
-            <h2 class="section-title">Shop by Category</h2>
-            <p class="section-subtitle">Find your perfect style</p>
         </div>
         
-        <div class="category-grid">
-            <div class="category-card">
-                <div class="category-image">
-                    <i class="fas fa-tshirt"></i>
-                </div>
-                <div class="category-content">
-                    <h3 class="category-title">Men's Fashion</h3>
-                    <p class="category-count">124 Products</p>
-                </div>
-            </div>
-            
-            <div class="category-card">
-                <div class="category-image">
-                    <i class="fas fa-female"></i>
-                </div>
-                <div class="category-content">
-                    <h3 class="category-title">Women's Fashion</h3>
-                    <p class="category-count">156 Products</p>
-                </div>
-            </div>
-            
-            <div class="category-card">
-                <div class="category-image">
-                    <i class="fas fa-shoe-prints"></i>
-                </div>
-                <div class="category-content">
-                    <h3 class="category-title">Footwear</h3>
-                    <p class="category-count">89 Products</p>
-                </div>
-            </div>
-            
-            <div class="category-card">
-                <div class="category-image">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="category-content">
-                    <h3 class="category-title">Accessories</h3>
-                    <p class="category-count">67 Products</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Promo Banner - AVORA Style (Exactly like your screenshot) -->
-    <div class="promo-banner">
-        <div class="promo-container">
-            <div class="promo-card">
-                <div class="promo-info">
-                    <span class="promo-tag">Save</span>
-                    <span class="promo-amount">£400</span>
-                    <span class="promo-original">£2,699</span>
-                </div>
-                <div class="promo-icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-            </div>
-            
-            <div class="promo-card">
-                <div class="promo-info">
-                    <span class="promo-tag">Save</span>
-                    <span class="promo-amount">£1,200</span>
-                    <span class="promo-original">£2,699</span>
-                </div>
-                <div class="promo-icon">
-                    <i class="fas fa-gem"></i>
-                </div>
-            </div>
-            
-            <div class="promo-card">
-                <div class="promo-info">
-                    <span class="promo-tag">Save</span>
-                    <span class="promo-amount">£800</span>
-                    <span class="promo-original">£2,699</span>
-                </div>
-                <div class="promo-icon">
-                    <i class="fas fa-crown"></i>
-                </div>
+        <!-- প্রোডাক্ট গ্রিড -->
+        <div id="productsGrid" class="products-grid">
+            <div style="text-align: center; grid-column: 1/-1; padding: 50px;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 40px; color: #2563eb;"></i>
+                <p style="margin-top: 20px; color: #666;">প্রোডাক্ট লোড হচ্ছে...</p>
             </div>
         </div>
     </div>
 
-    <!-- Products Grid - AVORA Style -->
-    <section class="products-section">
-        <div class="products-header">
-            <h2 class="products-title">Featured Products</h2>
-            <a href="products.html" class="view-all">
-                View All <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
-        
-        <div class="products-grid">
-            <!-- Product 1 - Smartwatch -->
-            <div class="product-card">
-                <div class="product-badge save">Save £1,199</div>
-                <div class="product-image">
-                    <i class="fas fa-clock"></i>
-                    <div class="product-actions">
-                        <span class="product-action-btn"><i class="fas fa-heart"></i></span>
-                        <span class="product-action-btn"><i class="fas fa-eye"></i></span>
-                        <span class="product-action-btn"><i class="fas fa-shopping-cart"></i></span>
-                    </div>
-                </div>
-                <div class="product-content">
-                    <div class="product-category">Smart Watch</div>
-                    <h3 class="product-name">HK9 Pro Max+ Gen4 Smartwatch</h3>
-                    <div class="product-price">
-                        <span class="current-price">£1,500</span>
-                        <span class="old-price">£2,699</span>
-                    </div>
-                    <div class="product-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <span class="reviews">(124 reviews)</span>
-                    </div>
-                    <button class="btn-add-cart">
-                        <i class="fas fa-shopping-cart"></i> Order Now
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Product 2 - Jacket -->
-            <div class="product-card">
-                <div class="product-badge save">Save £400</div>
-                <div class="product-image">
-                    <i class="fas fa-tshirt"></i>
-                    <div class="product-actions">
-                        <span class="product-action-btn"><i class="fas fa-heart"></i></span>
-                        <span class="product-action-btn"><i class="fas fa-eye"></i></span>
-                        <span class="product-action-btn"><i class="fas fa-shopping-cart"></i></span>
-                    </div>
-                </div>
-                <div class="product-content">
-                    <div class="product-category">Fashion</div>
-                    <h3 class="product-name">Buttoned Suede Jacket</h3>
-                    <div class="product-price">
-                        <span class="current-price">£800</span>
-                        <span class="old-price">£1,200</span>
-                    </div>
-                    <div class="product-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span class="reviews">(89 reviews)</span>
-                    </div>
-                    <button class="btn-add-cart">
-                        <i class="fas fa-shopping-cart"></i> Order Now
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Product 3 - Sneakers -->
-            <div class="product-card">
-                <div class="product-badge save">£100 OFF</div>
-                <div class="product-image">
-                    <i class="fas fa-shoe-prints"></i>
-                    <div class="product-actions">
-                        <span class="product-action-btn"><i class="fas fa-heart"></i></span>
-                        <span class="product-action-btn"><i class="fas fa-eye"></i></span>
-                        <span class="product-action-btn"><i class="fas fa-shopping-cart"></i></span>
-                    </div>
-                </div>
-                <div class="product-content">
-                    <div class="product-category">Footwear</div>
-                    <h3 class="product-name">Sneaker Grey</h3>
-                    <div class="product-price">
-                        <span class="current-price">£150</span>
-                        <span class="old-price">£250</span>
-                    </div>
-                    <div class="product-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span class="reviews">(256 reviews)</span>
-                    </div>
-                    <button class="btn-add-cart">
-                        <i class="fas fa-shopping-cart"></i> Order Now
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Product 4 - Another Watch -->
-            <div class="product-card">
-                <div class="product-badge">New</div>
-                <div class="product-image">
-                    <i class="fas fa-mobile-alt"></i>
-                    <div class="product-actions">
-                        <span class="product-action-btn"><i class="fas fa-heart"></i></span>
-                        <span class="product-action-btn"><i class="fas fa-eye"></i></span>
-                        <span class="product-action-btn"><i class="fas fa-shopping-cart"></i></span>
-                    </div>
-                </div>
-                <div class="product-content">
-                    <div class="product-category">Electronics</div>
-                    <h3 class="product-name">Wireless Earbuds Pro</h3>
-                    <div class="product-price">
-                        <span class="current-price">£120</span>
-                        <span class="old-price">£199</span>
-                    </div>
-                    <div class="product-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <span class="reviews">(78 reviews)</span>
-                    </div>
-                    <button class="btn-add-cart">
-                        <i class="fas fa-shopping-cart"></i> Order Now
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-col">
-                <div class="footer-logo">
-                    <i class="fas fa-crown"></i>
-                    <span>AVORA</span>
-                </div>
-                <p style="color: rgba(255,255,255,0.7); line-height: 1.8;">
-                    Premium fashion brand offering high-quality products with exceptional customer service.
-                </p>
-                <div class="footer-social">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-            
-            <div class="footer-col">
-                <h3>Quick Links</h3>
-                <a href="#">About Us</a>
-                <a href="#">Contact</a>
-                <a href="#">FAQs</a>
-                <a href="#">Shipping Policy</a>
-                <a href="#">Returns & Refunds</a>
-            </div>
-            
-            <div class="footer-col">
-                <h3>Categories</h3>
-                <a href="#">Men's Fashion</a>
-                <a href="#">Women's Fashion</a>
-                <a href="#">Footwear</a>
-                <a href="#">Accessories</a>
-                <a href="#">Smart Watches</a>
-            </div>
-            
-            <div class="footer-col">
-                <h3>Contact Info</h3>
-                <p style="color: rgba(255,255,255,0.7); margin-bottom: 15px;">
-                    <i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i>
-                    Dhaka, Bangladesh
-                </p>
-                <p style="color: rgba(255,255,255,0.7); margin-bottom: 15px;">
-                    <i class="fas fa-phone" style="margin-right: 10px;"></i>
-                    +880 1234-567890
-                </p>
-                <p style="color: rgba(255,255,255,0.7); margin-bottom: 15px;">
-                    <i class="fas fa-envelope" style="margin-right: 10px;"></i>
-                    info@avora.com
-                </p>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2024 AVORA FASHION. All rights reserved.</p>
-        </div>
-    </footer>
-
     <script type="module">
-        import { auth, db, onAuthStateChanged } from './firebase-app.js';
-        
-        // Anonymous login for visitors
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                // signInAnonymously(auth);
+        import { 
+            auth, db, 
+            onAuthStateChanged, 
+            signOut,
+            ref, onValue, runTransaction, push, set, get 
+        } from './firebase-config.js';
+
+        let currentUser = null;
+
+        // ইউজার স্টেট চেক
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            
+            // নেভিগেশন আপডেট
+            const navLinks = document.getElementById('navLinks');
+            
+            if (user) {
+                // ইউজারের নাম আনার জন্য
+                let userName = 'ইউজার';
+                try {
+                    const userSnap = await get(ref(db, 'users/' + user.uid));
+                    if (userSnap.exists()) {
+                        userName = userSnap.val().name || 'ইউজার';
+                    }
+                } catch (error) {}
+                
+                // অ্যাডমিন চেক
+                let isAdmin = false;
+                try {
+                    const adminSnap = await get(ref(db, 'users/' + user.uid + '/role'));
+                    isAdmin = adminSnap.val() === 'admin';
+                } catch (error) {}
+                
+                navLinks.innerHTML = `
+                    <a href="index.html">হোম</a>
+                    <a href="#" id="cartLink"><i class="fas fa-shopping-cart"></i> কার্ট</a>
+                    ${isAdmin ? '<a href="admin.html" class="btn btn-primary"><i class="fas fa-cog"></i> অ্যাডমিন</a>' : ''}
+                    <div class="user-info">
+                        <span class="user-name"><i class="fas fa-user"></i> ${userName}</span>
+                        <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> লগআউট</button>
+                    </div>
+                `;
+                
+                document.getElementById('logoutBtn').addEventListener('click', async () => {
+                    await signOut(auth);
+                    window.location.reload();
+                });
+                
+            } else {
+                navLinks.innerHTML = `
+                    <a href="index.html">হোম</a>
+                    <a href="login.html">লগইন</a>
+                    <a href="signup.html" class="btn btn-primary">সাইনআপ</a>
+                `;
             }
+            
+            // প্রোডাক্ট লোড
+            loadProducts();
         });
-        
-        // Add to cart function
-        window.addToCart = function(productId) {
-            toastr.success('Product added to cart!');
+
+        // প্রোডাক্ট লোড ফাংশন
+        function loadProducts() {
+            const productsRef = ref(db, 'products');
+            
+            onValue(productsRef, (snapshot) => {
+                const products = snapshot.val() || {};
+                const productsGrid = document.getElementById('productsGrid');
+                
+                if (Object.keys(products).length === 0) {
+                    productsGrid.innerHTML = `
+                        <div style="text-align: center; grid-column: 1/-1; padding: 60px;">
+                            <i class="fas fa-box-open" style="font-size: 60px; color: #ccc;"></i>
+                            <h3 style="margin-top: 20px; color: #666;">কোন প্রোডাক্ট নেই</h3>
+                            <p style="color: #999; margin-top: 10px;">অ্যাডমিন প্রোডাক্ট যোগ করলে এখানে দেখাবে</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let html = '';
+                
+                Object.keys(products).forEach(key => {
+                    const product = products[key];
+                    const inStock = product.stock > 0;
+                    
+                    html += `
+                        <div class="product-card">
+                            <div class="product-image">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div class="product-content">
+                                <h3 class="product-title">${product.name}</h3>
+                                <div class="product-price">${product.price}</div>
+                                <div class="product-stock ${!inStock ? 'stock-out' : ''}">
+                                    <i class="fas fa-${inStock ? 'check' : 'times'}"></i>
+                                    ${inStock ? product.stock + ' টি স্টক আছে' : 'স্টক আউট'}
+                                </div>
+                                <button class="buy-btn" 
+                                        onclick="buyProduct('${key}')"
+                                        ${!inStock || !currentUser ? 'disabled' : ''}>
+                                    ${!currentUser ? 'লগইন করে কিনুন' : (inStock ? 'অর্ডার করুন' : 'স্টক নেই')}
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                productsGrid.innerHTML = html;
+            });
+        }
+
+        // প্রোডাক্ট কেনার ফাংশন
+        window.buyProduct = async function(productId) {
+            if (!currentUser) {
+                alert('দয়া করে লগইন করুন!');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                const productRef = ref(db, 'products/' + productId);
+                
+                // ট্রানজেকশনে স্টক কমান
+                await runTransaction(productRef, (product) => {
+                    if (product && product.stock > 0) {
+                        product.stock -= 1;
+                        return product;
+                    }
+                    return null;
+                });
+                
+                // অর্ডার সেভ করুন
+                const productSnap = await get(ref(db, 'products/' + productId));
+                const product = productSnap.val();
+                
+                await push(ref(db, 'orders'), {
+                    productId: productId,
+                    productName: product.name,
+                    price: product.price,
+                    buyer: currentUser.uid,
+                    buyerEmail: currentUser.email,
+                    status: 'pending',
+                    orderDate: Date.now()
+                });
+                
+                alert('✅ অর্ডার সফল হয়েছে! অ্যাডমিন শীঘ্রই প্রোডাক্ট পাঠাবে।');
+                
+            } catch (error) {
+                if (error.message.includes('transaction failed')) {
+                    alert('❌ প্রোডাক্টটি স্টকে নেই!');
+                } else {
+                    alert('❌ অর্ডার ব্যর্থ! আবার চেষ্টা করুন।');
+                }
+            }
         };
     </script>
 </body>
