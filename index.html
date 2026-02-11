@@ -1,224 +1,137 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ItemsalesBD - আপনার পছন্দের প্রোডাক্ট কিনুন</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script type="module" src="firebase-config.js"></script>
-    <style>
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .user-name {
-            font-weight: 600;
-            color: #2563eb;
-        }
-        .logout-btn {
-            background: none;
-            border: 1px solid #dc2626;
-            color: #dc2626;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-        .logout-btn:hover {
-            background: #dc2626;
-            color: white;
-        }
-    </style>
+  <title>ItemSalesBD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body{font-family:Arial;background:#f4f6f9;margin:0}
+    header{background:#111;color:white;padding:15px;text-align:center}
+    .container{padding:20px}
+    .card{background:white;padding:15px;margin:10px;border-radius:12px;box-shadow:0 5px 15px rgba(0,0,0,0.1)}
+    button{padding:8px 15px;background:#111;color:white;border:none;border-radius:5px;cursor:pointer}
+    input{padding:10px;margin:5px 0;width:100%;border-radius:5px;border:1px solid #ccc}
+    img{width:100%;border-radius:10px}
+  </style>
 </head>
 <body>
-    <!-- নেভিগেশন -->
-    <nav class="navbar">
-        <div class="container nav-container">
-            <a href="index.html" class="logo">
-                <span>ItemsalesBD</span>
-            </a>
-            <div class="nav-links" id="navLinks">
-                <!-- ডাইনামিক লোড হবে -->
-            </div>
+
+<header>
+  <h2>ItemSalesBD</h2>
+  <button onclick="logout()">Logout</button>
+</header>
+
+<div class="container">
+
+  <div id="authBox">
+    <h3>Login / Signup</h3>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="signup()">Sign Up</button>
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div id="userPanel" style="display:none;">
+    <h3>Products</h3>
+    <div id="productList"></div>
+
+    <h3>My Orders</h3>
+    <div id="myOrders"></div>
+  </div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, where } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDTyjzVYkwyeayKjZjfFNWHpLZJB5XOo1A",
+  authDomain: "itemsalesbd.firebaseapp.com",
+  projectId: "itemsalesbd",
+  storageBucket: "itemsalesbd.firebasestorage.app",
+  messagingSenderId: "390468845332",
+  appId: "1:390468845332:web:7350cfdf25f23151688c01",
+  measurementId: "G-1REJXDEMSD"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.signup = async function(){
+  await createUserWithEmailAndPassword(auth,email.value,password.value);
+}
+
+window.login = async function(){
+  await signInWithEmailAndPassword(auth,email.value,password.value);
+}
+
+window.logout = async function(){
+  await signOut(auth);
+}
+
+onAuthStateChanged(auth, user=>{
+  if(user){
+    authBox.style.display="none";
+    userPanel.style.display="block";
+    loadProducts();
+    loadOrders(user.uid);
+  }else{
+    authBox.style.display="block";
+    userPanel.style.display="none";
+  }
+});
+
+function loadProducts(){
+  onSnapshot(collection(db,"products"), snapshot=>{
+    productList.innerHTML="";
+    snapshot.forEach(doc=>{
+      let p=doc.data();
+      productList.innerHTML+=`
+        <div class="card">
+          <img src="${p.image}">
+          <h4>${p.name}</h4>
+          <p>Price: ${p.price}৳</p>
+          <p>Stock: ${p.stock}</p>
+          <p>Subscription: ${p.subscriptionDays || 0} days</p>
+          <button onclick="buy('${doc.id}',${p.price})">Buy</button>
         </div>
-    </nav>
+      `;
+    });
+  });
+}
 
-    <!-- প্রোডাক্ট সেকশন -->
-    <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin: 30px 0;">
-            <h1 style="color: #333;">সকল প্রোডাক্ট</h1>
-            <div id="cartInfo" style="display: none;">
-                <i class="fas fa-shopping-cart" style="color: #2563eb; font-size: 24px;"></i>
-            </div>
+window.buy = async function(id,price){
+  const user = auth.currentUser;
+  await addDoc(collection(db,"orders"),{
+    userId:user.uid,
+    productId:id,
+    price:price,
+    status:"Pending",
+    date:new Date()
+  });
+  alert("Order Placed Successfully");
+}
+
+function loadOrders(uid){
+  const q = query(collection(db,"orders"), where("userId","==",uid));
+  onSnapshot(q, snapshot=>{
+    myOrders.innerHTML="";
+    snapshot.forEach(doc=>{
+      let o=doc.data();
+      myOrders.innerHTML+=`
+        <div class="card">
+          <p>Price: ${o.price}৳</p>
+          <p>Status: ${o.status}</p>
         </div>
-        
-        <!-- প্রোডাক্ট গ্রিড -->
-        <div id="productsGrid" class="products-grid">
-            <div style="text-align: center; grid-column: 1/-1; padding: 50px;">
-                <i class="fas fa-spinner fa-spin" style="font-size: 40px; color: #2563eb;"></i>
-                <p style="margin-top: 20px; color: #666;">প্রোডাক্ট লোড হচ্ছে...</p>
-            </div>
-        </div>
-    </div>
+      `;
+    });
+  });
+}
+</script>
 
-    <script type="module">
-        import { 
-            auth, db, 
-            onAuthStateChanged, 
-            signOut,
-            ref, onValue, runTransaction, push, set, get 
-        } from './firebase-config.js';
-
-        let currentUser = null;
-
-        // ইউজার স্টেট চেক
-        onAuthStateChanged(auth, async (user) => {
-            currentUser = user;
-            
-            // নেভিগেশন আপডেট
-            const navLinks = document.getElementById('navLinks');
-            
-            if (user) {
-                // ইউজারের নাম আনার জন্য
-                let userName = 'ইউজার';
-                try {
-                    const userSnap = await get(ref(db, 'users/' + user.uid));
-                    if (userSnap.exists()) {
-                        userName = userSnap.val().name || 'ইউজার';
-                    }
-                } catch (error) {}
-                
-                // অ্যাডমিন চেক
-                let isAdmin = false;
-                try {
-                    const adminSnap = await get(ref(db, 'users/' + user.uid + '/role'));
-                    isAdmin = adminSnap.val() === 'admin';
-                } catch (error) {}
-                
-                navLinks.innerHTML = `
-                    <a href="index.html">হোম</a>
-                    <a href="#" id="cartLink"><i class="fas fa-shopping-cart"></i> কার্ট</a>
-                    ${isAdmin ? '<a href="admin.html" class="btn btn-primary"><i class="fas fa-cog"></i> অ্যাডমিন</a>' : ''}
-                    <div class="user-info">
-                        <span class="user-name"><i class="fas fa-user"></i> ${userName}</span>
-                        <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> লগআউট</button>
-                    </div>
-                `;
-                
-                document.getElementById('logoutBtn').addEventListener('click', async () => {
-                    await signOut(auth);
-                    window.location.reload();
-                });
-                
-            } else {
-                navLinks.innerHTML = `
-                    <a href="index.html">হোম</a>
-                    <a href="login.html">লগইন</a>
-                    <a href="signup.html" class="btn btn-primary">সাইনআপ</a>
-                `;
-            }
-            
-            // প্রোডাক্ট লোড
-            loadProducts();
-        });
-
-        // প্রোডাক্ট লোড ফাংশন
-        function loadProducts() {
-            const productsRef = ref(db, 'products');
-            
-            onValue(productsRef, (snapshot) => {
-                const products = snapshot.val() || {};
-                const productsGrid = document.getElementById('productsGrid');
-                
-                if (Object.keys(products).length === 0) {
-                    productsGrid.innerHTML = `
-                        <div style="text-align: center; grid-column: 1/-1; padding: 60px;">
-                            <i class="fas fa-box-open" style="font-size: 60px; color: #ccc;"></i>
-                            <h3 style="margin-top: 20px; color: #666;">কোন প্রোডাক্ট নেই</h3>
-                            <p style="color: #999; margin-top: 10px;">অ্যাডমিন প্রোডাক্ট যোগ করলে এখানে দেখাবে</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                let html = '';
-                
-                Object.keys(products).forEach(key => {
-                    const product = products[key];
-                    const inStock = product.stock > 0;
-                    
-                    html += `
-                        <div class="product-card">
-                            <div class="product-image">
-                                <i class="fas fa-box"></i>
-                            </div>
-                            <div class="product-content">
-                                <h3 class="product-title">${product.name}</h3>
-                                <div class="product-price">${product.price}</div>
-                                <div class="product-stock ${!inStock ? 'stock-out' : ''}">
-                                    <i class="fas fa-${inStock ? 'check' : 'times'}"></i>
-                                    ${inStock ? product.stock + ' টি স্টক আছে' : 'স্টক আউট'}
-                                </div>
-                                <button class="buy-btn" 
-                                        onclick="buyProduct('${key}')"
-                                        ${!inStock || !currentUser ? 'disabled' : ''}>
-                                    ${!currentUser ? 'লগইন করে কিনুন' : (inStock ? 'অর্ডার করুন' : 'স্টক নেই')}
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                productsGrid.innerHTML = html;
-            });
-        }
-
-        // প্রোডাক্ট কেনার ফাংশন
-        window.buyProduct = async function(productId) {
-            if (!currentUser) {
-                alert('দয়া করে লগইন করুন!');
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            try {
-                const productRef = ref(db, 'products/' + productId);
-                
-                // ট্রানজেকশনে স্টক কমান
-                await runTransaction(productRef, (product) => {
-                    if (product && product.stock > 0) {
-                        product.stock -= 1;
-                        return product;
-                    }
-                    return null;
-                });
-                
-                // অর্ডার সেভ করুন
-                const productSnap = await get(ref(db, 'products/' + productId));
-                const product = productSnap.val();
-                
-                await push(ref(db, 'orders'), {
-                    productId: productId,
-                    productName: product.name,
-                    price: product.price,
-                    buyer: currentUser.uid,
-                    buyerEmail: currentUser.email,
-                    status: 'pending',
-                    orderDate: Date.now()
-                });
-                
-                alert('✅ অর্ডার সফল হয়েছে! অ্যাডমিন শীঘ্রই প্রোডাক্ট পাঠাবে।');
-                
-            } catch (error) {
-                if (error.message.includes('transaction failed')) {
-                    alert('❌ প্রোডাক্টটি স্টকে নেই!');
-                } else {
-                    alert('❌ অর্ডার ব্যর্থ! আবার চেষ্টা করুন।');
-                }
-            }
-        };
-    </script>
 </body>
 </html>
