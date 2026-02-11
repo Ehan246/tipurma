@@ -1,114 +1,1118 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>ItemSalesBD</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVORA FASHION - Premium Lifestyle Brand</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-body{
-    background:#0a0a0a;
-    color:#00ff88;
-    font-family:Arial;
-    padding:30px;
-}
-input,button{
-    padding:8px;
-    margin:6px 0;
-}
-</style>
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #0f3460;
+            --accent: #e94560;
+            --gold: #ffd700;
+            --dark: #16213e;
+            --light: #f1f1f1;
+            --white: #ffffff;
+            --gray: #888888;
+            --gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--white);
+            color: var(--dark);
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--accent);
+            font-size: 32px;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            color: var(--dark);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-icon:hover {
+            color: var(--accent);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--accent);
+            color: white;
+            font-size: 12px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hero Banner */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><path d="M30 0L60 30L30 60L0 30L30 0Z" fill="rgba(255,255,255,0.03)"/></svg>');
+            background-size: 60px 60px;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-left {
+            flex: 1;
+            color: white;
+        }
+
+        .hero-tagline {
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .hero-title {
+            font-size: 64px;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero-title span {
+            color: var(--gold);
+            display: block;
+        }
+
+        .hero-desc {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: 2px solid var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--accent);
+        }
+
+        .hero-right {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .price-tag {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            background: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .old-price {
+            color: var(--gray);
+            text-decoration: line-through;
+            font-size: 14px;
+        }
+
+        .new-price {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 24px;
+        }
+
+        .save-badge {
+            background: var(--accent);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Categories */
+        .categories {
+            padding: 80px 0;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .section-subtitle {
+            color: var(--gray);
+            font-size: 18px;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            padding: 0 30px;
+        }
+
+        .category-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .category-image {
+            height: 250px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 60px;
+        }
+
+        .category-content {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .category-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .category-count {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* Products Grid - AVORA Style */
+        .products-section {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .products-header {
+            max-width: 1400px;
+            margin: 0 auto 40px;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .products-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .view-all {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .products-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--accent);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .product-badge.save {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        .product-image {
+            height: 300px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 50px;
+            position: relative;
+        }
+
+        .product-actions {
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            transition: all 0.3s;
+        }
+
+        .product-card:hover .product-actions {
+            bottom: 0;
+        }
+
+        .product-action-btn {
+            width: 45px;
+            height: 45px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            font-size: 18px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .product-action-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .product-content {
+            padding: 25px;
+        }
+
+        .product-category {
+            color: var(--gray);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .current-price {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .old-price {
+            color: var(--gray);
+            text-decoration: line-through;
+            font-size: 16px;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .stars {
+            color: var(--gold);
+            font-size: 14px;
+        }
+
+        .reviews {
+            color: var(--gray);
+            font-size: 13px;
+        }
+
+        .btn-add-cart {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-add-cart:hover {
+            background: var(--primary);
+        }
+
+        /* Promo Banner - AVORA Style */
+        .promo-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            padding: 80px 0;
+            margin: 60px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .promo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .promo-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s;
+        }
+
+        .promo-card:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-5px);
+        }
+
+        .promo-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .promo-tag {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.9;
+        }
+
+        .promo-amount {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .promo-original {
+            text-decoration: line-through;
+            opacity: 0.7;
+            font-size: 16px;
+        }
+
+        .promo-icon {
+            font-size: 48px;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary);
+            color: white;
+            padding: 80px 0 20px;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 50px;
+        }
+
+        .footer-logo {
+            font-size: 28px;
+            font-weight: 900;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .footer-social a {
+            color: white;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+
+        .footer-social a:hover {
+            color: var(--gold);
+        }
+
+        .footer-col h3 {
+            font-size: 18px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .footer-col a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 60px auto 0;
+            padding: 20px 30px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+        }
+
+        @media (max-width: 1200px) {
+            .products-grid,
+            .category-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .promo-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 48px;
+            }
+            .products-grid,
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .footer-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .hero-title span {
+                display: inline;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+            .products-grid,
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+            .promo-container {
+                grid-template-columns: 1fr;
+            }
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-crown"></i>
+                <span>AVORA</span>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="products.html" class="nav-link">Shop</a>
+                <a href="#new" class="nav-link">New Arrivals</a>
+                <a href="#sale" class="nav-link">Sale</a>
+                <a href="#brands" class="nav-link">Brands</a>
+            </div>
+            
+            <div class="nav-icons">
+                <a href="#" class="nav-icon"><i class="fas fa-search"></i></a>
+                <a href="#" class="nav-icon"><i class="fas fa-heart"></i></a>
+                <a href="cart.html" class="nav-icon">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count">3</span>
+                </a>
+                <a href="#" class="nav-icon"><i class="fas fa-user"></i></a>
+            </div>
+        </div>
+    </nav>
 
-<h1>ItemSalesBD Login System</h1>
+    <!-- Hero Section - AVORA Style -->
+    <section class="hero">
+        <div class="hero-pattern"></div>
+        <div class="hero-content">
+            <div class="hero-left">
+                <p class="hero-tagline">PREMIUM COLLECTION 2026</p>
+                <h1 class="hero-title">
+                    Define Your<br>
+                    <span>Style</span>
+                </h1>
+                <p class="hero-desc">
+                    Discover the latest trends in fashion with AVORA. 
+                    Premium quality products at exclusive prices.
+                </p>
+                <div class="hero-buttons">
+                    <a href="products.html" class="btn btn-primary">
+                        <i class="fas fa-shopping-bag"></i> Shop Now
+                    </a>
+                    <a href="#" class="btn btn-outline">
+                        <i class="fas fa-play"></i> Watch Video
+                    </a>
+                </div>
+            </div>
+            <div class="hero-right">
+                <div class="price-tag">
+                    <div>
+                        <div class="old-price">£2,699</div>
+                        <div class="new-price">£1,500</div>
+                    </div>
+                    <span class="save-badge">Save £1,199</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<input id="email" placeholder="Email"><br>
-<input id="password" type="password" placeholder="Password"><br>
+    <!-- Categories -->
+    <section class="categories">
+        <div class="section-header">
+            <h2 class="section-title">Shop by Category</h2>
+            <p class="section-subtitle">Find your perfect style</p>
+        </div>
+        
+        <div class="category-grid">
+            <div class="category-card">
+                <div class="category-image">
+                    <i class="fas fa-tshirt"></i>
+                </div>
+                <div class="category-content">
+                    <h3 class="category-title">Men's Fashion</h3>
+                    <p class="category-count">124 Products</p>
+                </div>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-image">
+                    <i class="fas fa-female"></i>
+                </div>
+                <div class="category-content">
+                    <h3 class="category-title">Women's Fashion</h3>
+                    <p class="category-count">156 Products</p>
+                </div>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-image">
+                    <i class="fas fa-shoe-prints"></i>
+                </div>
+                <div class="category-content">
+                    <h3 class="category-title">Footwear</h3>
+                    <p class="category-count">89 Products</p>
+                </div>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-image">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="category-content">
+                    <h3 class="category-title">Accessories</h3>
+                    <p class="category-count">67 Products</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<button id="signupBtn">Signup</button>
-<button id="loginBtn">Login</button>
-<button id="logoutBtn">Logout</button>
+    <!-- Promo Banner - AVORA Style (Exactly like your screenshot) -->
+    <div class="promo-banner">
+        <div class="promo-container">
+            <div class="promo-card">
+                <div class="promo-info">
+                    <span class="promo-tag">Save</span>
+                    <span class="promo-amount">£400</span>
+                    <span class="promo-original">£2,699</span>
+                </div>
+                <div class="promo-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+            </div>
+            
+            <div class="promo-card">
+                <div class="promo-info">
+                    <span class="promo-tag">Save</span>
+                    <span class="promo-amount">£1,200</span>
+                    <span class="promo-original">£2,699</span>
+                </div>
+                <div class="promo-icon">
+                    <i class="fas fa-gem"></i>
+                </div>
+            </div>
+            
+            <div class="promo-card">
+                <div class="promo-info">
+                    <span class="promo-tag">Save</span>
+                    <span class="promo-amount">£800</span>
+                    <span class="promo-original">£2,699</span>
+                </div>
+                <div class="promo-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<h3 id="status"></h3>
+    <!-- Products Grid - AVORA Style -->
+    <section class="products-section">
+        <div class="products-header">
+            <h2 class="products-title">Featured Products</h2>
+            <a href="products.html" class="view-all">
+                View All <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        
+        <div class="products-grid">
+            <!-- Product 1 - Smartwatch -->
+            <div class="product-card">
+                <div class="product-badge save">Save £1,199</div>
+                <div class="product-image">
+                    <i class="fas fa-clock"></i>
+                    <div class="product-actions">
+                        <span class="product-action-btn"><i class="fas fa-heart"></i></span>
+                        <span class="product-action-btn"><i class="fas fa-eye"></i></span>
+                        <span class="product-action-btn"><i class="fas fa-shopping-cart"></i></span>
+                    </div>
+                </div>
+                <div class="product-content">
+                    <div class="product-category">Smart Watch</div>
+                    <h3 class="product-name">HK9 Pro Max+ Gen4 Smartwatch</h3>
+                    <div class="product-price">
+                        <span class="current-price">£1,500</span>
+                        <span class="old-price">£2,699</span>
+                    </div>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="reviews">(124 reviews)</span>
+                    </div>
+                    <button class="btn-add-cart">
+                        <i class="fas fa-shopping-cart"></i> Order Now
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Product 2 - Jacket -->
+            <div class="product-card">
+                <div class="product-badge save">Save £400</div>
+                <div class="product-image">
+                    <i class="fas fa-tshirt"></i>
+                    <div class="product-actions">
+                        <span class="product-action-btn"><i class="fas fa-heart"></i></span>
+                        <span class="product-action-btn"><i class="fas fa-eye"></i></span>
+                        <span class="product-action-btn"><i class="fas fa-shopping-cart"></i></span>
+                    </div>
+                </div>
+                <div class="product-content">
+                    <div class="product-category">Fashion</div>
+                    <h3 class="product-name">Buttoned Suede Jacket</h3>
+                    <div class="product-price">
+                        <span class="current-price">£800</span>
+                        <span class="old-price">£1,200</span>
+                    </div>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="reviews">(89 reviews)</span>
+                    </div>
+                    <button class="btn-add-cart">
+                        <i class="fas fa-shopping-cart"></i> Order Now
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Product 3 - Sneakers -->
+            <div class="product-card">
+                <div class="product-badge save">£100 OFF</div>
+                <div class="product-image">
+                    <i class="fas fa-shoe-prints"></i>
+                    <div class="product-actions">
+                        <span class="product-action-btn"><i class="fas fa-heart"></i></span>
+                        <span class="product-action-btn"><i class="fas fa-eye"></i></span>
+                        <span class="product-action-btn"><i class="fas fa-shopping-cart"></i></span>
+                    </div>
+                </div>
+                <div class="product-content">
+                    <div class="product-category">Footwear</div>
+                    <h3 class="product-name">Sneaker Grey</h3>
+                    <div class="product-price">
+                        <span class="current-price">£150</span>
+                        <span class="old-price">£250</span>
+                    </div>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="reviews">(256 reviews)</span>
+                    </div>
+                    <button class="btn-add-cart">
+                        <i class="fas fa-shopping-cart"></i> Order Now
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Product 4 - Another Watch -->
+            <div class="product-card">
+                <div class="product-badge">New</div>
+                <div class="product-image">
+                    <i class="fas fa-mobile-alt"></i>
+                    <div class="product-actions">
+                        <span class="product-action-btn"><i class="fas fa-heart"></i></span>
+                        <span class="product-action-btn"><i class="fas fa-eye"></i></span>
+                        <span class="product-action-btn"><i class="fas fa-shopping-cart"></i></span>
+                    </div>
+                </div>
+                <div class="product-content">
+                    <div class="product-category">Electronics</div>
+                    <h3 class="product-name">Wireless Earbuds Pro</h3>
+                    <div class="product-price">
+                        <span class="current-price">£120</span>
+                        <span class="old-price">£199</span>
+                    </div>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="reviews">(78 reviews)</span>
+                    </div>
+                    <button class="btn-add-cart">
+                        <i class="fas fa-shopping-cart"></i> Order Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<script type="module">
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <i class="fas fa-crown"></i>
+                    <span>AVORA</span>
+                </div>
+                <p style="color: rgba(255,255,255,0.7); line-height: 1.8;">
+                    Premium fashion brand offering high-quality products with exceptional customer service.
+                </p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <a href="#">About Us</a>
+                <a href="#">Contact</a>
+                <a href="#">FAQs</a>
+                <a href="#">Shipping Policy</a>
+                <a href="#">Returns & Refunds</a>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Categories</h3>
+                <a href="#">Men's Fashion</a>
+                <a href="#">Women's Fashion</a>
+                <a href="#">Footwear</a>
+                <a href="#">Accessories</a>
+                <a href="#">Smart Watches</a>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Contact Info</h3>
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 15px;">
+                    <i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i>
+                    Dhaka, Bangladesh
+                </p>
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 15px;">
+                    <i class="fas fa-phone" style="margin-right: 10px;"></i>
+                    +880 1234-567890
+                </p>
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 15px;">
+                    <i class="fas fa-envelope" style="margin-right: 10px;"></i>
+                    info@avora.com
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 AVORA FASHION. All rights reserved.</p>
+        </div>
+    </footer>
 
-// Firebase imports
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } 
-from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getDatabase, ref, set } 
-from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
-
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyDTyjzVYkwyeayKjZjfFNWHpLZJB5XOo1A",
-  authDomain: "itemsalesbd.firebaseapp.com",
-  databaseURL: "https://itemsalesbd-default-rtdb.firebaseio.com",
-  projectId: "itemsalesbd",
-  storageBucket: "itemsalesbd.firebasestorage.app",
-  messagingSenderId: "390468845332",
-  appId: "1:390468845332:web:7350cfdf25f23151688c01",
-  measurementId: "G-1REJXDEMSD"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
-
-// Elements
-const email = document.getElementById("email");
-const password = document.getElementById("password");
-const statusText = document.getElementById("status");
-
-// Signup
-document.getElementById("signupBtn").onclick = async () => {
-    try {
-        const userCred = await createUserWithEmailAndPassword(
-            auth,
-            email.value,
-            password.value
-        );
-
-        // Save user role as customer
-        await set(ref(db, 'users/' + userCred.user.uid), {
-            email: email.value,
-            role: "customer",
-            createdAt: Date.now()
+    <script type="module">
+        import { auth, db, onAuthStateChanged } from './firebase-app.js';
+        
+        // Anonymous login for visitors
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // signInAnonymously(auth);
+            }
         });
-
-        alert("Account created!");
-    } catch (err) {
-        alert(err.message);
-    }
-};
-
-// Login
-document.getElementById("loginBtn").onclick = async () => {
-    try {
-        await signInWithEmailAndPassword(auth, email.value, password.value);
-        alert("Logged in!");
-    } catch (err) {
-        alert(err.message);
-    }
-};
-
-// Logout
-document.getElementById("logoutBtn").onclick = () => {
-    signOut(auth);
-};
-
-// Auth state
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        statusText.innerText = "Logged in as: " + user.email;
-    } else {
-        statusText.innerText = "Not logged in";
-    }
-});
-
-</script>
-
+        
+        // Add to cart function
+        window.addToCart = function(productId) {
+            toastr.success('Product added to cart!');
+        };
+    </script>
 </body>
 </html>
