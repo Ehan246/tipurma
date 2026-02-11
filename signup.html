@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সাইনআপ - ItemsalesBD</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="firebase-config.js"></script>
+</head>
+<body>
+    <!-- নেভিগেশন -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <span>ItemsalesBD</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">হোম</a>
+                <a href="login.html">লগইন</a>
+                <a href="signup.html" class="btn btn-primary">সাইনআপ</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- সাইনআপ ফর্ম -->
+    <div class="container">
+        <div class="auth-card">
+            <h2 class="auth-title">নতুন অ্যাকাউন্ট খুলুন</h2>
+            <p class="auth-subtitle">ItemsalesBD এ আজই জয়েন করুন!</p>
+            
+            <div id="alertMessage" style="display: none;"></div>
+            
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="name">আপনার নাম</label>
+                    <input type="text" id="name" class="form-control" placeholder="আপনার নাম" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">ইমেইল</label>
+                    <input type="email" id="email" class="form-control" placeholder="your@email.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">মোবাইল নম্বর</label>
+                    <input type="tel" id="phone" class="form-control" placeholder="017xxxxxxxx" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">ঠিকানা</label>
+                    <textarea id="address" class="form-control" placeholder="আপনার সম্পূর্ণ ঠিকানা" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">পাসওয়ার্ড</label>
+                    <input type="password" id="password" class="form-control" placeholder="********" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">পাসওয়ার্ড নিশ্চিত করুন</label>
+                    <input type="password" id="confirmPassword" class="form-control" placeholder="********" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 16px;">
+                    <i class="fas fa-user-plus"></i> অ্যাকাউন্ট খুলুন
+                </button>
+            </form>
+            
+            <div class="auth-footer">
+                ইতিমধ্যে অ্যাকাউন্ট আছে? <a href="login.html">লগইন করুন</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth, db, createUserWithEmailAndPassword, ref, set, onAuthStateChanged } from './firebase-config.js';
+        
+        // যদি লগইন করা থাকে তাহলে হোম পেজে পাঠাও
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.location.href = 'index.html';
+            }
+        });
+        
+        // সাইনআপ ফর্ম সাবমিট
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const alertDiv = document.getElementById('alertMessage');
+            
+            // পাসওয়ার্ড চেক
+            if (password !== confirmPassword) {
+                alertDiv.style.display = 'block';
+                alertDiv.className = 'alert alert-error';
+                alertDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> পাসওয়ার্ড মিলছে না!';
+                return;
+            }
+            
+            // পাসওয়ার্ড শক্তি পরীক্ষা
+            if (password.length < 6) {
+                alertDiv.style.display = 'block';
+                alertDiv.className = 'alert alert-error';
+                alertDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!';
+                return;
+            }
+            
+            try {
+                // ইউজার তৈরি
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                // ইউজারের তথ্য ডাটাবেজে সেভ
+                await set(ref(db, 'users/' + user.uid), {
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    address: address,
+                    role: 'user', // নরমাল ইউজার
+                    createdAt: Date.now()
+                });
+                
+                alertDiv.style.display = 'block';
+                alertDiv.className = 'alert alert-success';
+                alertDiv.innerHTML = '<i class="fas fa-check-circle"></i> অ্যাকাউন্ট তৈরি সফল হয়েছে! রিডাইরেক্ট হচ্ছে...';
+                
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+                
+            } catch (error) {
+                alertDiv.style.display = 'block';
+                alertDiv.className = 'alert alert-error';
+                
+                if (error.code === 'auth/email-already-in-use') {
+                    alertDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> এই ইমেইলটি ইতিমধ্যে ব্যবহার করা হচ্ছে!';
+                } else {
+                    alertDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> অ্যাকাউন্ট তৈরি ব্যর্থ! আবার চেষ্টা করুন।';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
