@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Bkash to Nagad | পেমেন্ট কনফার্ম</title>
+  <title>Nagad to Bkash | সেন্ড মানি কনফার্ম</title>
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
@@ -17,7 +17,7 @@
 
     body {
       min-height: 100vh;
-      background: linear-gradient(135deg, #e03a3a 0%, #c41e1e 100%);
+      background: linear-gradient(135deg, #128c7e 0%, #0e6b5f 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -34,7 +34,7 @@
     }
 
     .header {
-      background: #1a2c2a;
+      background: #1f3e38;
       padding: 1.5rem;
       text-align: center;
     }
@@ -49,14 +49,14 @@
     }
 
     .header h1 span:first-child {
-      background: #ff6b2c;
+      background: #128c7e;
       padding: 0.2rem 0.8rem;
       border-radius: 50px;
       font-size: 0.9rem;
     }
 
     .header h1 span:last-child {
-      background: #128c7e;
+      background: #ff6b2c;
       padding: 0.2rem 0.8rem;
       border-radius: 50px;
       font-size: 0.9rem;
@@ -67,11 +67,11 @@
     }
 
     .exchange-details {
-      background: #fef5e8;
+      background: #e8f5f2;
       border-radius: 1.2rem;
       padding: 1rem;
       margin-bottom: 1.5rem;
-      border: 1px solid #ffe0b5;
+      border: 1px solid #b8dfd4;
     }
 
     .detail-row {
@@ -82,7 +82,7 @@
     }
 
     .detail-label {
-      color: #7a5a3a;
+      color: #1c6b5d;
       font-weight: 500;
     }
 
@@ -92,17 +92,17 @@
     }
 
     .merchant-card {
-      background: linear-gradient(135deg, #fff5ea, #fff0e0);
+      background: linear-gradient(135deg, #e8f5f2, #d4f0ea);
       border-radius: 1.2rem;
       padding: 1.2rem;
       margin-bottom: 1.5rem;
       text-align: center;
-      border: 2px dashed #ff9f4a;
+      border: 2px dashed #128c7e;
     }
 
     .merchant-title {
       font-size: 0.75rem;
-      color: #c46b2e;
+      color: #0f6e60;
       font-weight: 600;
       margin-bottom: 0.5rem;
     }
@@ -116,7 +116,7 @@
     }
 
     .copy-btn {
-      background: #ff6b2c;
+      background: #128c7e;
       color: white;
       border: none;
       padding: 0.5rem 1.2rem;
@@ -127,13 +127,13 @@
     }
 
     .payment-note {
-      background: #fff3e0;
+      background: #e0f2ef;
       padding: 0.8rem;
       border-radius: 1rem;
       margin: 1rem 0;
       font-size: 0.8rem;
       text-align: center;
-      color: #b85c2a;
+      color: #1c6b5d;
     }
 
     .input-group {
@@ -157,13 +157,13 @@
     }
 
     .trx-input:focus {
-      border-color: #ff8c42;
-      box-shadow: 0 0 0 2px rgba(255, 140, 66, 0.2);
+      border-color: #128c7e;
+      box-shadow: 0 0 0 2px rgba(18, 140, 126, 0.2);
     }
 
     .confirm-btn {
       width: 100%;
-      background: #ff6b2c;
+      background: #128c7e;
       border: none;
       padding: 1rem;
       border-radius: 2rem;
@@ -180,15 +180,15 @@
     }
 
     .warning-box {
-      background: #fff2f0;
-      border: 1px solid #ffccbc;
+      background: #fff2e5;
+      border: 1px solid #ffcf9a;
       border-radius: 1rem;
       padding: 0.9rem;
       margin-top: 1rem;
     }
 
     .warning-title {
-      color: #d84315;
+      color: #c96f0e;
       font-weight: 700;
       font-size: 0.8rem;
       margin-bottom: 0.4rem;
@@ -251,7 +251,7 @@
     }
 
     .popup-btn {
-      background: #ff6b2c;
+      background: #128c7e;
       color: white;
       border: none;
       padding: 0.7rem 2rem;
@@ -280,10 +280,10 @@
 <div class="payment-card">
   <div class="header">
     <h1>
-      <span>bKash</span>
-      <span>→ Nagad</span>
+      <span>Nagad</span>
+      <span>→ bKash</span>
     </h1>
-    <p>SEND MONEY TO NAGAD</p>
+    <p>SEND MONEY TO BKASH</p>
   </div>
 
   <div class="form-body">
@@ -293,34 +293,34 @@
         <span class="detail-value" id="displayAmount">0.00 ৳</span>
       </div>
       <div class="detail-row">
-        <span class="detail-label">ফি (1.49% + 10 TK):</span>
+        <span class="detail-label">ফি (1.25% + 10 TK):</span>
         <span class="detail-value" id="feeAmount">0.00 ৳</span>
       </div>
       <div class="detail-row">
-        <span class="detail-label">Nagad এ পাবেন:</span>
+        <span class="detail-label">bKash এ পাবেন:</span>
         <span class="detail-value" id="receiveAmount">0.00 ৳</span>
       </div>
     </div>
 
     <div class="merchant-card">
-      <div class="merchant-title">📌 ONLY ACCEPTED PERSONAL NAGAD NUMBER</div>
-      <div class="merchant-number">01712345678</div>
+      <div class="merchant-title">📌 ONLY ACCEPTED PERSONAL BKASH NUMBER</div>
+      <div class="merchant-number">01812345678</div>
       <button class="copy-btn" onclick="copyMerchantNumber()">📋 কপি করুন</button>
       <div class="payment-note">
-        ⚠️ নির্দিষ্ট পরিমাণ: <strong id="payAmount">0.00</strong> ৳ এই Nagad নম্বরে SEND MONEY করুন
+        ⚠️ নির্দিষ্ট পরিমাণ: <strong id="payAmount">0.00</strong> ৳ এই bKash নম্বরে SEND MONEY করুন
       </div>
     </div>
 
     <div class="input-group">
-      <div class="input-label">🔑 TrxID নম্বর (bKash লেনদেন আইডি)</div>
-      <input type="text" id="trxIdInput" class="trx-input" placeholder="যেমন: 8ZK7A9H4T3" autocomplete="off">
-      <div style="font-size: 0.7rem; color: #b87333; margin-top: 0.3rem;">* TrxID অবশ্যই পূরণ করতে হবে!</div>
+      <div class="input-label">🔑 TrxID নম্বর (Nagad লেনদেন আইডি)</div>
+      <input type="text" id="trxIdInput" class="trx-input" placeholder="যেমন: NAGAD123456789" autocomplete="off">
+      <div style="font-size: 0.7rem; color: #0f6e60; margin-top: 0.3rem;">* TrxID অবশ্যই পূরণ করতে হবে!</div>
     </div>
 
     <div class="input-group">
-      <div class="input-label">📱 আপনার Nagad নম্বর (যেখানে টাকা যাবে)</div>
-      <input type="text" id="customerNumber" class="trx-input" placeholder="যেমন: 018xxxxxxxx" autocomplete="off">
-      <div style="font-size: 0.7rem; color: #b87333; margin-top: 0.3rem;">* আপনার Nagad নম্বর দিন</div>
+      <div class="input-label">📱 আপনার bKash নম্বর (যেখানে টাকা যাবে)</div>
+      <input type="text" id="customerNumber" class="trx-input" placeholder="যেমন: 019xxxxxxxx" autocomplete="off">
+      <div style="font-size: 0.7rem; color: #0f6e60; margin-top: 0.3rem;">* আপনার bKash নম্বর দিন</div>
     </div>
 
     <button class="confirm-btn" id="confirmPaymentBtn">✅ পেমেন্ট কনফার্ম করুন</button>
@@ -329,7 +329,7 @@
       <div class="warning-title">⚠️ সতর্কতা:</div>
       <div class="warning-text">
         • লেনদেন আইডি সঠিকভাবে পূরণ করতে হবে, অন্যথায় ক্রেডিট পেতে সক্ষম হবেন না।<br>
-        • অনুগ্রহ করে নিশ্চিত করুন যে আপনি উপরের Nagad নম্বরে SEND MONEY করেছেন।
+        • অনুগ্রহ করে নিশ্চিত করুন যে আপনি উপরের bKash নম্বরে SEND MONEY করেছেন।
       </div>
     </div>
   </div>
@@ -361,12 +361,12 @@
   firebase.initializeApp(firebaseConfig);
   const database = firebase.database();
 
-  const MERCHANT_NUMBER = "01712345678";
+  const MERCHANT_NUMBER = "01812345678";
   let exchangeData = null;
 
   function copyMerchantNumber() {
     navigator.clipboard.writeText(MERCHANT_NUMBER);
-    alert("✅ Nagad নম্বর কপি হয়েছে: " + MERCHANT_NUMBER);
+    alert("✅ bKash নম্বর কপি হয়েছে: " + MERCHANT_NUMBER);
   }
 
   function showPopup(message) {
@@ -386,7 +386,7 @@
     const stored = localStorage.getItem('pendingExchange');
     if (stored) {
       exchangeData = JSON.parse(stored);
-      if (exchangeData.direction !== 'bkash_to_nagad') {
+      if (exchangeData.direction !== 'nagad_to_bkash') {
         window.location.href = 'index.html';
         return;
       }
@@ -420,18 +420,18 @@
       return;
     }
     
-    if (trxId.length < 5) {
-      alert("❌ সঠিক TrxID দিন (অন্তত ৫ অক্ষর)");
+    if (trxId.length < 4) {
+      alert("❌ সঠিক TrxID দিন (অন্তত ৪ অক্ষর)");
       return;
     }
     
     if (!customerNumber) {
-      alert("❌ আপনার Nagad নম্বর দিন!");
+      alert("❌ আপনার bKash নম্বর দিন!");
       return;
     }
     
     if (customerNumber.length < 11) {
-      alert("❌ সঠিক Nagad নম্বর দিন (11 ডিজিট)");
+      alert("❌ সঠিক bKash নম্বর দিন (11 ডিজিট)");
       return;
     }
     
@@ -446,7 +446,7 @@
     
     try {
       const transactionData = {
-        type: 'bkash_to_nagad',
+        type: 'nagad_to_bkash',
         amount: exchangeData.amount,
         received: exchangeData.received,
         fee: exchangeData.fee,
@@ -456,7 +456,7 @@
         customerNumber: customerNumber,
         merchantNumber: MERCHANT_NUMBER,
         status: 'completed',
-        direction: 'Bkash → Nagad',
+        direction: 'Nagad → Bkash',
         timestamp: new Date().toISOString()
       };
       
@@ -472,13 +472,13 @@
       
       localStorage.removeItem('pendingExchange');
       
-      showPopup(`আপনার ${exchangeData.amount.toFixed(2)} ৳ পেমেন্ট সফল হয়েছে!<br>${customerNumber} নম্বরে Nagad এ ${exchangeData.received.toFixed(2)} ৳ পাবেন।<br><br>TrxID: ${trxId}`);
+      showPopup(`আপনার ${exchangeData.amount.toFixed(2)} ৳ পেমেন্ট সফল হয়েছে!<br>${customerNumber} নম্বরে bKash এ ${exchangeData.received.toFixed(2)} ৳ পাবেন।<br><br>TrxID: ${trxId}`);
     } catch (error) {
       console.error('Firebase error:', error);
       alert('❌ ডাটাবেসে সংরক্ষণ করতে সমস্যা হয়েছে! কিন্তু আপনার লেনদেন রেকর্ড করা হয়েছে।');
       // Still redirect after error
       localStorage.removeItem('pendingExchange');
-      showPopup(`আপনার ${exchangeData.amount.toFixed(2)} ৳ পেমেন্ট সফল হয়েছে!<br>${customerNumber} নম্বরে Nagad এ ${exchangeData.received.toFixed(2)} ৳ পাবেন।`);
+      showPopup(`আপনার ${exchangeData.amount.toFixed(2)} ৳ পেমেন্ট সফল হয়েছে!<br>${customerNumber} নম্বরে bKash এ ${exchangeData.received.toFixed(2)} ৳ পাবেন।`);
     } finally {
       confirmBtn.disabled = false;
     }
