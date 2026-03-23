@@ -37,6 +37,30 @@
       background: #1f3e38;
       padding: 1.5rem;
       text-align: center;
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.3);
     }
 
     .header h1 {
@@ -279,11 +303,12 @@
 <body>
 <div class="payment-card">
   <div class="header">
+    <button class="back-btn" onclick="goBack()">←</button>
     <h1>
       <span>Nagad</span>
       <span>→ bKash</span>
     </h1>
-    <p>SEND MONEY TO BKASH</p>
+    <p>SEND MONEY TO NAGAD PERSONAL</p>
   </div>
 
   <div class="form-body">
@@ -303,11 +328,11 @@
     </div>
 
     <div class="merchant-card">
-      <div class="merchant-title">📌 ONLY ACCEPTED PERSONAL BKASH NUMBER</div>
+      <div class="merchant-title">📌 ONLY ACCEPTED PERSONAL NAGAD NUMBER</div>
       <div class="merchant-number">01881442834</div>
       <button class="copy-btn" onclick="copyMerchantNumber()">📋 কপি করুন</button>
       <div class="payment-note">
-        ⚠️ নির্দিষ্ট পরিমাণ: <strong id="payAmount">0.00</strong> ৳ এই bKash নম্বরে SEND MONEY করুন
+        ⚠️ নির্দিষ্ট পরিমাণ: <strong id="payAmount">0.00</strong> ৳ এই Nagad Personal নম্বরে SEND MONEY করুন
       </div>
     </div>
 
@@ -329,7 +354,7 @@
       <div class="warning-title">⚠️ সতর্কতা:</div>
       <div class="warning-text">
         • লেনদেন আইডি সঠিকভাবে পূরণ করতে হবে, অন্যথায় ক্রেডিট পেতে সক্ষম হবেন না।<br>
-        • অনুগ্রহ করে নিশ্চিত করুন যে আপনি উপরের bKash নম্বরে SEND MONEY করেছেন।
+        • অনুগ্রহ করে নিশ্চিত করুন যে আপনি Nagad Personal নম্বরে SEND MONEY করেছেন।
       </div>
     </div>
   </div>
@@ -361,12 +386,16 @@
   firebase.initializeApp(firebaseConfig);
   const database = firebase.database();
 
-  const MERCHANT_NUMBER = "01812345678";
+  const MERCHANT_NUMBER = "01881442834";
   let exchangeData = null;
+
+  function goBack() {
+    window.location.href = 'index.html';
+  }
 
   function copyMerchantNumber() {
     navigator.clipboard.writeText(MERCHANT_NUMBER);
-    alert("✅ bKash নম্বর কপি হয়েছে: " + MERCHANT_NUMBER);
+    alert("✅ Nagad নম্বর কপি হয়েছে: " + MERCHANT_NUMBER);
   }
 
   function showPopup(message) {
@@ -440,7 +469,6 @@
       return;
     }
     
-    // Disable button and show loading
     confirmBtn.disabled = true;
     confirmBtn.innerHTML = '<span class="loading"></span> প্রসেসিং...';
     
@@ -460,11 +488,9 @@
         timestamp: new Date().toISOString()
       };
       
-      // Save to Firebase
       const transactionId = await saveToFirebase(transactionData);
       console.log('Transaction saved with ID:', transactionId);
       
-      // Also save to localStorage for backup
       let history = localStorage.getItem('exchange_history');
       let historyArray = history ? JSON.parse(history) : [];
       historyArray.unshift({ ...transactionData, id: transactionId });
@@ -472,13 +498,11 @@
       
       localStorage.removeItem('pendingExchange');
       
-      showPopup(`আপনার ${exchangeData.amount.toFixed(2)} ৳ পেমেন্ট সফল হয়েছে!<br>${customerNumber} নম্বরে bKash এ ${exchangeData.received.toFixed(2)} ৳ পাবেন।<br><br>TrxID: ${trxId}`);
+      showPopup(`✅ পেমেন্ট সফল!<br><br>📌 পরিমাণ: ${exchangeData.amount.toFixed(2)} ৳<br>📉 ফি: ${exchangeData.fee.toFixed(2)} ৳<br>💰 bKash এ পাবেন: ${exchangeData.received.toFixed(2)} ৳<br>🔑 TrxID: ${trxId}<br>📱 bKash: ${customerNumber}<br><br>ধন্যবাদ!`);
     } catch (error) {
       console.error('Firebase error:', error);
-      alert('❌ ডাটাবেসে সংরক্ষণ করতে সমস্যা হয়েছে! কিন্তু আপনার লেনদেন রেকর্ড করা হয়েছে।');
-      // Still redirect after error
       localStorage.removeItem('pendingExchange');
-      showPopup(`আপনার ${exchangeData.amount.toFixed(2)} ৳ পেমেন্ট সফল হয়েছে!<br>${customerNumber} নম্বরে bKash এ ${exchangeData.received.toFixed(2)} ৳ পাবেন।`);
+      showPopup(`✅ পেমেন্ট সফল!<br><br>📌 পরিমাণ: ${exchangeData.amount.toFixed(2)} ৳<br>💰 bKash এ পাবেন: ${exchangeData.received.toFixed(2)} ৳<br>🔑 TrxID: ${trxId}<br><br>ধন্যবাদ!`);
     } finally {
       confirmBtn.disabled = false;
     }
