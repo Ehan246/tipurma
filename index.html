@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>FlexExchanger | Bkash ↔ Nagad (Real Fee Demo)</title>
+  <title>FlexExchanger | Bkash ↔ Nagad</title>
   <style>
     * {
       margin: 0;
@@ -21,20 +21,18 @@
       padding: 1.5rem;
     }
 
-    .exchange-card {
+    .main-card {
       max-width: 620px;
       width: 100%;
       background: rgba(255, 255, 255, 0.97);
-      backdrop-filter: blur(0px);
       border-radius: 3rem;
       box-shadow: 0 30px 50px -15px rgba(0, 0, 0, 0.5);
       overflow: hidden;
-      transition: all 0.2s ease;
     }
 
     .brand {
       background: #1c2f2b;
-      padding: 1.4rem 2rem;
+      padding: 1.5rem 2rem;
       text-align: center;
     }
 
@@ -42,7 +40,6 @@
       color: #fef3df;
       font-size: 1.9rem;
       font-weight: 700;
-      letter-spacing: -0.3px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -51,20 +48,18 @@
     }
 
     .brand h1 span:first-child {
-      background: #e8432e;
+      background: #ff6b2c;
       padding: 0.2rem 0.8rem;
       border-radius: 60px;
       font-size: 1rem;
-      background: #ff6b2c;
       color: #1e2f2c;
     }
 
     .brand h1 span:last-child {
-      background: #1e88e5;
+      background: #0e7c6e;
       padding: 0.2rem 0.8rem;
       border-radius: 60px;
       font-size: 1rem;
-      background: #0e7c6e;
       color: white;
     }
 
@@ -72,56 +67,59 @@
       color: #bdd9d1;
       font-size: 0.8rem;
       margin-top: 0.4rem;
-      font-weight: 500;
     }
 
-    .exchange-body {
-      padding: 1.8rem 2rem 2rem 2rem;
+    .main-body {
+      padding: 2rem;
     }
 
-    .direction-section {
-      background: #f0f5f3;
-      border-radius: 3rem;
-      padding: 0.5rem;
+    .direction-options {
       display: flex;
-      gap: 0.8rem;
+      gap: 1rem;
       margin-bottom: 2rem;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.03);
     }
 
-    .dir-btn {
+    .option-card {
       flex: 1;
-      text-align: center;
-      padding: 0.85rem 0.2rem;
-      border-radius: 2.5rem;
-      font-weight: 700;
-      font-size: 1.05rem;
-      cursor: pointer;
-      transition: 0.2s;
-      background: transparent;
-      color: #2c4a42;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      border: none;
-    }
-
-    .dir-btn.active {
       background: white;
-      color: #0f4c3a;
-      box-shadow: 0 6px 14px -8px rgba(0, 0, 0, 0.2);
-      border: 1px solid #e2eae7;
+      border: 2px solid #e2ece8;
+      border-radius: 1.5rem;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
 
-    .dir-btn:first-child.active {
-      background: linear-gradient(105deg, #fff, #fff5e8);
-      color: #c24e1a;
+    .option-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.2);
     }
 
-    .dir-btn:last-child.active {
-      background: linear-gradient(105deg, #fff, #e2f2ef);
-      color: #0f6e60;
+    .option-card.selected {
+      border-color: #ff6b2c;
+      background: #fff9f0;
+      box-shadow: 0 5px 15px rgba(255, 107, 44, 0.2);
+    }
+
+    .option-card.nagad-selected {
+      border-color: #0e7c6e;
+      background: #e8f5f2;
+    }
+
+    .option-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .option-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .option-fee {
+      font-size: 0.7rem;
+      color: #7f8c8d;
     }
 
     .input-group {
@@ -129,28 +127,20 @@
     }
 
     .input-label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
       font-weight: 600;
       color: #1f463e;
       margin-bottom: 0.6rem;
-      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .amount-wrapper {
-      position: relative;
       display: flex;
       align-items: center;
       background: #fafdfc;
       border-radius: 2rem;
       border: 1.5px solid #e2ece8;
-      transition: all 0.2s;
-    }
-
-    .amount-wrapper:focus-within {
-      border-color: #2c9c7e;
-      box-shadow: 0 0 0 3px rgba(44, 156, 126, 0.2);
     }
 
     .currency-symbol {
@@ -164,26 +154,17 @@
       flex: 1;
       border: none;
       background: transparent;
-      padding: 1rem 0.8rem 1rem 0;
+      padding: 1rem 0.8rem;
       font-size: 1.3rem;
       font-weight: 600;
       outline: none;
-      color: #1f3e36;
     }
 
-    .amount-wrapper input::placeholder {
-      color: #c2d3cd;
-      font-weight: 400;
-      font-size: 1rem;
-    }
-
-    /* fee breakdown card */
-    .fee-details {
+    .fee-preview {
       background: #f1f8f5;
-      border-radius: 1.5rem;
-      padding: 1rem 1.4rem;
-      margin: 1.2rem 0 1.2rem;
-      border-left: 4px solid #27ae82;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      margin: 1.2rem 0;
     }
 
     .fee-row {
@@ -191,127 +172,36 @@
       justify-content: space-between;
       font-size: 0.85rem;
       margin-bottom: 0.5rem;
-      flex-wrap: wrap;
-      gap: 0.3rem;
     }
 
-    .fee-label {
-      font-weight: 500;
-      color: #3f6b5f;
-    }
-
-    .fee-value {
-      font-weight: 600;
-      color: #1a5a4a;
-      font-family: monospace;
-    }
-
-    .total-receive {
-      margin-top: 0.7rem;
-      padding-top: 0.6rem;
+    .total-row {
       border-top: 1px dashed #cbdcd6;
+      margin-top: 0.6rem;
+      padding-top: 0.6rem;
       font-weight: 800;
-      font-size: 1rem;
-      display: flex;
-      justify-content: space-between;
-      color: #0d483b;
     }
 
-    .total-receive span:last-child {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: #066e55;
-    }
-
-    .exchange-btn {
+    .confirm-btn {
       width: 100%;
-      background: #1f5a4c;
+      background: #ff6b2c;
       border: none;
       padding: 1rem;
-      border-radius: 3rem;
+      border-radius: 2rem;
       font-weight: 800;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.7rem;
       cursor: pointer;
-      transition: all 0.2s;
-      margin: 1.2rem 0 1.2rem;
-      box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.25);
+      transition: 0.2s;
+      margin: 1rem 0;
     }
 
-    .exchange-btn:hover {
-      background: #0f463b;
+    .confirm-btn:hover {
+      background: #e55a1e;
       transform: scale(0.98);
-    }
-
-    .log-section {
-      margin-top: 1rem;
-      border-top: 1px solid #e2f0ea;
-      padding-top: 1.2rem;
-    }
-
-    .log-header {
-      font-weight: 600;
-      color: #2f6c5e;
-      font-size: 0.85rem;
-      margin-bottom: 0.7rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .log-list {
-      background: #fafefc;
-      border-radius: 1.5rem;
-      padding: 0.2rem;
-      max-height: 230px;
-      overflow-y: auto;
-    }
-
-    .log-item {
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid #e3f0ea;
-      font-size: 0.8rem;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      font-family: monospace;
-      color: #1d5848;
-    }
-
-    .log-time {
-      color: #7aa89b;
-      font-size: 0.7rem;
-      font-family: monospace;
-    }
-
-    .empty-log {
-      text-align: center;
-      padding: 1.2rem;
-      color: #98bfb0;
-      font-size: 0.8rem;
-    }
-
-    @media (max-width: 520px) {
-      .exchange-body {
-        padding: 1.4rem;
-      }
-      .dir-btn {
-        font-size: 0.85rem;
-        gap: 0.2rem;
-      }
-      .total-receive span:last-child {
-        font-size: 1.1rem;
-      }
-    }
-
-    button {
-      background: none;
-      border: none;
     }
 
     footer {
@@ -322,400 +212,201 @@
       color: #548c7c;
       border-top: 1px solid #e2f0ea;
     }
-
-    .badge-rate {
-      background: #e9f3ef;
-      border-radius: 30px;
-      padding: 0.2rem 0.8rem;
-      font-size: 0.7rem;
-      font-weight: 500;
-    }
   </style>
 </head>
 <body>
-<div class="exchange-card">
+<div class="main-card">
   <div class="brand">
     <h1>
       <span>💸 bkash</span>
       <span>⟷</span>
       <span>📱 nagad</span>
     </h1>
-    <div class="sub">real fee • instant exchange demo</div>
+    <div class="sub">সরাসরি এক্সচেঞ্জ • নির্ভরযোগ্য হার</div>
   </div>
 
-  <div class="exchange-body">
-    <!-- Direction Toggle -->
-    <div class="direction-section" id="directionToggle">
-      <button class="dir-btn" id="bkashToNagadBtn">
-        <span>🟠</span> Bkash → Nagad
-      </button>
-      <button class="dir-btn" id="nagadToBkashBtn">
-        <span>🟢</span> Nagad → Bkash
-      </button>
+  <div class="main-body">
+    <div class="direction-options">
+      <div class="option-card" id="bkashToNagadOption">
+        <div class="option-icon">🟠 ➡️ 🟢</div>
+        <div class="option-title">Bkash → Nagad</div>
+        <div class="option-fee">ফি: 1.49% + 10 TK</div>
+      </div>
+      <div class="option-card" id="nagadToBkashOption">
+        <div class="option-icon">🟢 ➡️ 🟠</div>
+        <div class="option-title">Nagad → Bkash</div>
+        <div class="option-fee">ফি: 1.25% + 10 TK</div>
+      </div>
     </div>
 
-    <!-- FROM area -->
     <div class="input-group">
-      <div class="input-label" id="fromLabel">
-        <span>📤</span> <span id="fromLabelText">Send from (Bkash)</span>
+      <div class="input-label">
+        <span>💰</span> <span id="sendFromLabel">Bkash থেকে পাঠাবেন</span>
       </div>
       <div class="amount-wrapper">
-        <span class="currency-symbol" id="fromCurrencySymbol">৳</span>
-        <input type="number" id="amountInput" placeholder="Enter amount (BDT)" value="500" step="any">
+        <span class="currency-symbol">৳</span>
+        <input type="number" id="amountInput" placeholder="পরিমাণ লিখুন" value="500" step="any">
       </div>
     </div>
 
-    <!-- Detailed fee & receive preview -->
-    <div class="fee-details" id="feeBreakdownCard">
+    <div class="fee-preview" id="feePreview">
       <div class="fee-row">
-        <span class="fee-label">💰 Exchange amount:</span>
-        <span class="fee-value" id="displayAmount">0.00 ৳</span>
+        <span>এক্সচেঞ্জ পরিমাণ:</span>
+        <span id="displayAmount">0.00 ৳</span>
       </div>
       <div class="fee-row">
-        <span class="fee-label" id="feePercentLabel">📉 Fee (1.49% + 10 TK):</span>
-        <span class="fee-value" id="feeTotalDisplay">0.00 ৳</span>
+        <span id="feeLabel">ফি (1.49% + 10 TK):</span>
+        <span id="feeAmount">0.00 ৳</span>
       </div>
-      <div class="total-receive">
-        <span>✅ You will receive:</span>
-        <span id="finalReceiveAmount">0.00 ৳</span>
-      </div>
-      <div class="fee-row" style="margin-top: 6px; font-size:0.75rem; opacity:0.8">
-        <span>⚡ instant settlement</span>
-        <span id="rateNote">bkash→nagad: 1.49% + 10</span>
+      <div class="fee-row total-row">
+        <span>✅ পাবেন:</span>
+        <span id="receiveAmount">0.00 ৳</span>
       </div>
     </div>
 
-    <!-- Exchange CTA -->
-    <button class="exchange-btn" id="exchangeActionBtn">
-      <span>🔄</span> Confirm & Exchange
+    <button class="confirm-btn" id="confirmExchangeBtn">
+      <span>🔄</span> কনফার্ম করুন & এক্সচেঞ্জ করুন
     </button>
-
-    <!-- Transaction log -->
-    <div class="log-section">
-      <div class="log-header">
-        <span>📋</span> Recent transactions
-      </div>
-      <div class="log-list" id="logList">
-        <div class="empty-log">— no transactions yet —</div>
-      </div>
-    </div>
   </div>
   <footer>
-    ⚡ Demo: Bkash→Nagad fee = 1.49% + 10 TK | Nagad→Bkash fee = 1.25% + 10 TK
+    ⚡ Bkash→Nagad: 1.49%+10 | Nagad→Bkash: 1.25%+10
   </footer>
 </div>
 
 <script>
-  // --------------------------------------------------------------
-  // REAL FEE IMPLEMENTATION: 
-  // Bkash → Nagad : 1.49% of amount + 10 TK
-  // Nagad → Bkash : 1.25% of amount + 10 TK
-  // Received = amount - (feePercent/100 * amount) - 10
-  // --------------------------------------------------------------
-  let currentDirection = 'bkash_to_nagad';     // 'bkash_to_nagad' OR 'nagad_to_bkash'
-  let transactionHistory = [];
+  let currentDirection = 'bkash_to_nagad';
 
-  // DOM elements
-  const bkashToNagadBtn = document.getElementById('bkashToNagadBtn');
-  const nagadToBkashBtn = document.getElementById('nagadToBkashBtn');
+  const bkashOption = document.getElementById('bkashToNagadOption');
+  const nagadOption = document.getElementById('nagadToBkashOption');
   const amountInput = document.getElementById('amountInput');
-  const finalReceiveSpan = document.getElementById('finalReceiveAmount');
+  const sendFromLabel = document.getElementById('sendFromLabel');
   const displayAmountSpan = document.getElementById('displayAmount');
-  const feeTotalDisplaySpan = document.getElementById('feeTotalDisplay');
-  const fromLabelText = document.getElementById('fromLabelText');
-  const fromCurrencySymbol = document.getElementById('fromCurrencySymbol');
-  const feePercentLabel = document.getElementById('feePercentLabel');
-  const rateNoteSpan = document.getElementById('rateNote');
-  const exchangeBtn = document.getElementById('exchangeActionBtn');
-  const logListContainer = document.getElementById('logList');
+  const feeAmountSpan = document.getElementById('feeAmount');
+  const receiveAmountSpan = document.getElementById('receiveAmount');
+  const feeLabel = document.getElementById('feeLabel');
+  const confirmBtn = document.getElementById('confirmExchangeBtn');
 
-  // Helper: get current fee percent and fixed fee (always 10 TK)
   function getFeeConfig(direction) {
     if (direction === 'bkash_to_nagad') {
-      return { percent: 1.49, fixed: 10, name: 'Bkash → Nagad' };
+      return { percent: 1.49, fixed: 10, name: 'Bkash → Nagad', sendFrom: 'Bkash', receiveTo: 'Nagad' };
     } else {
-      return { percent: 1.25, fixed: 10, name: 'Nagad → Bkash' };
+      return { percent: 1.25, fixed: 10, name: 'Nagad → Bkash', sendFrom: 'Nagad', receiveTo: 'Bkash' };
     }
   }
 
-  // Core calculation: given amount (BDT) and direction, returns received amount after deducting fees.
-  // Formula: receive = amount - (amount * percent/100) - fixed_fee
-  // If result negative (fee higher than amount) return 0, but we handle validation.
-  function calculateReceivedAmount(amount, direction) {
-    if (isNaN(amount) || amount === null || amount <= 0) return 0;
+  function calculateReceived(amount, direction) {
+    if (isNaN(amount) || amount <= 0) return 0;
     const config = getFeeConfig(direction);
     const percentFee = (amount * config.percent) / 100;
     const totalFee = percentFee + config.fixed;
     let received = amount - totalFee;
-    if (received < 0) received = 0;
-    return received;
+    return received < 0 ? 0 : received;
   }
 
-  // Get detailed fee breakdown (percentFee, totalFee, received)
   function getFeeBreakdown(amount, direction) {
     if (isNaN(amount) || amount <= 0) {
-      return { percentFee: 0, totalFee: 0, received: 0, percent: direction === 'bkash_to_nagad' ? 1.49 : 1.25, fixed: 10 };
+      return { totalFee: 0, received: 0 };
     }
     const config = getFeeConfig(direction);
     const percentFee = (amount * config.percent) / 100;
     const totalFee = percentFee + config.fixed;
     let received = amount - totalFee;
     if (received < 0) received = 0;
-    return { percentFee, totalFee, received, percentVal: config.percent, fixedFee: config.fixed };
+    return { totalFee, received };
   }
 
-  // Update full UI: live fee breakdown, receive amount, labels, rate note
-  function updateLivePreview() {
-    let rawAmount = amountInput.value;
-    let amountNum = parseFloat(rawAmount);
-    if (isNaN(amountNum) || rawAmount === '') {
-      displayAmountSpan.innerText = '0.00 ৳';
-      feeTotalDisplaySpan.innerText = '0.00 ৳';
-      finalReceiveSpan.innerText = '0.00 ৳';
-      return;
-    }
-    if (amountNum < 0) amountNum = 0;
-    const breakdown = getFeeBreakdown(amountNum, currentDirection);
-    displayAmountSpan.innerText = amountNum.toFixed(2) + ' ৳';
-    feeTotalDisplaySpan.innerText = breakdown.totalFee.toFixed(2) + ' ৳';
-    finalReceiveSpan.innerText = breakdown.received.toFixed(2) + ' ৳';
-    
-    // update label and percent text
-    if (currentDirection === 'bkash_to_nagad') {
-      feePercentLabel.innerHTML = `📉 Fee (1.49% + 10 TK):`;
-      rateNoteSpan.innerText = `bkash→nagad: 1.49% + 10 TK`;
-    } else {
-      feePercentLabel.innerHTML = `📉 Fee (1.25% + 10 TK):`;
-      rateNoteSpan.innerText = `nagad→bkash: 1.25% + 10 TK`;
-    }
+  function updatePreview() {
+    let amount = parseFloat(amountInput.value);
+    if (isNaN(amount)) amount = 0;
+    if (amount < 0) amount = 0;
+
+    displayAmountSpan.innerText = amount.toFixed(2) + ' ৳';
+    const breakdown = getFeeBreakdown(amount, currentDirection);
+    feeAmountSpan.innerText = breakdown.totalFee.toFixed(2) + ' ৳';
+    receiveAmountSpan.innerText = breakdown.received.toFixed(2) + ' ৳';
   }
 
-  // Update direction UI (active styles, labels)
   function updateDirectionUI() {
     if (currentDirection === 'bkash_to_nagad') {
-      bkashToNagadBtn.classList.add('active');
-      nagadToBkashBtn.classList.remove('active');
-      fromLabelText.innerText = 'Send from (Bkash)';
-      fromCurrencySymbol.innerText = '৳';
+      bkashOption.classList.add('selected');
+      bkashOption.classList.remove('nagad-selected');
+      nagadOption.classList.remove('selected');
+      sendFromLabel.innerText = 'Bkash থেকে পাঠাবেন';
+      feeLabel.innerHTML = '📉 ফি (1.49% + 10 TK):';
     } else {
-      nagadToBkashBtn.classList.add('active');
-      bkashToNagadBtn.classList.remove('active');
-      fromLabelText.innerText = 'Send from (Nagad)';
-      fromCurrencySymbol.innerText = '৳';
+      nagadOption.classList.add('selected');
+      nagadOption.classList.add('nagad-selected');
+      bkashOption.classList.remove('selected');
+      sendFromLabel.innerText = 'Nagad থেকে পাঠাবেন';
+      feeLabel.innerHTML = '📉 ফি (1.25% + 10 TK):';
     }
-    updateLivePreview();
+    updatePreview();
   }
 
-  // Add transaction record with full details
-  function addTransaction(amountSent, amountReceived, directionType, feePercentValue, feeFixed, totalFeeDeducted, timestamp = null) {
-    const now = timestamp ? new Date(timestamp) : new Date();
-    const formattedTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second:'2-digit' });
-    const dateStr = now.toLocaleDateString();
-    
-    let directionText = '';
-    let fromToShort = '';
-    if (directionType === 'bkash_to_nagad') {
-      directionText = 'Bkash → Nagad';
-      fromToShort = `Bkash ${amountSent.toFixed(2)} ৳ → Nagad ${amountReceived.toFixed(2)} ৳ (fee: ${feePercentValue}%+${feeFixed}tk)`;
-    } else {
-      directionText = 'Nagad → Bkash';
-      fromToShort = `Nagad ${amountSent.toFixed(2)} ৳ → Bkash ${amountReceived.toFixed(2)} ৳ (fee: ${feePercentValue}%+${feeFixed}tk)`;
-    }
-    
-    const logEntry = {
-      id: Date.now() + Math.random(),
-      direction: directionType,
-      sent: amountSent,
-      received: amountReceived,
-      feePercent: feePercentValue,
-      feeFixed: feeFixed,
-      totalFee: totalFeeDeducted,
-      timeLabel: `${dateStr} ${formattedTime}`,
-      description: fromToShort
-    };
-    transactionHistory.unshift(logEntry);
-    if (transactionHistory.length > 14) transactionHistory.pop();
-    renderTransactionLog();
-  }
-
-  // Render transaction history with enhanced details
-  function renderTransactionLog() {
-    if (!logListContainer) return;
-    if (transactionHistory.length === 0) {
-      logListContainer.innerHTML = `<div class="empty-log">— no transactions yet —</div>`;
-      return;
-    }
-    let html = '';
-    for (let t of transactionHistory) {
-      let arrowIcon = t.direction === 'bkash_to_nagad' ? '➡️' : '⬅️';
-      let dirName = t.direction === 'bkash_to_nagad' ? 'Bkash→Nagad' : 'Nagad→Bkash';
-      html += `
-        <div class="log-item">
-          <div style="display: flex; flex-direction: column; gap: 4px; flex:1;">
-            <strong>${arrowIcon} ${dirName}</strong>
-            <span>${t.description}</span>
-          </div>
-          <div class="log-time">${t.timeLabel}</div>
-        </div>
-      `;
-    }
-    logListContainer.innerHTML = html;
-  }
-
-  // Perform exchange with actual fee deduction
   function performExchange() {
-    let rawAmount = amountInput.value.trim();
-    if (rawAmount === '') {
-      alert('❌ Please enter an amount');
+    let amount = parseFloat(amountInput.value);
+    
+    if (isNaN(amount) || amount <= 0) {
+      alert('❌ সঠিক পরিমাণ লিখুন!');
       return;
     }
-    let amountNum = parseFloat(rawAmount);
-    if (isNaN(amountNum) || amountNum <= 0) {
-      alert('❌ Please enter a valid positive amount (minimum 1 BDT)');
+    
+    if (amount < 10) {
+      alert('❌ নূন্যতম এক্সচেঞ্জ পরিমাণ ১০ টাকা');
       return;
     }
-    // Sanity limits for demo
-    if (amountNum > 200000) {
-      alert('⚠️ Demo max limit 200,000 BDT for smooth testing');
+    
+    if (amount > 500000) {
+      alert('⚠️ সর্বোচ্চ সীমা 500,000 টাকা');
       return;
-    }
-    if (amountNum < 10) {
-      if (!confirm('Amount is below 10 BDT. Fee may exceed amount and received could be zero. Continue?')) return;
     }
     
     const config = getFeeConfig(currentDirection);
-    const percentFeeAmount = (amountNum * config.percent) / 100;
-    const totalFee = percentFeeAmount + config.fixed;
-    let receivedValue = amountNum - totalFee;
-    if (receivedValue < 0) receivedValue = 0;
+    const breakdown = getFeeBreakdown(amount, currentDirection);
     
-    // Additional validation: if receivedValue <= 0 and amountNum >0, show warning.
-    if (receivedValue === 0 && amountNum > 0) {
-      if (!confirm(`⚠️ After deducting ${config.percent}% + ${config.fixed} TK fee (total ${totalFee.toFixed(2)} TK), you'll receive 0.00 TK. Exchange still recorded?`)) {
+    if (breakdown.received <= 0 && amount > 0) {
+      if (!confirm(`⚠️ ফি কাটার পরে আপনি ${breakdown.received.toFixed(2)} টাকা পাবেন। তবুও কি এক্সচেঞ্জ চালিয়ে যাবেন?`)) {
         return;
       }
     }
     
-    // Record transaction
-    addTransaction(
-      amountNum, 
-      receivedValue, 
-      currentDirection, 
-      config.percent, 
-      config.fixed, 
-      totalFee
-    );
+    // Store exchange data in localStorage to pass to next page
+    const exchangeData = {
+      amount: amount,
+      received: breakdown.received,
+      fee: breakdown.totalFee,
+      direction: currentDirection,
+      sendFrom: config.sendFrom,
+      receiveTo: config.receiveTo,
+      feePercent: config.percent,
+      feeFixed: config.fixed,
+      timestamp: new Date().toISOString()
+    };
     
-    let fromWallet = currentDirection === 'bkash_to_nagad' ? 'Bkash' : 'Nagad';
-    let toWallet = currentDirection === 'bkash_to_nagad' ? 'Nagad' : 'Bkash';
-    alert(`✅ Exchange successful!\n\n💸 Sent: ${amountNum.toFixed(2)} ৳ from ${fromWallet}\n📉 Fee: ${config.percent}% + ${config.fixed} TK = ${totalFee.toFixed(2)} TK\n💰 Received: ${receivedValue.toFixed(2)} ৳ in ${toWallet}\n\nRef: DEMO-${Math.floor(Math.random()*10000)}`);
+    localStorage.setItem('pendingExchange', JSON.stringify(exchangeData));
     
-    // Optional: keep amount, but recalc live preview again
-    updateLivePreview();
-  }
-
-  // Bind all event listeners
-  function bindEvents() {
-    amountInput.addEventListener('input', function(e) {
-      let val = e.target.value;
-      if (val === '') {
-        updateLivePreview();
-        return;
-      }
-      let num = parseFloat(val);
-      if (!isNaN(num) && num >= 0) {
-        updateLivePreview();
-      } else {
-        displayAmountSpan.innerText = '0.00 ৳';
-        feeTotalDisplaySpan.innerText = '0.00 ৳';
-        finalReceiveSpan.innerText = '0.00 ৳';
-      }
-    });
-    
-    amountInput.addEventListener('blur', function() {
-      let val = parseFloat(amountInput.value);
-      if (isNaN(val)) {
-        amountInput.value = '';
-        updateLivePreview();
-      } else if (val < 0) {
-        amountInput.value = 0;
-        updateLivePreview();
-      } else {
-        updateLivePreview();
-      }
-    });
-    
-    // direction buttons
-    bkashToNagadBtn.addEventListener('click', () => {
-      if (currentDirection === 'bkash_to_nagad') return;
-      currentDirection = 'bkash_to_nagad';
-      updateDirectionUI();
-      updateLivePreview();
-    });
-    
-    nagadToBkashBtn.addEventListener('click', () => {
-      if (currentDirection === 'nagad_to_bkash') return;
-      currentDirection = 'nagad_to_bkash';
-      updateDirectionUI();
-      updateLivePreview();
-    });
-    
-    exchangeBtn.addEventListener('click', performExchange);
-  }
-  
-  // Helper to seed demo transactions showing realistic fee examples
-  function seedDemoTransactions() {
-    if (transactionHistory.length === 0) {
-      // demo 1: Bkash → Nagad with 500 TK (fee: 1.49% of 500 = 7.45, +10 = 17.45, receive 482.55)
-      const date1 = new Date();
-      date1.setMinutes(date1.getMinutes() - 5);
-      addTransaction(500, 482.55, 'bkash_to_nagad', 1.49, 10, 17.45, date1);
-      
-      // demo 2: Nagad → Bkash with 1200 TK (fee: 1.25% of 1200 = 15, +10 = 25, receive 1175)
-      const date2 = new Date();
-      date2.setMinutes(date2.getMinutes() - 32);
-      addTransaction(1200, 1175.00, 'nagad_to_bkash', 1.25, 10, 25.00, date2);
-      
-      // demo 3: Bkash → Nagad with 2100 TK (1.49% of 2100 = 31.29, +10 = 41.29, receive 2058.71)
-      const date3 = new Date();
-      date3.setHours(date3.getHours() - 2);
-      addTransaction(2100, 2058.71, 'bkash_to_nagad', 1.49, 10, 41.29, date3);
-      
-      // demo 4: Nagad → Bkash with 750 TK (1.25% of 750 = 9.375, +10 = 19.375, receive 730.625)
-      const date4 = new Date();
-      date4.setMinutes(date4.getMinutes() - 70);
-      addTransaction(750, 730.63, 'nagad_to_bkash', 1.25, 10, 19.38, date4);
+    // Redirect to appropriate page based on direction
+    if (currentDirection === 'bkash_to_nagad') {
+      window.location.href = 'bkash-to-nagad.html';
+    } else {
+      window.location.href = 'nagad-to-bkash.html';
     }
   }
   
-  // prevent negative and multiple dots
-  function sanitizeNumericInput() {
-    amountInput.addEventListener('keydown', (e) => {
-      const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Escape', 'Enter', '.'];
-      if (allowedKeys.includes(e.key)) return;
-      if (!/^[0-9]$/.test(e.key)) {
-        e.preventDefault();
-      }
-      if (e.key === '.' && amountInput.value.includes('.')) {
-        e.preventDefault();
-      }
-    });
-  }
-  
-  // initialize app
-  function init() {
+  bkashOption.addEventListener('click', () => {
+    currentDirection = 'bkash_to_nagad';
     updateDirectionUI();
-    bindEvents();
-    sanitizeNumericInput();
-    // set default amount to 500 and recalc correctly (482.55 for bkash->nagad)
-    if (amountInput.value === '' || amountInput.value === '0') {
-      amountInput.value = '500';
-    }
-    updateLivePreview();
-    seedDemoTransactions();
-  }
+  });
   
-  init();
+  nagadOption.addEventListener('click', () => {
+    currentDirection = 'nagad_to_bkash';
+    updateDirectionUI();
+  });
+  
+  amountInput.addEventListener('input', updatePreview);
+  confirmBtn.addEventListener('click', performExchange);
+  
+  updateDirectionUI();
 </script>
 </body>
 </html>
