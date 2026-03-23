@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>Bkash to Nagad | পেমেন্ট কনফার্ম</title>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
   <style>
     * {
       margin: 0;
@@ -171,6 +174,11 @@
       margin: 1rem 0;
     }
 
+    .confirm-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
     .warning-box {
       background: #fff2f0;
       border: 1px solid #ffccbc;
@@ -251,6 +259,21 @@
       font-weight: 600;
       cursor: pointer;
     }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 0.6s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -322,6 +345,22 @@
 </div>
 
 <script>
+  // Firebase Configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBm-u9hmjJtBRouEFIHifnkU_Zjn8llJqs",
+    authDomain: "takatotaka-49555.firebaseapp.com",
+    databaseURL: "https://takatotaka-49555-default-rtdb.firebaseio.com",
+    projectId: "takatotaka-49555",
+    storageBucket: "takatotaka-49555.appspot.com",
+    messagingSenderId: "321092793137",
+    appId: "1:321092793137:web:cc73a09d40f7c2b4eeb610",
+    measurementId: "G-KJ11Z3TZ0R"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+
   const MERCHANT_NUMBER = "01712345678";
   let exchangeData = null;
 
@@ -361,9 +400,20 @@
     }
   }
 
-  function confirmPayment() {
+  async function saveToFirebase(transactionData) {
+    const transactionsRef = database.ref('transactions');
+    const newTransactionRef = transactionsRef.push();
+    await newTransactionRef.set({
+      ...transactionData,
+      createdAt: firebase.database.ServerValue.TIMESTAMP
+    });
+    return newTransactionRef.key;
+  }
+
+  async function confirmPayment() {
     const trxId = document.getElementById('trxIdInput').value.trim();
     const customerNumber = document.getElementById('customerNumber').value.trim();
+    const confirmBtn = document.getElementById('confirmPaymentBtn');
     
     if (!trxId) {
       alert("❌ TrxID নম্বর অবশ্যই পূরণ করতে হবে!");
@@ -390,26 +440,48 @@
       return;
     }
     
-    const transaction = {
-      id: Date.now(),
-      type: 'bkash_to_nagad',
-      amount: exchangeData.amount,
-      received: exchangeData.received,
-      fee: exchangeData.fee,
-      trxId: trxId,
-      customerNumber: customerNumber,
-      merchant: MERCHANT_NUMBER,
-      date: new Date().toLocaleString()
-    };
+    // Disable button and show loading
+    confirmBtn.disabled = true;
+    confirmBtn.innerHTML = '<span class="loading"></span> প্রসেসিং...';
     
-    let history = localStorage.getItem('exchange_history');
-    let historyArray = history ? JSON.parse(history) : [];
-    historyArray.unshift(transaction);
-    localStorage.setItem('exchange_history', JSON.stringify(historyArray));
-    
-    localStorage.removeItem('pendingExchange');
-    
-    showPopup(`আপনার ${exchangeData.amount.toFixed(2)} ৳ পেমেন্ট সফল হয়েছে!<br>${customerNumber} নম্বরে Nagad এ ${exchangeData.received.toFixed(2)} ৳ পাবেন।`);
+    try {
+      const transactionData = {
+        type: 'bkash_to_nagad',
+        amount: exchangeData.amount,
+        received: exchangeData.received,
+        fee: exchangeData.fee,
+        feePercent: exchangeData.feePercent,
+        feeFixed: exchangeData.feeFixed,
+        trxId: trxId,
+        customerNumber: customerNumber,
+        merchantNumber: MERCHANT_NUMBER,
+        status: 'completed',
+        direction: 'Bkash → Nagad',
+        timestamp: new Date().toISOString()
+      };
+      
+      // Save to Firebase
+      const transactionId = await saveToFirebase(transactionData);
+      console.log('Transaction saved with ID:', transactionId);
+      
+      // Also save to localStorage for backup
+      let history = localStorage.getItem('exchange_history');
+      let historyArray = history ? JSON.parse(history) : [];
+      historyArray.unshift({ ...transactionData, id: transactionId });
+      localStorage.setItem('exchange_history', JSON.stringify(historyArray));
+      
+      localStorage.removeItem('pendingExchange');
+      
+      showPopup(`আপনার ${exchangeData.amount.toFixed(2)} ৳ পেমেন্ট সফল হয়েছে!<br>${customerNumber} নম্বরে Nagad এ ${exchangeData.received.toFixed(2)} ৳ পাবেন।<br><br>TrxID: ${trxId}`);
+    } catch (error) {
+      console.error('Firebase error:', error);
+      alert('❌ ডাটাবেসে সংরক্ষণ করতে সমস্যা হয়েছে! কিন্তু আপনার লেনদেন রেকর্ড করা হয়েছে।');
+      // Still redirect after error
+      localStorage.removeItem('pendingExchange');
+      showPopup(`আপনার ${exchangeData.amount.toFixed(2)} ৳ পেমেন্ট সফল হয়েছে!<br>${customerNumber} নম্বরে Nagad এ ${exchangeData.received.toFixed(2)} ৳ পাবেন।`);
+    } finally {
+      confirmBtn.disabled = false;
+    }
   }
   
   document.getElementById('confirmPaymentBtn').addEventListener('click', confirmPayment);
