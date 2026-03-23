@@ -305,6 +305,23 @@
       color: #ffde9c;
     }
 
+    .footer-links {
+      margin-top: 10px;
+      margin-bottom: 8px;
+    }
+
+    .footer-links a {
+      color: #bdd9d1;
+      text-decoration: none;
+      margin: 0 8px;
+      font-size: 0.7rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: #ffde9c;
+    }
+
     /* Floating Support Icon Styles */
     .support-container {
       position: fixed;
@@ -463,6 +480,10 @@
       .brand h1 {
         font-size: 1.3rem;
       }
+      .footer-links a {
+        margin: 0 4px;
+        font-size: 0.6rem;
+      }
     }
   </style>
 </head>
@@ -525,12 +546,19 @@
     </button>
   </div>
 
-  <!-- Footer with Copyright -->
+  <!-- Footer with Copyright and Links -->
   <div class="site-footer">
     <div class="footer-text">
       © 2026 <strong>Flex Exchanger</strong> - Exchange Your Money <i class="fas fa-exchange-alt"></i>
     </div>
-    <div class="footer-text" style="font-size: 0.7rem; margin-top: 5px;">
+    <div class="footer-links">
+      <a href="about.html"><i class="fas fa-info-circle"></i> About</a> |
+      <a href="terms.html"><i class="fas fa-file-contract"></i> Terms</a> |
+      <a href="privacy.html"><i class="fas fa-shield-alt"></i> Privacy</a> |
+      <a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a> |
+      <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
+    </div>
+    <div class="footer-text" style="font-size: 0.65rem; margin-top: 5px;">
       <i class="fas fa-shield-alt"></i> Secure & Fast Exchange | 24/7 Support
     </div>
   </div>
