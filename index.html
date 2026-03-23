@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>FlexExchanger | Bkash ↔ Nagad</title>
+  <!-- Website Icon (Favicon) -->
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/FKPf7xFW/Gemini-Generated-Image-797iqg797iqg797i.png">
+  <link rel="shortcut icon" type="image/png" href="https://i.postimg.cc/FKPf7xFW/Gemini-Generated-Image-797iqg797iqg797i.png">
   <style>
     * {
       margin: 0;
@@ -47,12 +50,22 @@
       flex-wrap: wrap;
     }
 
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      vertical-align: middle;
+    }
+
     .brand h1 span:first-child {
       background: #ff6b2c;
       padding: 0.2rem 0.8rem;
       border-radius: 60px;
       font-size: 1rem;
       color: #1e2f2c;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .brand h1 span:last-child {
@@ -61,6 +74,9 @@
       border-radius: 60px;
       font-size: 1rem;
       color: white;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .sub {
@@ -108,6 +124,13 @@
 
     .option-icon {
       font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .option-icon-img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
       margin-bottom: 0.5rem;
     }
 
@@ -218,9 +241,9 @@
 <div class="main-card">
   <div class="brand">
     <h1>
-      <span>💸 bkash</span>
+      <span><img src="https://i.postimg.cc/VsWR4xNj/download.png" alt="bKash" class="brand-icon" style="width: 32px; height: 32px;"> bkash</span>
       <span>⟷</span>
-      <span>📱 nagad</span>
+      <span>nagad <img src="https://i.postimg.cc/CMsNJ3KG/download-(1).png" alt="Nagad" class="brand-icon" style="width: 32px; height: 32px;"></span>
     </h1>
     <div class="sub">সরাসরি এক্সচেঞ্জ • নির্ভরযোগ্য হার</div>
   </div>
@@ -228,12 +251,16 @@
   <div class="main-body">
     <div class="direction-options">
       <div class="option-card" id="bkashToNagadOption">
-        <div class="option-icon">🟠 ➡️ 🟢</div>
+        <div class="option-icon">
+          <img src="https://i.postimg.cc/VsWR4xNj/download.png" alt="bKash" class="option-icon-img" style="width: 50px; height: 50px;">
+        </div>
         <div class="option-title">Bkash → Nagad</div>
         <div class="option-fee">ফি: 1.49% + 10 TK</div>
       </div>
       <div class="option-card" id="nagadToBkashOption">
-        <div class="option-icon">🟢 ➡️ 🟠</div>
+        <div class="option-icon">
+          <img src="https://i.postimg.cc/CMsNJ3KG/download-(1).png" alt="Nagad" class="option-icon-img" style="width: 50px; height: 50px;">
+        </div>
         <div class="option-title">Nagad → Bkash</div>
         <div class="option-fee">ফি: 1.25% + 10 TK</div>
       </div>
@@ -292,15 +319,6 @@
     } else {
       return { percent: 1.25, fixed: 10, name: 'Nagad → Bkash', sendFrom: 'Nagad', receiveTo: 'Bkash' };
     }
-  }
-
-  function calculateReceived(amount, direction) {
-    if (isNaN(amount) || amount <= 0) return 0;
-    const config = getFeeConfig(direction);
-    const percentFee = (amount * config.percent) / 100;
-    const totalFee = percentFee + config.fixed;
-    let received = amount - totalFee;
-    return received < 0 ? 0 : received;
   }
 
   function getFeeBreakdown(amount, direction) {
@@ -370,7 +388,6 @@
       }
     }
     
-    // Store exchange data in localStorage to pass to next page
     const exchangeData = {
       amount: amount,
       received: breakdown.received,
@@ -385,7 +402,6 @@
     
     localStorage.setItem('pendingExchange', JSON.stringify(exchangeData));
     
-    // Redirect to appropriate page based on direction
     if (currentDirection === 'bkash_to_nagad') {
       window.location.href = 'bkash-to-nagad.html';
     } else {
