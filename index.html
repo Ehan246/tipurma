@@ -3,743 +3,182 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  
-  <!-- Title -->
   <title>FlexExchanger | Bkash to Nagad Instant Money Exchange</title>
-  
-  <!-- Meta Tags for SEO -->
-  <meta name="description" content="Instant Bkash to Nagad and Nagad to Bkash money exchange. Lowest fees: 1.49% for Bkash→Nagad & 1.25% for Nagad→Bkash +10 TK. Fast, secure & 24/7 customer support. Exchange now!">
-  <meta name="keywords" content="bkash to nagad, nagad to bkash, money exchange, bkash exchange, nagad exchange, instant transfer, bkash to nagad converter, nagad to bkash converter, bangladesh money transfer">
-  <meta name="author" content="FlexExchanger">
-  <meta name="robots" content="index, follow">
-  <meta name="language" content="Bengali">
-  <meta name="revisit-after" content="7 days">
-  <meta name="distribution" content="global">
-  <meta name="rating" content="general">
-  
-  <!-- Open Graph Meta Tags (Facebook, WhatsApp, Telegram, LinkedIn) -->
-  <meta property="og:title" content="FlexExchanger | Bkash ↔ Nagad Instant Exchange">
-  <meta property="og:description" content="Exchange money between Bkash and Nagad instantly. Best rates, lowest fees, 24/7 customer support. Fast & secure!">
-  <meta property="og:image" content="https://i.postimg.cc/FKPf7xFW/Gemini-Generated-Image-797iqg797iqg797i.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:url" content="https://flexexchanger.com">
-  <meta property="og:type" content="website">
-  <meta property="og:locale" content="bn_BD">
-  <meta property="og:site_name" content="FlexExchanger">
-  
-  <!-- Twitter Card Meta Tags -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="FlexExchanger | Bkash ↔ Nagad Instant Exchange">
-  <meta name="twitter:description" content="Instant money exchange between Bkash and Nagad. Fast, secure, reliable with 24/7 support.">
-  <meta name="twitter:image" content="https://i.postimg.cc/FKPf7xFW/Gemini-Generated-Image-797iqg797iqg797i.png">
-  
-  <!-- Additional Meta Tags -->
-  <meta name="theme-color" content="#1c2f2b">
-  <meta name="msapplication-TileColor" content="#1c2f2b">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="FlexExchanger">
-  
-  <!-- Canonical URL -->
-  <link rel="canonical" href="https://flexexchanger.com">
-  
-  <!-- Website Icon (Favicon) -->
   <link rel="icon" type="image/png" href="https://i.postimg.cc/FKPf7xFW/Gemini-Generated-Image-797iqg797iqg797i.png">
-  <link rel="apple-touch-icon" href="https://i.postimg.cc/FKPf7xFW/Gemini-Generated-Image-797iqg797iqg797i.png">
-  <link rel="shortcut icon" type="image/png" href="https://i.postimg.cc/FKPf7xFW/Gemini-Generated-Image-797iqg797iqg797i.png">
-  
-  <!-- Font Awesome for Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KJ11Z3TZ0R"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-KJ11Z3TZ0R');
-  </script>
-  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, 'Roboto', sans-serif;
-    }
-
-    body {
-      min-height: 100vh;
-      background: linear-gradient(145deg, #0a2c26 0%, #07221e 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-      position: relative;
-    }
-
-    .main-card {
-      max-width: 620px;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.97);
-      border-radius: 3rem;
-      box-shadow: 0 30px 50px -15px rgba(0, 0, 0, 0.5);
-      overflow: hidden;
-    }
-
-    .brand {
-      background: #1c2f2b;
-      padding: 1.5rem 2rem;
-      text-align: center;
-    }
-
-    .brand h1 {
-      color: #fef3df;
-      font-size: 1.9rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      flex-wrap: wrap;
-    }
-
-    .brand-icon {
-      width: 48px;
-      height: 48px;
-      object-fit: contain;
-      vertical-align: middle;
-    }
-
-    .brand h1 span:first-child {
-      background: #ff6b2c;
-      padding: 0.2rem 0.8rem;
-      border-radius: 60px;
-      font-size: 1rem;
-      color: #1e2f2c;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .brand h1 span:last-child {
-      background: #0e7c6e;
-      padding: 0.2rem 0.8rem;
-      border-radius: 60px;
-      font-size: 1rem;
-      color: white;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .sub {
-      color: #bdd9d1;
-      font-size: 0.8rem;
-      margin-top: 0.4rem;
-    }
-
-    .main-body {
-      padding: 2rem;
-    }
-
-    .direction-options {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .option-card {
-      flex: 1;
-      background: white;
-      border: 2px solid #e2ece8;
-      border-radius: 1.5rem;
-      padding: 1.5rem 1rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .option-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.2);
-    }
-
-    .option-card.selected {
-      border-color: #ff6b2c;
-      background: #fff9f0;
-      box-shadow: 0 5px 15px rgba(255, 107, 44, 0.2);
-    }
-
-    .option-card.nagad-selected {
-      border-color: #0e7c6e;
-      background: #e8f5f2;
-    }
-
-    .option-icon {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .option-icon-img {
-      width: 60px;
-      height: 60px;
-      object-fit: contain;
-      margin-bottom: 0.5rem;
-    }
-
-    .option-title {
-      font-weight: 700;
-      font-size: 1.1rem;
-      margin-bottom: 0.3rem;
-    }
-
-    .option-fee {
-      font-size: 0.7rem;
-      color: #7f8c8d;
-    }
-
-    .input-group {
-      margin-bottom: 1.5rem;
-    }
-
-    .input-label {
-      font-weight: 600;
-      color: #1f463e;
-      margin-bottom: 0.6rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .amount-wrapper {
-      display: flex;
-      align-items: center;
-      background: #fafdfc;
-      border-radius: 2rem;
-      border: 1.5px solid #e2ece8;
-    }
-
-    .currency-symbol {
-      padding: 0 1rem;
-      font-weight: 700;
-      font-size: 1.3rem;
-      color: #2b6b5c;
-    }
-
-    .amount-wrapper input {
-      flex: 1;
-      border: none;
-      background: transparent;
-      padding: 1rem 0.8rem;
-      font-size: 1.3rem;
-      font-weight: 600;
-      outline: none;
-    }
-
-    .fee-preview {
-      background: #f1f8f5;
-      border-radius: 1.2rem;
-      padding: 1rem;
-      margin: 1.2rem 0;
-    }
-
-    .fee-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .total-row {
-      border-top: 1px dashed #cbdcd6;
-      margin-top: 0.6rem;
-      padding-top: 0.6rem;
-      font-weight: 800;
-    }
-
-    .confirm-btn {
-      width: 100%;
-      background: #ff6b2c;
-      border: none;
-      padding: 1rem;
-      border-radius: 2rem;
-      font-weight: 800;
-      font-size: 1.1rem;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.7rem;
-      cursor: pointer;
-      transition: 0.2s;
-      margin: 1rem 0;
-    }
-
-    .confirm-btn:hover {
-      background: #e55a1e;
-      transform: scale(0.98);
-    }
-
-    /* Footer Styles */
-    .site-footer {
-      text-align: center;
-      padding: 1.2rem;
-      background: #1c2f2b;
-      color: #bdd9d1;
-      border-top: 1px solid #2e4a43;
-    }
-
-    .footer-text {
-      font-size: 0.75rem;
-      letter-spacing: 0.5px;
-    }
-
-    .footer-text i {
-      color: #ff6b2c;
-      margin: 0 2px;
-    }
-
-    .footer-text strong {
-      color: #ffde9c;
-    }
-
-    .footer-links {
-      margin-top: 10px;
-      margin-bottom: 8px;
-    }
-
-    .footer-links a {
-      color: #bdd9d1;
-      text-decoration: none;
-      margin: 0 8px;
-      font-size: 0.7rem;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover {
-      color: #ffde9c;
-    }
-
-    /* Floating Support Icon Styles */
-    .support-container {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      z-index: 1000;
-    }
-
-    .support-btn {
-      width: 60px;
-      height: 60px;
-      background: #25D366;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      transition: all 0.3s ease;
-      animation: pulse 2s infinite;
-    }
-
-    .support-btn i {
-      font-size: 32px;
-      color: white;
-    }
-
-    .support-btn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-    }
-
-    @keyframes pulse {
-      0% {
-        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
-      }
-      70% {
-        box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
-      }
-    }
-
-    .support-options {
-      position: absolute;
-      bottom: 75px;
-      right: 0;
-      background: white;
-      border-radius: 20px;
-      padding: 12px 0;
-      min-width: 220px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      display: none;
-      animation: slideUp 0.3s ease;
-    }
-
-    .support-options.show {
-      display: block;
-    }
-
-    @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .support-option {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 20px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-      text-decoration: none;
-      color: #333;
-    }
-
-    .support-option:hover {
-      background: #f5f5f5;
-    }
-
-    .support-option i {
-      font-size: 22px;
-      width: 30px;
-      text-align: center;
-    }
-
-    .support-option .fa-whatsapp {
-      color: #25D366;
-    }
-
-    .support-option .fa-envelope {
-      color: #EA4335;
-    }
-
-    .support-option span {
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .support-option .small-text {
-      font-size: 11px;
-      color: #888;
-      font-weight: normal;
-    }
-
-    .option-details {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .support-options::before {
-      content: '';
-      position: absolute;
-      bottom: -8px;
-      right: 20px;
-      width: 16px;
-      height: 16px;
-      background: white;
-      transform: rotate(45deg);
-      box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .overlay-close {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      z-index: 999;
-      display: none;
-    }
-
-    .overlay-close.show {
-      display: block;
-    }
-
-    @media (max-width: 500px) {
-      .main-body {
-        padding: 1.2rem;
-      }
-      .option-card {
-        padding: 1rem 0.5rem;
-      }
-      .option-icon-img {
-        width: 40px;
-        height: 40px;
-      }
-      .brand h1 {
-        font-size: 1.3rem;
-      }
-      .footer-links a {
-        margin: 0 4px;
-        font-size: 0.6rem;
-      }
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Inter', system-ui, sans-serif; }
+    body { min-height: 100vh; background: linear-gradient(145deg, #0a2c26 0%, #07221e 100%); display: flex; align-items: center; justify-content: center; padding: 1.5rem; position: relative; }
+    .main-card { max-width: 620px; width: 100%; background: rgba(255, 255, 255, 0.97); border-radius: 3rem; box-shadow: 0 30px 50px -15px rgba(0, 0, 0, 0.5); overflow: hidden; }
+    .brand { background: #1c2f2b; padding: 1.5rem 2rem; text-align: center; }
+    .brand h1 { color: #fef3df; font-size: 1.9rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 0.6rem; flex-wrap: wrap; }
+    .brand-icon { width: 48px; height: 48px; object-fit: contain; }
+    .brand h1 span:first-child { background: #ff6b2c; padding: 0.2rem 0.8rem; border-radius: 60px; font-size: 1rem; color: #1e2f2c; display: inline-flex; align-items: center; gap: 8px; }
+    .brand h1 span:last-child { background: #0e7c6e; padding: 0.2rem 0.8rem; border-radius: 60px; font-size: 1rem; color: white; display: inline-flex; align-items: center; gap: 8px; }
+    .sub { color: #bdd9d1; font-size: 0.8rem; margin-top: 0.4rem; }
+    .main-body { padding: 2rem; }
+    .direction-options { display: flex; gap: 1rem; margin-bottom: 2rem; }
+    .option-card { flex: 1; background: white; border: 2px solid #e2ece8; border-radius: 1.5rem; padding: 1.5rem 1rem; text-align: center; cursor: pointer; transition: all 0.3s ease; }
+    .option-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.2); }
+    .option-card.selected { border-color: #ff6b2c; background: #fff9f0; box-shadow: 0 5px 15px rgba(255, 107, 44, 0.2); }
+    .option-card.nagad-selected { border-color: #0e7c6e; background: #e8f5f2; }
+    .option-icon-img { width: 50px; height: 50px; object-fit: contain; margin-bottom: 0.5rem; }
+    .option-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.3rem; }
+    .option-fee { font-size: 0.7rem; color: #7f8c8d; }
+    .input-group { margin-bottom: 1.5rem; }
+    .input-label { font-weight: 600; color: #1f463e; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem; }
+    .amount-wrapper { display: flex; align-items: center; background: #fafdfc; border-radius: 2rem; border: 1.5px solid #e2ece8; }
+    .currency-symbol { padding: 0 1rem; font-weight: 700; font-size: 1.3rem; color: #2b6b5c; }
+    .amount-wrapper input { flex: 1; border: none; background: transparent; padding: 1rem 0.8rem; font-size: 1.3rem; font-weight: 600; outline: none; }
+    .fee-preview { background: #f1f8f5; border-radius: 1.2rem; padding: 1rem; margin: 1.2rem 0; }
+    .fee-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.5rem; }
+    .total-row { border-top: 1px dashed #cbdcd6; margin-top: 0.6rem; padding-top: 0.6rem; font-weight: 800; }
+    .confirm-btn { width: 100%; background: #ff6b2c; border: none; padding: 1rem; border-radius: 2rem; font-weight: 800; font-size: 1.1rem; color: white; display: flex; align-items: center; justify-content: center; gap: 0.7rem; cursor: pointer; transition: 0.2s; margin: 1rem 0; }
+    .confirm-btn:hover { background: #e55a1e; transform: scale(0.98); }
+    .site-footer { text-align: center; padding: 1.2rem; background: #1c2f2b; color: #bdd9d1; border-top: 1px solid #2e4a43; }
+    .footer-text { font-size: 0.75rem; }
+    .footer-text i { color: #ff6b2c; margin: 0 2px; }
+    .footer-text strong { color: #ffde9c; }
+    .footer-links { margin-top: 10px; margin-bottom: 8px; }
+    .footer-links a { color: #bdd9d1; text-decoration: none; margin: 0 8px; font-size: 0.7rem; }
+    .footer-links a:hover { color: #ffde9c; }
+    .support-container { position: fixed; bottom: 25px; right: 25px; z-index: 1000; }
+    .support-btn { width: 60px; height: 60px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); animation: pulse 2s infinite; }
+    .support-btn i { font-size: 32px; color: white; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+    .support-options { position: absolute; bottom: 75px; right: 0; background: white; border-radius: 20px; padding: 12px 0; min-width: 220px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); display: none; }
+    .support-options.show { display: block; }
+    .support-option { display: flex; align-items: center; gap: 12px; padding: 12px 20px; text-decoration: none; color: #333; }
+    .support-option:hover { background: #f5f5f5; }
+    .support-option .fa-whatsapp { color: #25D366; }
+    .support-option .fa-envelope { color: #EA4335; }
+    .overlay-close { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 999; display: none; }
+    .overlay-close.show { display: block; }
+    @media (max-width: 500px) { .main-body { padding: 1.2rem; } .option-icon-img { width: 40px; height: 40px; } .brand h1 { font-size: 1.3rem; } }
   </style>
 </head>
 <body>
 <div class="main-card">
   <div class="brand">
-    <h1>
-      <span><img src="https://i.postimg.cc/VsWR4xNj/download.png" alt="bKash" class="brand-icon" style="width: 32px; height: 32px;"> bkash</span>
-      <span>⟷</span>
-      <span>nagad <img src="https://i.postimg.cc/CMsNJ3KG/download-(1).png" alt="Nagad" class="brand-icon" style="width: 32px; height: 32px;"></span>
-    </h1>
+    <h1><span><img src="https://i.postimg.cc/VsWR4xNj/download.png" class="brand-icon" style="width: 32px; height: 32px;"> bkash</span><span>⟷</span><span>nagad <img src="https://i.postimg.cc/CMsNJ3KG/download-(1).png" class="brand-icon" style="width: 32px; height: 32px;"></span></h1>
     <div class="sub">সরাসরি এক্সচেঞ্জ • নির্ভরযোগ্য হার</div>
   </div>
-
   <div class="main-body">
     <div class="direction-options">
-      <div class="option-card" id="bkashToNagadOption">
-        <div class="option-icon">
-          <img src="https://i.postimg.cc/VsWR4xNj/download.png" alt="bKash" class="option-icon-img" style="width: 50px; height: 50px;">
-        </div>
-        <div class="option-title">Bkash → Nagad</div>
-        <div class="option-fee">ফি: 1.49% + 10 TK</div>
-      </div>
-      <div class="option-card" id="nagadToBkashOption">
-        <div class="option-icon">
-          <img src="https://i.postimg.cc/CMsNJ3KG/download-(1).png" alt="Nagad" class="option-icon-img" style="width: 50px; height: 50px;">
-        </div>
-        <div class="option-title">Nagad → Bkash</div>
-        <div class="option-fee">ফি: 1.25% + 10 TK</div>
-      </div>
+      <div class="option-card" id="bkashToNagadOption"><div class="option-icon"><img src="https://i.postimg.cc/VsWR4xNj/download.png" class="option-icon-img"></div><div class="option-title">Bkash → Nagad</div><div class="option-fee" id="b2nFeeDisplay">ফি: 1.49% + 10 TK</div></div>
+      <div class="option-card" id="nagadToBkashOption"><div class="option-icon"><img src="https://i.postimg.cc/CMsNJ3KG/download-(1).png" class="option-icon-img"></div><div class="option-title">Nagad → Bkash</div><div class="option-fee" id="n2bFeeDisplay">ফি: 1.25% + 10 TK</div></div>
     </div>
-
-    <div class="input-group">
-      <div class="input-label">
-        <span>💰</span> <span id="sendFromLabel">Bkash থেকে পাঠাবেন</span>
-      </div>
-      <div class="amount-wrapper">
-        <span class="currency-symbol">৳</span>
-        <input type="number" id="amountInput" placeholder="পরিমাণ লিখুন" value="500" step="any">
-      </div>
-    </div>
-
-    <div class="fee-preview" id="feePreview">
-      <div class="fee-row">
-        <span>এক্সচেঞ্জ পরিমাণ:</span>
-        <span id="displayAmount">0.00 ৳</span>
-      </div>
-      <div class="fee-row">
-        <span id="feeLabel">ফি (1.49% + 10 TK):</span>
-        <span id="feeAmount">0.00 ৳</span>
-      </div>
-      <div class="fee-row total-row">
-        <span>✅ পাবেন:</span>
-        <span id="receiveAmount">0.00 ৳</span>
-      </div>
-    </div>
-
-    <button class="confirm-btn" id="confirmExchangeBtn">
-      <span>🔄</span> কনফার্ম করুন & এক্সচেঞ্জ করুন
-    </button>
+    <div class="input-group"><div class="input-label"><span>💰</span> <span id="sendFromLabel">Bkash থেকে পাঠাবেন</span></div><div class="amount-wrapper"><span class="currency-symbol">৳</span><input type="number" id="amountInput" placeholder="পরিমাণ লিখুন" value="500" step="any"></div></div>
+    <div class="fee-preview"><div class="fee-row"><span>এক্সচেঞ্জ পরিমাণ:</span><span id="displayAmount">0.00 ৳</span></div><div class="fee-row"><span id="feeLabel">ফি (1.49% + 10 TK):</span><span id="feeAmount">0.00 ৳</span></div><div class="fee-row total-row"><span>✅ পাবেন:</span><span id="receiveAmount">0.00 ৳</span></div></div>
+    <button class="confirm-btn" id="confirmExchangeBtn"><span>🔄</span> কনফার্ম করুন & এক্সচেঞ্জ করুন</button>
   </div>
-
-  <!-- Footer with Copyright and Links -->
-  <div class="site-footer">
-    <div class="footer-text">
-      © 2026 <strong>Flex Exchanger</strong> - Exchange Your Money <i class="fas fa-exchange-alt"></i>
-    </div>
-    <div class="footer-links">
-      <a href="about.html"><i class="fas fa-info-circle"></i> About</a> |
-      <a href="terms.html"><i class="fas fa-file-contract"></i> Terms</a> |
-      <a href="privacy.html"><i class="fas fa-shield-alt"></i> Privacy</a> |
-      <a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a> |
-      <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
-    </div>
-    <div class="footer-text" style="font-size: 0.65rem; margin-top: 5px;">
-      <i class="fas fa-shield-alt"></i> Secure & Fast Exchange | 24/7 Support
-    </div>
-  </div>
+  <div class="site-footer"><div class="footer-text">© 2026 <strong>Flex Exchanger</strong> - Exchange Your Money <i class="fas fa-exchange-alt"></i></div><div class="footer-links"><a href="about.html"><i class="fas fa-info-circle"></i> About</a> | <a href="terms.html"><i class="fas fa-file-contract"></i> Terms</a> | <a href="privacy.html"><i class="fas fa-shield-alt"></i> Privacy</a> | <a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a> | <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></div><div class="footer-text" style="font-size: 0.65rem;"><i class="fas fa-shield-alt"></i> Secure & Fast Exchange | 24/7 Support</div></div>
 </div>
-
-<!-- Floating Support Icon -->
-<div class="support-container">
-  <div class="support-btn" id="supportBtn">
-    <i class="fas fa-headset"></i>
-  </div>
-  <div class="support-options" id="supportOptions">
-    <a href="https://wa.me/8801945259421?text=Hello,%20I%20need%20help%20with%20FlexExchanger" target="_blank" class="support-option">
-      <i class="fab fa-whatsapp"></i>
-      <div class="option-details">
-        <span>WhatsApp</span>
-        <span class="small-text">01945259421</span>
-      </div>
-    </a>
-    <a href="mailto:flexexchanger@goatmail.uk?subject=Support%20Request%20-%20FlexExchanger&body=Hello,%20I%20need%20help%20with%20my%20transaction" class="support-option">
-      <i class="fas fa-envelope"></i>
-      <div class="option-details">
-        <span>Gmail / Email</span>
-        <span class="small-text">flexexchanger@goatmail.uk</span>
-      </div>
-    </a>
-  </div>
-</div>
-<div class="overlay-close" id="overlayClose"></div>
-
+<div class="support-container"><div class="support-btn" id="supportBtn"><i class="fas fa-headset"></i></div><div class="support-options" id="supportOptions"><a href="https://wa.me/8801945259421?text=Hello,%20I%20need%20help%20with%20FlexExchanger" target="_blank" class="support-option"><i class="fab fa-whatsapp"></i><div><span>WhatsApp</span><div style="font-size:11px;color:#888;">01945259421</div></div></a><a href="mailto:flexexchanger@goatmail.uk?subject=Support%20Request" class="support-option"><i class="fas fa-envelope"></i><div><span>Gmail / Email</span><div style="font-size:11px;color:#888;">flexexchanger@goatmail.uk</div></div></a></div></div><div class="overlay-close" id="overlayClose"></div>
 <script>
+  // Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBm-u9hmjJtBRouEFIHifnkU_Zjn8llJqs",
+    authDomain: "takatotaka-49555.firebaseapp.com",
+    databaseURL: "https://takatotaka-49555-default-rtdb.firebaseio.com",
+    projectId: "takatotaka-49555",
+    storageBucket: "takatotaka-49555.appspot.com",
+    messagingSenderId: "321092793137",
+    appId: "1:321092793137:web:cc73a09d40f7c2b4eeb610"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+  
   let currentDirection = 'bkash_to_nagad';
-
-  const bkashOption = document.getElementById('bkashToNagadOption');
-  const nagadOption = document.getElementById('nagadToBkashOption');
-  const amountInput = document.getElementById('amountInput');
-  const sendFromLabel = document.getElementById('sendFromLabel');
-  const displayAmountSpan = document.getElementById('displayAmount');
-  const feeAmountSpan = document.getElementById('feeAmount');
-  const receiveAmountSpan = document.getElementById('receiveAmount');
-  const feeLabel = document.getElementById('feeLabel');
-  const confirmBtn = document.getElementById('confirmExchangeBtn');
-
-  // Support Icon Functions
-  const supportBtn = document.getElementById('supportBtn');
-  const supportOptions = document.getElementById('supportOptions');
-  const overlayClose = document.getElementById('overlayClose');
-
-  function toggleSupportOptions() {
-    supportOptions.classList.toggle('show');
-    overlayClose.classList.toggle('show');
-  }
-
-  function closeSupportOptions() {
-    supportOptions.classList.remove('show');
-    overlayClose.classList.remove('show');
-  }
-
-  supportBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    toggleSupportOptions();
-  });
-
-  overlayClose.addEventListener('click', () => {
-    closeSupportOptions();
-  });
-
-  document.querySelectorAll('.support-option').forEach(option => {
-    option.addEventListener('click', () => {
-      closeSupportOptions();
+  let rates = { b2nPercent: 1.49, b2nFixed: 10, n2bPercent: 1.25, n2bFixed: 10 };
+  
+  // Load rates from Firebase
+  function loadRates() {
+    database.ref('exchange_rates').on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        rates.b2nPercent = data.bkashToNagadPercent || 1.49;
+        rates.b2nFixed = data.bkashToNagadFixed || 10;
+        rates.n2bPercent = data.nagadToBkashPercent || 1.25;
+        rates.n2bFixed = data.nagadToBkashFixed || 10;
+      }
+      updateFeeDisplay();
+      updatePreview();
     });
-  });
-
+  }
+  
+  function updateFeeDisplay() {
+    document.getElementById('b2nFeeDisplay').innerHTML = `ফি: ${rates.b2nPercent}% + ${rates.b2nFixed} TK`;
+    document.getElementById('n2bFeeDisplay').innerHTML = `ফি: ${rates.n2bPercent}% + ${rates.n2bFixed} TK`;
+  }
+  
   function getFeeConfig(direction) {
     if (direction === 'bkash_to_nagad') {
-      return { percent: 1.49, fixed: 10, name: 'Bkash → Nagad', sendFrom: 'Bkash', receiveTo: 'Nagad' };
+      return { percent: rates.b2nPercent, fixed: rates.b2nFixed, sendFrom: 'Bkash', receiveTo: 'Nagad' };
     } else {
-      return { percent: 1.25, fixed: 10, name: 'Nagad → Bkash', sendFrom: 'Nagad', receiveTo: 'Bkash' };
+      return { percent: rates.n2bPercent, fixed: rates.n2bFixed, sendFrom: 'Nagad', receiveTo: 'Bkash' };
     }
   }
-
+  
   function getFeeBreakdown(amount, direction) {
-    if (isNaN(amount) || amount <= 0) {
-      return { totalFee: 0, received: 0 };
-    }
+    if (isNaN(amount) || amount <= 0) return { totalFee: 0, received: 0 };
     const config = getFeeConfig(direction);
     const percentFee = (amount * config.percent) / 100;
     const totalFee = percentFee + config.fixed;
     let received = amount - totalFee;
-    if (received < 0) received = 0;
-    return { totalFee, received };
+    return received < 0 ? 0 : received;
   }
-
+  
   function updatePreview() {
     let amount = parseFloat(amountInput.value);
     if (isNaN(amount)) amount = 0;
-    if (amount < 0) amount = 0;
-
-    displayAmountSpan.innerText = amount.toFixed(2) + ' ৳';
+    document.getElementById('displayAmount').innerText = amount.toFixed(2) + ' ৳';
     const breakdown = getFeeBreakdown(amount, currentDirection);
-    feeAmountSpan.innerText = breakdown.totalFee.toFixed(2) + ' ৳';
-    receiveAmountSpan.innerText = breakdown.received.toFixed(2) + ' ৳';
+    document.getElementById('feeAmount').innerText = breakdown.totalFee.toFixed(2) + ' ৳';
+    document.getElementById('receiveAmount').innerText = breakdown.received.toFixed(2) + ' ৳';
+    const config = getFeeConfig(currentDirection);
+    document.getElementById('feeLabel').innerHTML = `📉 ফি (${config.percent}% + ${config.fixed} TK):`;
   }
-
+  
   function updateDirectionUI() {
+    const config = getFeeConfig(currentDirection);
     if (currentDirection === 'bkash_to_nagad') {
-      bkashOption.classList.add('selected');
-      bkashOption.classList.remove('nagad-selected');
-      nagadOption.classList.remove('selected');
-      sendFromLabel.innerText = 'Bkash থেকে পাঠাবেন';
-      feeLabel.innerHTML = '📉 ফি (1.49% + 10 TK):';
+      document.getElementById('bkashToNagadOption').classList.add('selected');
+      document.getElementById('nagadToBkashOption').classList.remove('selected');
+      document.getElementById('sendFromLabel').innerText = 'Bkash থেকে পাঠাবেন';
     } else {
-      nagadOption.classList.add('selected');
-      nagadOption.classList.add('nagad-selected');
-      bkashOption.classList.remove('selected');
-      sendFromLabel.innerText = 'Nagad থেকে পাঠাবেন';
-      feeLabel.innerHTML = '📉 ফি (1.25% + 10 TK):';
+      document.getElementById('nagadToBkashOption').classList.add('selected');
+      document.getElementById('bkashToNagadOption').classList.remove('selected');
+      document.getElementById('sendFromLabel').innerText = 'Nagad থেকে পাঠাবেন';
     }
     updatePreview();
   }
-
+  
   function performExchange() {
     let amount = parseFloat(amountInput.value);
-    
-    if (isNaN(amount) || amount <= 0) {
-      alert('❌ সঠিক পরিমাণ লিখুন!');
-      return;
-    }
-    
-    if (amount < 10) {
-      alert('❌ নূন্যতম এক্সচেঞ্জ পরিমাণ ১০ টাকা');
-      return;
-    }
-    
-    if (amount > 500000) {
-      alert('⚠️ সর্বোচ্চ সীমা 500,000 টাকা');
-      return;
-    }
-    
+    if (isNaN(amount) || amount <= 0) { alert('❌ সঠিক পরিমাণ লিখুন!'); return; }
+    if (amount < 10) { alert('❌ নূন্যতম এক্সচেঞ্জ পরিমাণ ১০ টাকা'); return; }
     const config = getFeeConfig(currentDirection);
     const breakdown = getFeeBreakdown(amount, currentDirection);
-    
-    if (breakdown.received <= 0 && amount > 0) {
-      if (!confirm(`⚠️ ফি কাটার পরে আপনি ${breakdown.received.toFixed(2)} টাকা পাবেন। তবুও কি এক্সচেঞ্জ চালিয়ে যাবেন?`)) {
-        return;
-      }
-    }
-    
-    const exchangeData = {
-      amount: amount,
-      received: breakdown.received,
-      fee: breakdown.totalFee,
-      direction: currentDirection,
-      sendFrom: config.sendFrom,
-      receiveTo: config.receiveTo,
-      feePercent: config.percent,
-      feeFixed: config.fixed,
-      timestamp: new Date().toISOString()
-    };
-    
+    const exchangeData = { amount, received: breakdown.received, fee: breakdown.totalFee, direction: currentDirection, sendFrom: config.sendFrom, receiveTo: config.receiveTo, feePercent: config.percent, feeFixed: config.fixed, timestamp: new Date().toISOString() };
     localStorage.setItem('pendingExchange', JSON.stringify(exchangeData));
-    
-    if (currentDirection === 'bkash_to_nagad') {
-      window.location.href = 'bkash-to-nagad.html';
-    } else {
-      window.location.href = 'nagad-to-bkash.html';
-    }
+    window.location.href = currentDirection === 'bkash_to_nagad' ? 'bkash-to-nagad.html' : 'nagad-to-bkash.html';
   }
   
-  bkashOption.addEventListener('click', () => {
-    currentDirection = 'bkash_to_nagad';
-    updateDirectionUI();
-  });
+  // Support Icon
+  const supportBtn = document.getElementById('supportBtn'), supportOptions = document.getElementById('supportOptions'), overlayClose = document.getElementById('overlayClose');
+  supportBtn.onclick = (e) => { e.stopPropagation(); supportOptions.classList.toggle('show'); overlayClose.classList.toggle('show'); };
+  overlayClose.onclick = () => { supportOptions.classList.remove('show'); overlayClose.classList.remove('show'); };
   
-  nagadOption.addEventListener('click', () => {
-    currentDirection = 'nagad_to_bkash';
-    updateDirectionUI();
-  });
+  document.getElementById('bkashToNagadOption').onclick = () => { currentDirection = 'bkash_to_nagad'; updateDirectionUI(); };
+  document.getElementById('nagadToBkashOption').onclick = () => { currentDirection = 'nagad_to_bkash'; updateDirectionUI(); };
+  document.getElementById('amountInput').addEventListener('input', updatePreview);
+  document.getElementById('confirmExchangeBtn').onclick = performExchange;
   
-  amountInput.addEventListener('input', updatePreview);
-  confirmBtn.addEventListener('click', performExchange);
-  
+  loadRates();
   updateDirectionUI();
 </script>
 </body>
