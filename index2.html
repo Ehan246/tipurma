@@ -3,119 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>FlexExchanger | Bkash to Nagad Instant Money Exchange</title>
+  <title>FlexExchanger | Bkash to Nagad Exchange</title>
   <link rel="icon" type="image/png" href="https://i.postimg.cc/FKPf7xFW/Gemini-Generated-Image-797iqg797iqg797i.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Inter', system-ui, sans-serif; }
-    body { min-height: 100vh; background: linear-gradient(145deg, #0a2c26 0%, #07221e 100%); display: flex; align-items: center; justify-content: center; padding: 1.5rem; position: relative; }
-    .main-card { max-width: 620px; width: 100%; background: rgba(255, 255, 255, 0.97); border-radius: 3rem; box-shadow: 0 30px 50px -15px rgba(0, 0, 0, 0.5); overflow: hidden; }
-    
-    /* Top Bar */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { min-height: 100vh; background: linear-gradient(145deg, #0a2c26 0%, #07221e 100%); display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+    .main-card { max-width: 620px; width: 100%; background: white; border-radius: 3rem; overflow: hidden; box-shadow: 0 30px 50px -15px rgba(0,0,0,0.5); }
     .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; background: #1c2f2b; border-bottom: 1px solid #2e4a43; }
-    .user-info { display: flex; align-items: center; gap: 1rem; }
     .user-name { color: #ffde9c; font-weight: 600; font-size: 0.85rem; }
-    .top-bar a { color: #bdd9d1; text-decoration: none; font-size: 0.85rem; transition: color 0.2s; display: inline-flex; align-items: center; gap: 6px; }
-    .top-bar a:hover { color: #ffde9c; }
     .logout-btn { background: none; border: none; color: #bdd9d1; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; }
     .logout-btn:hover { color: #ffde9c; }
-    
-    .brand { background: #1c2f2b; padding: 1rem 2rem 1.5rem 2rem; text-align: center; }
-    .brand h1 { color: #fef3df; font-size: 1.9rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 0.6rem; flex-wrap: wrap; }
-    .brand-icon { width: 48px; height: 48px; object-fit: contain; }
-    .brand h1 span:first-child { background: #ff6b2c; padding: 0.2rem 0.8rem; border-radius: 60px; font-size: 1rem; color: #1e2f2c; display: inline-flex; align-items: center; gap: 8px; }
-    .brand h1 span:last-child { background: #0e7c6e; padding: 0.2rem 0.8rem; border-radius: 60px; font-size: 1rem; color: white; display: inline-flex; align-items: center; gap: 8px; }
-    .sub { color: #bdd9d1; font-size: 0.8rem; margin-top: 0.4rem; }
+    .brand { background: #1c2f2b; padding: 1rem 2rem 1.5rem; text-align: center; }
+    .brand h1 { color: #fef3df; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; gap: 0.6rem; flex-wrap: wrap; }
+    .brand-icon { width: 35px; height: 35px; object-fit: contain; }
+    .brand h1 span:first-child { background: #ff6b2c; padding: 0.2rem 0.8rem; border-radius: 60px; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px; }
+    .brand h1 span:last-child { background: #0e7c6e; padding: 0.2rem 0.8rem; border-radius: 60px; font-size: 0.9rem; color: white; display: inline-flex; align-items: center; gap: 6px; }
+    .sub { color: #bdd9d1; font-size: 0.7rem; margin-top: 0.3rem; }
     .main-body { padding: 2rem; }
     .direction-options { display: flex; gap: 1rem; margin-bottom: 2rem; }
-    .option-card { flex: 1; background: white; border: 2px solid #e2ece8; border-radius: 1.5rem; padding: 1.5rem 1rem; text-align: center; cursor: pointer; transition: all 0.3s ease; }
-    .option-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.2); }
-    .option-card.selected { border-color: #ff6b2c; background: #fff9f0; box-shadow: 0 5px 15px rgba(255, 107, 44, 0.2); }
+    .option-card { flex: 1; background: #f9fbfa; border: 2px solid #e2ece8; border-radius: 1.5rem; padding: 1.2rem 0.5rem; text-align: center; cursor: pointer; transition: 0.2s; }
+    .option-card.selected { border-color: #ff6b2c; background: #fff9f0; }
     .option-card.nagad-selected { border-color: #0e7c6e; background: #e8f5f2; }
-    .option-icon-img { width: 50px; height: 50px; object-fit: contain; margin-bottom: 0.5rem; }
-    .option-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.3rem; }
-    .option-fee { font-size: 0.7rem; color: #7f8c8d; }
+    .option-icon-img { width: 45px; height: 45px; object-fit: contain; margin-bottom: 0.3rem; }
+    .option-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.2rem; }
+    .option-fee { font-size: 0.65rem; color: #7f8c8d; }
     .input-group { margin-bottom: 1.5rem; }
-    .input-label { font-weight: 600; color: #1f463e; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem; }
+    .input-label { font-weight: 600; color: #1f463e; margin-bottom: 0.5rem; }
     .amount-wrapper { display: flex; align-items: center; background: #fafdfc; border-radius: 2rem; border: 1.5px solid #e2ece8; }
-    .currency-symbol { padding: 0 1rem; font-weight: 700; font-size: 1.3rem; color: #2b6b5c; }
-    .amount-wrapper input { flex: 1; border: none; background: transparent; padding: 1rem 0.8rem; font-size: 1.3rem; font-weight: 600; outline: none; }
+    .currency-symbol { padding: 0 1rem; font-weight: 700; font-size: 1.2rem; color: #2b6b5c; }
+    .amount-wrapper input { flex: 1; border: none; background: transparent; padding: 0.9rem 0; font-size: 1.2rem; font-weight: 600; outline: none; }
     .fee-preview { background: #f1f8f5; border-radius: 1.2rem; padding: 1rem; margin: 1.2rem 0; }
-    .fee-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.5rem; }
-    .total-row { border-top: 1px dashed #cbdcd6; margin-top: 0.6rem; padding-top: 0.6rem; font-weight: 800; }
-    .confirm-btn { width: 100%; background: #ff6b2c; border: none; padding: 1rem; border-radius: 2rem; font-weight: 800; font-size: 1.1rem; color: white; display: flex; align-items: center; justify-content: center; gap: 0.7rem; cursor: pointer; transition: 0.2s; margin: 1rem 0; }
+    .fee-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.4rem; }
+    .total-row { border-top: 1px dashed #cbdcd6; margin-top: 0.5rem; padding-top: 0.5rem; font-weight: 800; }
+    .confirm-btn { width: 100%; background: #ff6b2c; border: none; padding: 0.9rem; border-radius: 2rem; font-weight: 700; font-size: 1rem; color: white; cursor: pointer; margin: 1rem 0; transition: 0.2s; }
     .confirm-btn:hover { background: #e55a1e; transform: scale(0.98); }
-    .site-footer { text-align: center; padding: 1.2rem; background: #1c2f2b; color: #bdd9d1; border-top: 1px solid #2e4a43; }
-    .footer-text { font-size: 0.75rem; }
-    .footer-text i { color: #ff6b2c; margin: 0 2px; }
-    .footer-text strong { color: #ffde9c; }
-    .footer-links { margin-top: 10px; margin-bottom: 8px; }
-    .footer-links a { color: #bdd9d1; text-decoration: none; margin: 0 8px; font-size: 0.7rem; }
-    .footer-links a:hover { color: #ffde9c; }
-    .support-container { position: fixed; bottom: 25px; right: 25px; z-index: 1000; }
-    .support-btn { width: 60px; height: 60px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); animation: pulse 2s infinite; }
-    .support-btn i { font-size: 32px; color: white; }
-    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
-    .support-options { position: absolute; bottom: 75px; right: 0; background: white; border-radius: 20px; padding: 12px 0; min-width: 220px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); display: none; }
+    .site-footer { text-align: center; padding: 1rem; background: #1c2f2b; color: #bdd9d1; border-top: 1px solid #2e4a43; }
+    .footer-text { font-size: 0.65rem; }
+    .support-container { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+    .support-btn { width: 50px; height: 50px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    .support-btn i { font-size: 26px; color: white; }
+    .support-options { position: absolute; bottom: 60px; right: 0; background: white; border-radius: 15px; padding: 8px 0; min-width: 190px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: none; }
     .support-options.show { display: block; }
-    .support-option { display: flex; align-items: center; gap: 12px; padding: 12px 20px; text-decoration: none; color: #333; }
+    .support-option { display: flex; align-items: center; gap: 10px; padding: 10px 15px; text-decoration: none; color: #333; font-size: 0.8rem; }
     .support-option:hover { background: #f5f5f5; }
     .support-option .fa-whatsapp { color: #25D366; }
     .support-option .fa-envelope { color: #EA4335; }
     .overlay-close { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 999; display: none; }
     .overlay-close.show { display: block; }
-    @media (max-width: 500px) { .main-body { padding: 1.2rem; } .option-icon-img { width: 40px; height: 40px; } .brand h1 { font-size: 1.3rem; } .top-bar { padding: 0.5rem 1rem; } }
+    @media (max-width: 550px) { .main-body { padding: 1.2rem; } .option-icon-img { width: 35px; height: 35px; } .brand h1 { font-size: 1.3rem; } }
   </style>
 </head>
 <body>
 <div class="main-card">
-  <!-- Top Bar with User Info -->
   <div class="top-bar">
-    <a href="dashboard.html"><i class="fas fa-user-circle"></i> My Dashboard</a>
-    <div class="user-info">
-      <span class="user-name" id="userName"><i class="fas fa-user"></i> Loading...</span>
-      <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
-    </div>
+    <a href="dashboard.html" style="color:#bdd9d1; text-decoration:none; font-size:0.8rem;"><i class="fas fa-user-circle"></i> Dashboard</a>
+    <div><span class="user-name" id="userName"><i class="fas fa-spinner fa-spin"></i> Loading...</span>
+    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
   </div>
-  
   <div class="brand">
-    <h1><span><img src="https://i.postimg.cc/VsWR4xNj/download.png" class="brand-icon" style="width: 32px;"> bkash</span><span>⟷</span><span>nagad <img src="https://i.postimg.cc/CMsNJ3KG/download-(1).png" class="brand-icon" style="width: 32px;"></span></h1>
+    <h1><span><img src="https://i.postimg.cc/VsWR4xNj/download.png" class="brand-icon"> bkash</span><span>⟷</span><span>nagad <img src="https://i.postimg.cc/CMsNJ3KG/download-(1).png" class="brand-icon"></span></h1>
     <div class="sub">সরাসরি এক্সচেঞ্জ • নির্ভরযোগ্য হার</div>
   </div>
   <div class="main-body">
     <div class="direction-options">
-      <div class="option-card" id="bkashToNagadOption">
-        <div class="option-icon"><img src="https://i.postimg.cc/VsWR4xNj/download.png" class="option-icon-img"></div>
-        <div class="option-title">Bkash → Nagad</div>
-        <div class="option-fee" id="b2nFeeDisplay">ফি: 1.49% + 10 TK</div>
-      </div>
-      <div class="option-card" id="nagadToBkashOption">
-        <div class="option-icon"><img src="https://i.postimg.cc/CMsNJ3KG/download-(1).png" class="option-icon-img"></div>
-        <div class="option-title">Nagad → Bkash</div>
-        <div class="option-fee" id="n2bFeeDisplay">ফি: 1.25% + 10 TK</div>
-      </div>
+      <div class="option-card" id="bkashToNagadOption"><div><img src="https://i.postimg.cc/VsWR4xNj/download.png" class="option-icon-img"></div><div class="option-title">Bkash → Nagad</div><div class="option-fee" id="b2nFeeDisplay">ফি: 1.49% + 10 TK</div></div>
+      <div class="option-card" id="nagadToBkashOption"><div><img src="https://i.postimg.cc/CMsNJ3KG/download-(1).png" class="option-icon-img"></div><div class="option-title">Nagad → Bkash</div><div class="option-fee" id="n2bFeeDisplay">ফি: 1.25% + 10 TK</div></div>
     </div>
-    <div class="input-group"><div class="input-label"><span>💰</span> <span id="sendFromLabel">Bkash থেকে পাঠাবেন</span></div><div class="amount-wrapper"><span class="currency-symbol">৳</span><input type="number" id="amountInput" placeholder="পরিমাণ লিখুন" value="500" step="any"></div></div>
-    <div class="fee-preview">
-      <div class="fee-row"><span>এক্সচেঞ্জ পরিমাণ:</span><span id="displayAmount">0.00 ৳</span></div>
-      <div class="fee-row"><span id="feeLabel">ফি (1.49% + 10 TK):</span><span id="feeAmount">0.00 ৳</span></div>
-      <div class="fee-row total-row"><span>✅ পাবেন:</span><span id="receiveAmount">0.00 ৳</span></div>
-    </div>
+    <div class="input-group"><div class="input-label"><span>💰</span> <span id="sendFromLabel">Bkash থেকে পাঠাবেন</span></div><div class="amount-wrapper"><span class="currency-symbol">৳</span><input type="number" id="amountInput" placeholder="পরিমাণ লিখুন" value="500"></div></div>
+    <div class="fee-preview"><div class="fee-row"><span>এক্সচেঞ্জ পরিমাণ:</span><span id="displayAmount">0.00 ৳</span></div><div class="fee-row"><span id="feeLabel">ফি (1.49% + 10 TK):</span><span id="feeAmount">0.00 ৳</span></div><div class="fee-row total-row"><span>✅ পাবেন:</span><span id="receiveAmount">0.00 ৳</span></div></div>
     <button class="confirm-btn" id="confirmExchangeBtn"><span>🔄</span> কনফার্ম করুন & এক্সচেঞ্জ করুন</button>
   </div>
-  <div class="site-footer">
-    <div class="footer-text">© 2026 <strong>Flex Exchanger</strong> - Exchange Your Money <i class="fas fa-exchange-alt"></i></div>
-    <div class="footer-links"><a href="about.html"><i class="fas fa-info-circle"></i> About</a> | <a href="terms.html"><i class="fas fa-file-contract"></i> Terms</a> | <a href="privacy.html"><i class="fas fa-shield-alt"></i> Privacy</a> | <a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a> | <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></div>
-    <div class="footer-text" style="font-size: 0.65rem;"><i class="fas fa-shield-alt"></i> Secure & Fast Exchange | 24/7 Support</div>
-  </div>
+  <div class="site-footer"><div class="footer-text">© 2026 <strong>Flex Exchanger</strong> - Exchange Your Money <i class="fas fa-exchange-alt"></i></div></div>
 </div>
-<div class="support-container"><div class="support-btn" id="supportBtn"><i class="fas fa-headset"></i></div><div class="support-options" id="supportOptions"><a href="https://wa.me/8801945259421?text=Hello,%20I%20need%20help%20with%20FlexExchanger" target="_blank" class="support-option"><i class="fab fa-whatsapp"></i><div><span>WhatsApp</span><div style="font-size:11px;color:#888;">01945259421</div></div></a><a href="mailto:flexexchanger@goatmail.uk?subject=Support%20Request" class="support-option"><i class="fas fa-envelope"></i><div><span>Gmail / Email</span><div style="font-size:11px;color:#888;">flexexchanger@goatmail.uk</div></div></a></div></div><div class="overlay-close" id="overlayClose"></div>
+<div class="support-container"><div class="support-btn" id="supportBtn"><i class="fas fa-headset"></i></div><div class="support-options" id="supportOptions"><a href="https://wa.me/8801945259421" target="_blank" class="support-option"><i class="fab fa-whatsapp"></i> WhatsApp: 01945259421</a><a href="mailto:flexexchanger@goatmail.uk" class="support-option"><i class="fas fa-envelope"></i> flexexchanger@goatmail.uk</a></div></div><div class="overlay-close" id="overlayClose"></div>
 
 <script>
-  // Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyBm-u9hmjJtBRouEFIHifnkU_Zjn8llJqs",
     authDomain: "takatotaka-49555.firebaseapp.com",
@@ -127,216 +93,68 @@
   };
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
-  const database = firebase.database();
+  const db = firebase.database();
   
+  let currentUser = null;
   let currentDirection = 'bkash_to_nagad';
   let rates = { b2nPercent: 1.49, b2nFixed: 10, n2bPercent: 1.25, n2bFixed: 10 };
-  let currentUser = null;
-  let userName = '';
   
-  // Check if user is logged in - if not, redirect to index.html
   auth.onAuthStateChanged(async (user) => {
-    if (!user) {
-      window.location.href = 'index.html';
-      return;
-    }
+    if (!user) { window.location.href = 'index.html'; return; }
     currentUser = user;
-    
     try {
-      // Load user data
-      const snapshot = await database.ref('users/' + user.uid).once('value');
-      const userData = snapshot.val();
-      if (userData) {
-        userName = userData.name || user.email.split('@')[0];
-      } else {
-        userName = user.email.split('@')[0];
-      }
-      document.getElementById('userName').innerHTML = `<i class="fas fa-user-circle"></i> ${userName}`;
-      
-      // Check if user is banned
-      if (userData && userData.status === 'banned') {
-        document.querySelector('.confirm-btn').disabled = true;
-        document.querySelector('.confirm-btn').style.opacity = '0.5';
-        document.querySelector('.confirm-btn').style.cursor = 'not-allowed';
-        alert('⚠️ আপনার অ্যাকাউন্ট ব্লক করা হয়েছে! সাপোর্টে যোগাযোগ করুন।');
-      }
-    } catch (error) {
-      console.error("Error loading user data:", error);
-      document.getElementById('userName').innerHTML = `<i class="fas fa-user-circle"></i> ${user.email.split('@')[0]}`;
-      userName = user.email.split('@')[0];
-    }
+      const snap = await db.ref('users/' + user.uid).once('value');
+      const userData = snap.val();
+      document.getElementById('userName').innerHTML = `<i class="fas fa-user-circle"></i> ${userData?.name || user.email.split('@')[0]}`;
+    } catch(e) { document.getElementById('userName').innerHTML = `<i class="fas fa-user-circle"></i> ${user.email.split('@')[0]}`; }
   });
   
-  function logout() {
-    auth.signOut().then(() => {
-      window.location.href = 'index.html';
-    }).catch((error) => {
-      console.error("Logout error:", error);
-    });
-  }
+  function logout() { auth.signOut().then(() => window.location.href = 'index.html'); }
   
-  // Load rates from Firebase
-  function loadRates() {
-    database.ref('exchange_rates').on('value', (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        rates.b2nPercent = data.bkashToNagadPercent || 1.49;
-        rates.b2nFixed = data.bkashToNagadFixed || 10;
-        rates.n2bPercent = data.nagadToBkashPercent || 1.25;
-        rates.n2bFixed = data.nagadToBkashFixed || 10;
-      }
-      updateFeeDisplay();
-      updatePreview();
-    }, (error) => {
-      console.error("Error loading rates:", error);
-    });
-  }
+  db.ref('exchange_rates').on('value', (s) => {
+    const d = s.val();
+    if(d) { rates.b2nPercent = d.bkashToNagadPercent || 1.49; rates.b2nFixed = d.bkashToNagadFixed || 10; rates.n2bPercent = d.nagadToBkashPercent || 1.25; rates.n2bFixed = d.nagadToBkashFixed || 10; }
+    updateFeeDisplay(); updatePreview();
+  });
   
-  function updateFeeDisplay() {
-    document.getElementById('b2nFeeDisplay').innerHTML = `ফি: ${rates.b2nPercent}% + ${rates.b2nFixed} TK`;
-    document.getElementById('n2bFeeDisplay').innerHTML = `ফি: ${rates.n2bPercent}% + ${rates.n2bFixed} TK`;
-  }
-  
-  function getFeeConfig(direction) {
-    if (direction === 'bkash_to_nagad') {
-      return { percent: rates.b2nPercent, fixed: rates.b2nFixed, sendFrom: 'Bkash', receiveTo: 'Nagad' };
-    } else {
-      return { percent: rates.n2bPercent, fixed: rates.n2bFixed, sendFrom: 'Nagad', receiveTo: 'Bkash' };
-    }
-  }
-  
+  function updateFeeDisplay() { document.getElementById('b2nFeeDisplay').innerHTML = `ফি: ${rates.b2nPercent}% + ${rates.b2nFixed} TK`; document.getElementById('n2bFeeDisplay').innerHTML = `ফি: ${rates.n2bPercent}% + ${rates.n2bFixed} TK`; }
+  function getConfig(dir) { return dir === 'bkash_to_nagad' ? { percent: rates.b2nPercent, fixed: rates.b2nFixed } : { percent: rates.n2bPercent, fixed: rates.n2bFixed }; }
   function updatePreview() {
-    let amount = parseFloat(document.getElementById('amountInput').value);
-    if (isNaN(amount)) amount = 0;
-    if (amount < 0) amount = 0;
-    
-    document.getElementById('displayAmount').innerText = amount.toFixed(2) + ' ৳';
-    
-    const config = getFeeConfig(currentDirection);
-    const percentFee = (amount * config.percent) / 100;
-    const totalFee = percentFee + config.fixed;
-    const received = amount - totalFee;
-    
-    document.getElementById('feeAmount').innerText = totalFee.toFixed(2) + ' ৳';
-    document.getElementById('receiveAmount').innerText = (received > 0 ? received : 0).toFixed(2) + ' ৳';
-    document.getElementById('feeLabel').innerHTML = `📉 ফি (${config.percent}% + ${config.fixed} TK):`;
+    let amt = parseFloat(document.getElementById('amountInput').value) || 0;
+    document.getElementById('displayAmount').innerText = amt.toFixed(2) + ' ৳';
+    const cfg = getConfig(currentDirection);
+    const fee = (amt * cfg.percent / 100) + cfg.fixed;
+    const rec = amt - fee;
+    document.getElementById('feeAmount').innerText = fee.toFixed(2) + ' ৳';
+    document.getElementById('receiveAmount').innerText = (rec > 0 ? rec : 0).toFixed(2) + ' ৳';
+    document.getElementById('feeLabel').innerHTML = `📉 ফি (${cfg.percent}% + ${cfg.fixed} TK):`;
   }
-  
   function updateDirectionUI() {
-    if (currentDirection === 'bkash_to_nagad') {
-      document.getElementById('bkashToNagadOption').classList.add('selected');
-      document.getElementById('nagadToBkashOption').classList.remove('selected');
-      document.getElementById('sendFromLabel').innerText = 'Bkash থেকে পাঠাবেন';
-    } else {
-      document.getElementById('nagadToBkashOption').classList.add('selected');
-      document.getElementById('bkashToNagadOption').classList.remove('selected');
-      document.getElementById('sendFromLabel').innerText = 'Nagad থেকে পাঠাবেন';
-    }
+    if(currentDirection === 'bkash_to_nagad') { document.getElementById('bkashToNagadOption').classList.add('selected'); document.getElementById('nagadToBkashOption').classList.remove('selected'); document.getElementById('sendFromLabel').innerText = 'Bkash থেকে পাঠাবেন'; }
+    else { document.getElementById('nagadToBkashOption').classList.add('selected'); document.getElementById('bkashToNagadOption').classList.remove('selected'); document.getElementById('sendFromLabel').innerText = 'Nagad থেকে পাঠাবেন'; }
     updatePreview();
   }
-  
   async function performExchange() {
-    let amount = parseFloat(document.getElementById('amountInput').value);
-    if (isNaN(amount) || amount <= 0) { 
-      alert('❌ সঠিক পরিমাণ লিখুন!'); 
-      return; 
-    }
-    if (amount < 10) { 
-      alert('❌ নূন্যতম এক্সচেঞ্জ পরিমাণ ১০ টাকা'); 
-      return; 
-    }
-    if (amount > 500000) { 
-      alert('⚠️ সর্বোচ্চ সীমা 500,000 টাকা'); 
-      return; 
-    }
-    
-    // Check if user is logged in
-    if (!currentUser) {
-      alert('❌ আপনি লগইন করেননি! প্লিজ লগইন করুন।');
-      window.location.href = 'index.html';
-      return;
-    }
-    
-    // Check if user is banned
-    try {
-      const snapshot = await database.ref('users/' + currentUser.uid).once('value');
-      const userData = snapshot.val();
-      if (userData && userData.status === 'banned') {
-        alert('⚠️ আপনার অ্যাকাউন্ট ব্লক করা হয়েছে! এক্সচেঞ্জ করতে পারবেন না।');
-        return;
-      }
-    } catch (error) {
-      console.error("Error checking user status:", error);
-    }
-    
-    const config = getFeeConfig(currentDirection);
-    const percentFee = (amount * config.percent) / 100;
-    const totalFee = percentFee + config.fixed;
-    const received = amount - totalFee;
-    
-    const exchangeData = {
-      amount: amount,
-      received: received > 0 ? received : 0,
-      fee: totalFee,
-      direction: currentDirection,
-      sendFrom: config.sendFrom,
-      receiveTo: config.receiveTo,
-      feePercent: config.percent,
-      feeFixed: config.fixed,
-      timestamp: new Date().toISOString(),
-      userId: currentUser.uid,
-      userEmail: currentUser.email,
-      userName: userName
-    };
-    
-    localStorage.setItem('pendingExchange', JSON.stringify(exchangeData));
-    
-    if (currentDirection === 'bkash_to_nagad') {
-      window.location.href = 'bkash-to-nagad.html';
-    } else {
-      window.location.href = 'nagad-to-bkash.html';
-    }
+    if(!currentUser) { alert('Please login first'); window.location.href='index.html'; return; }
+    let amt = parseFloat(document.getElementById('amountInput').value);
+    if(isNaN(amt) || amt < 10) { alert('❌ নূন্যতম ১০ টাকা'); return; }
+    const cfg = getConfig(currentDirection);
+    const fee = (amt * cfg.percent / 100) + cfg.fixed;
+    const rec = amt - fee;
+    const snap = await db.ref('users/' + currentUser.uid).once('value');
+    if(snap.val()?.status === 'banned') { alert('Your account is banned'); return; }
+    const data = { amount: amt, received: rec > 0 ? rec : 0, fee: fee, direction: currentDirection, feePercent: cfg.percent, feeFixed: cfg.fixed, timestamp: new Date().toISOString(), userId: currentUser.uid, userEmail: currentUser.email };
+    localStorage.setItem('pendingExchange', JSON.stringify(data));
+    window.location.href = currentDirection === 'bkash_to_nagad' ? 'bkash-to-nagad.html' : 'nagad-to-bkash.html';
   }
   
-  // Support Icon
-  const supportBtn = document.getElementById('supportBtn');
-  const supportOptions = document.getElementById('supportOptions');
-  const overlayClose = document.getElementById('overlayClose');
-  
-  if (supportBtn) {
-    supportBtn.onclick = (e) => { 
-      e.stopPropagation(); 
-      supportOptions.classList.toggle('show'); 
-      overlayClose.classList.toggle('show'); 
-    };
-  }
-  
-  if (overlayClose) {
-    overlayClose.onclick = () => { 
-      supportOptions.classList.remove('show'); 
-      overlayClose.classList.remove('show'); 
-    };
-  }
-  
-  document.querySelectorAll('.support-option').forEach(opt => { 
-    opt.onclick = () => { 
-      supportOptions.classList.remove('show'); 
-      overlayClose.classList.remove('show'); 
-    }; 
-  });
-  
-  // Event Listeners
-  const bkashOption = document.getElementById('bkashToNagadOption');
-  const nagadOption = document.getElementById('nagadToBkashOption');
-  const amountInput = document.getElementById('amountInput');
-  const confirmBtn = document.getElementById('confirmExchangeBtn');
-  
-  if (bkashOption) bkashOption.onclick = () => { currentDirection = 'bkash_to_nagad'; updateDirectionUI(); };
-  if (nagadOption) nagadOption.onclick = () => { currentDirection = 'nagad_to_bkash'; updateDirectionUI(); };
-  if (amountInput) amountInput.addEventListener('input', updatePreview);
-  if (confirmBtn) confirmBtn.onclick = performExchange;
-  
-  loadRates();
+  document.getElementById('bkashToNagadOption').onclick = () => { currentDirection = 'bkash_to_nagad'; updateDirectionUI(); };
+  document.getElementById('nagadToBkashOption').onclick = () => { currentDirection = 'nagad_to_bkash'; updateDirectionUI(); };
+  document.getElementById('amountInput').addEventListener('input', updatePreview);
+  document.getElementById('confirmExchangeBtn').onclick = performExchange;
+  const sb = document.getElementById('supportBtn'), so = document.getElementById('supportOptions'), oc = document.getElementById('overlayClose');
+  sb.onclick = (e) => { e.stopPropagation(); so.classList.toggle('show'); oc.classList.toggle('show'); };
+  oc.onclick = () => { so.classList.remove('show'); oc.classList.remove('show'); };
   updateDirectionUI();
 </script>
 </body>
