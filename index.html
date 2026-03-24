@@ -26,8 +26,6 @@
     .btn { padding: 0.8rem 2rem; border-radius: 2rem; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-block; border: none; }
     .btn-primary { background: #ff6b2c; color: white; }
     .btn-primary:hover { background: #e55a1e; transform: scale(0.98); }
-    .btn-outline { background: transparent; border: 2px solid #ff6b2c; color: #ff6b2c; }
-    .btn-outline:hover { background: #ff6b2c; color: white; }
     .features { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
     .feature { flex: 1; min-width: 140px; padding: 1rem; background: #f1f8f5; border-radius: 1rem; }
     .feature i { font-size: 2rem; color: #ff6b2c; margin-bottom: 0.5rem; }
@@ -46,11 +44,9 @@
   <div class="main-body">
     <div class="welcome-text"><i class="fas fa-exchange-alt"></i> Welcome to FlexExchanger</div>
     <div class="description">Bkash থেকে Nagad এবং Nagad থেকে Bkash এ দ্রুত, নিরাপদ ও সাশ্রয়ী মূল্যে টাকা এক্সচেঞ্জ করুন। 24/7 সাপোর্ট, লোয়েস্ট ফি!</div>
-    
     <div class="btn-group">
       <a href="auth.html" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Sign In / Sign Up</a>
     </div>
-    
     <div class="features">
       <div class="feature"><i class="fas fa-bolt"></i><h4>ইনস্ট্যান্ট</h4><p>৫-১০ মিনিটে ট্রান্সফার</p></div>
       <div class="feature"><i class="fas fa-shield-alt"></i><h4>১০০% সিকিউর</h4><p>এনক্রিপ্টেড লেনদেন</p></div>
@@ -59,9 +55,7 @@
   </div>
   <div class="footer">© 2026 Flex Exchanger - Exchange Your Money <i class="fas fa-exchange-alt"></i></div>
 </div>
-
 <script>
-  // Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyBm-u9hmjJtBRouEFIHifnkU_Zjn8llJqs",
     authDomain: "takatotaka-49555.firebaseapp.com",
@@ -73,13 +67,7 @@
   };
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
-  
-  // If already logged in, redirect to exchange page
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      window.location.href = 'index2.html';
-    }
-  });
+  auth.onAuthStateChanged((user) => { if (user) { window.location.href = 'index2.html'; } });
 </script>
 </body>
 </html>
