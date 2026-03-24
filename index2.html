@@ -132,6 +132,7 @@
   let currentDirection = 'bkash_to_nagad';
   let rates = { b2nPercent: 1.49, b2nFixed: 10, n2bPercent: 1.25, n2bFixed: 10 };
   let currentUser = null;
+  let userName = '';
   
   // Check if user is logged in - if not, redirect to index.html
   auth.onAuthStateChanged(async (user) => {
@@ -141,23 +142,36 @@
     }
     currentUser = user;
     
-    // Load user data
-    const snapshot = await database.ref('users/' + user.uid).once('value');
-    const userData = snapshot.val();
-    document.getElementById('userName').innerHTML = `<i class="fas fa-user-circle"></i> ${userData?.name || user.email.split('@')[0]}`;
-    
-    // Check if user is banned
-    if (userData && userData.status === 'banned') {
-      document.querySelector('.confirm-btn').disabled = true;
-      document.querySelector('.confirm-btn').style.opacity = '0.5';
-      document.querySelector('.confirm-btn').style.cursor = 'not-allowed';
-      alert('⚠️ আপনার অ্যাকাউন্ট ব্লক করা হয়েছে! সাপোর্টে যোগাযোগ করুন।');
+    try {
+      // Load user data
+      const snapshot = await database.ref('users/' + user.uid).once('value');
+      const userData = snapshot.val();
+      if (userData) {
+        userName = userData.name || user.email.split('@')[0];
+      } else {
+        userName = user.email.split('@')[0];
+      }
+      document.getElementById('userName').innerHTML = `<i class="fas fa-user-circle"></i> ${userName}`;
+      
+      // Check if user is banned
+      if (userData && userData.status === 'banned') {
+        document.querySelector('.confirm-btn').disabled = true;
+        document.querySelector('.confirm-btn').style.opacity = '0.5';
+        document.querySelector('.confirm-btn').style.cursor = 'not-allowed';
+        alert('⚠️ আপনার অ্যাকাউন্ট ব্লক করা হয়েছে! সাপোর্টে যোগাযোগ করুন।');
+      }
+    } catch (error) {
+      console.error("Error loading user data:", error);
+      document.getElementById('userName').innerHTML = `<i class="fas fa-user-circle"></i> ${user.email.split('@')[0]}`;
+      userName = user.email.split('@')[0];
     }
   });
   
   function logout() {
     auth.signOut().then(() => {
       window.location.href = 'index.html';
+    }).catch((error) => {
+      console.error("Logout error:", error);
     });
   }
   
@@ -173,6 +187,8 @@
       }
       updateFeeDisplay();
       updatePreview();
+    }, (error) => {
+      console.error("Error loading rates:", error);
     });
   }
   
@@ -221,18 +237,36 @@
   
   async function performExchange() {
     let amount = parseFloat(document.getElementById('amountInput').value);
-    if (isNaN(amount) || amount <= 0) { alert('❌ সঠিক পরিমাণ লিখুন!'); return; }
-    if (amount < 10) { alert('❌ নূন্যতম এক্সচেঞ্জ পরিমাণ ১০ টাকা'); return; }
-    if (amount > 500000) { alert('⚠️ সর্বোচ্চ সীমা 500,000 টাকা'); return; }
+    if (isNaN(amount) || amount <= 0) { 
+      alert('❌ সঠিক পরিমাণ লিখুন!'); 
+      return; 
+    }
+    if (amount < 10) { 
+      alert('❌ নূন্যতম এক্সচেঞ্জ পরিমাণ ১০ টাকা'); 
+      return; 
+    }
+    if (amount > 500000) { 
+      alert('⚠️ সর্বোচ্চ সীমা 500,000 টাকা'); 
+      return; 
+    }
+    
+    // Check if user is logged in
+    if (!currentUser) {
+      alert('❌ আপনি লগইন করেননি! প্লিজ লগইন করুন।');
+      window.location.href = 'index.html';
+      return;
+    }
     
     // Check if user is banned
-    if (currentUser) {
+    try {
       const snapshot = await database.ref('users/' + currentUser.uid).once('value');
       const userData = snapshot.val();
       if (userData && userData.status === 'banned') {
         alert('⚠️ আপনার অ্যাকাউন্ট ব্লক করা হয়েছে! এক্সচেঞ্জ করতে পারবেন না।');
         return;
       }
+    } catch (error) {
+      console.error("Error checking user status:", error);
     }
     
     const config = getFeeConfig(currentDirection);
@@ -250,8 +284,9 @@
       feePercent: config.percent,
       feeFixed: config.fixed,
       timestamp: new Date().toISOString(),
-      userId: currentUser ? currentUser.uid : null,
-      userEmail: currentUser ? currentUser.email : null
+      userId: currentUser.uid,
+      userEmail: currentUser.email,
+      userName: userName
     };
     
     localStorage.setItem('pendingExchange', JSON.stringify(exchangeData));
@@ -268,14 +303,38 @@
   const supportOptions = document.getElementById('supportOptions');
   const overlayClose = document.getElementById('overlayClose');
   
-  supportBtn.onclick = (e) => { e.stopPropagation(); supportOptions.classList.toggle('show'); overlayClose.classList.toggle('show'); };
-  overlayClose.onclick = () => { supportOptions.classList.remove('show'); overlayClose.classList.remove('show'); };
-  document.querySelectorAll('.support-option').forEach(opt => { opt.onclick = () => { supportOptions.classList.remove('show'); overlayClose.classList.remove('show'); }; });
+  if (supportBtn) {
+    supportBtn.onclick = (e) => { 
+      e.stopPropagation(); 
+      supportOptions.classList.toggle('show'); 
+      overlayClose.classList.toggle('show'); 
+    };
+  }
   
-  document.getElementById('bkashToNagadOption').onclick = () => { currentDirection = 'bkash_to_nagad'; updateDirectionUI(); };
-  document.getElementById('nagadToBkashOption').onclick = () => { currentDirection = 'nagad_to_bkash'; updateDirectionUI(); };
-  document.getElementById('amountInput').addEventListener('input', updatePreview);
-  document.getElementById('confirmExchangeBtn').onclick = performExchange;
+  if (overlayClose) {
+    overlayClose.onclick = () => { 
+      supportOptions.classList.remove('show'); 
+      overlayClose.classList.remove('show'); 
+    };
+  }
+  
+  document.querySelectorAll('.support-option').forEach(opt => { 
+    opt.onclick = () => { 
+      supportOptions.classList.remove('show'); 
+      overlayClose.classList.remove('show'); 
+    }; 
+  });
+  
+  // Event Listeners
+  const bkashOption = document.getElementById('bkashToNagadOption');
+  const nagadOption = document.getElementById('nagadToBkashOption');
+  const amountInput = document.getElementById('amountInput');
+  const confirmBtn = document.getElementById('confirmExchangeBtn');
+  
+  if (bkashOption) bkashOption.onclick = () => { currentDirection = 'bkash_to_nagad'; updateDirectionUI(); };
+  if (nagadOption) nagadOption.onclick = () => { currentDirection = 'nagad_to_bkash'; updateDirectionUI(); };
+  if (amountInput) amountInput.addEventListener('input', updatePreview);
+  if (confirmBtn) confirmBtn.onclick = performExchange;
   
   loadRates();
   updateDirectionUI();
