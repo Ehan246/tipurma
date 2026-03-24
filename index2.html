@@ -14,8 +14,9 @@
     body { min-height: 100vh; background: linear-gradient(145deg, #0a2c26 0%, #07221e 100%); display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
     .main-card { max-width: 620px; width: 100%; background: white; border-radius: 3rem; overflow: hidden; box-shadow: 0 30px 50px -15px rgba(0,0,0,0.5); }
     .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.5rem; background: #1c2f2b; border-bottom: 1px solid #2e4a43; }
+    .top-bar a { color: #bdd9d1; text-decoration: none; font-size: 0.8rem; }
     .user-name { color: #ffde9c; font-weight: 600; font-size: 0.85rem; }
-    .logout-btn { background: none; border: none; color: #bdd9d1; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; }
+    .logout-btn { background: none; border: none; color: #bdd9d1; cursor: pointer; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; margin-left: 1rem; }
     .logout-btn:hover { color: #ffde9c; }
     .brand { background: #1c2f2b; padding: 1rem 2rem 1.5rem; text-align: center; }
     .brand h1 { color: #fef3df; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; gap: 0.6rem; flex-wrap: wrap; }
@@ -50,8 +51,6 @@
     .support-options.show { display: block; }
     .support-option { display: flex; align-items: center; gap: 10px; padding: 10px 15px; text-decoration: none; color: #333; font-size: 0.8rem; }
     .support-option:hover { background: #f5f5f5; }
-    .support-option .fa-whatsapp { color: #25D366; }
-    .support-option .fa-envelope { color: #EA4335; }
     .overlay-close { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 999; display: none; }
     .overlay-close.show { display: block; }
     @media (max-width: 550px) { .main-body { padding: 1.2rem; } .option-icon-img { width: 35px; height: 35px; } .brand h1 { font-size: 1.3rem; } }
@@ -60,9 +59,11 @@
 <body>
 <div class="main-card">
   <div class="top-bar">
-    <a href="dashboard.html" style="color:#bdd9d1; text-decoration:none; font-size:0.8rem;"><i class="fas fa-user-circle"></i> Dashboard</a>
-    <div><span class="user-name" id="userName"><i class="fas fa-spinner fa-spin"></i> Loading...</span>
-    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+    <a href="dashboard.html"><i class="fas fa-user-circle"></i> Dashboard</a>
+    <div>
+      <span class="user-name" id="userName"><i class="fas fa-spinner fa-spin"></i> Loading...</span>
+      <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
   </div>
   <div class="brand">
     <h1><span><img src="https://i.postimg.cc/VsWR4xNj/download.png" class="brand-icon"> bkash</span><span>⟷</span><span>nagad <img src="https://i.postimg.cc/CMsNJ3KG/download-(1).png" class="brand-icon"></span></h1>
@@ -82,7 +83,6 @@
 <div class="support-container"><div class="support-btn" id="supportBtn"><i class="fas fa-headset"></i></div><div class="support-options" id="supportOptions"><a href="https://wa.me/8801945259421" target="_blank" class="support-option"><i class="fab fa-whatsapp"></i> WhatsApp: 01945259421</a><a href="mailto:flexexchanger@goatmail.uk" class="support-option"><i class="fas fa-envelope"></i> flexexchanger@goatmail.uk</a></div></div><div class="overlay-close" id="overlayClose"></div>
 
 <script>
-  // Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyBm-u9hmjJtBRouEFIHifnkU_Zjn8llJqs",
     authDomain: "takatotaka-49555.firebaseapp.com",
@@ -110,8 +110,8 @@
     try {
       const snap = await db.ref('users/' + user.uid).once('value');
       const userData = snap.val();
-      if (userData) {
-        document.getElementById('userName').innerHTML = `<i class="fas fa-user-circle"></i> ${userData.name || user.email.split('@')[0]}`;
+      if (userData && userData.name) {
+        document.getElementById('userName').innerHTML = `<i class="fas fa-user-circle"></i> ${userData.name}`;
       } else {
         document.getElementById('userName').innerHTML = `<i class="fas fa-user-circle"></i> ${user.email.split('@')[0]}`;
       }
@@ -123,12 +123,10 @@
   function logout() {
     auth.signOut().then(() => {
       window.location.href = 'index.html';
-    }).catch((error) => {
-      console.error("Logout error:", error);
     });
   }
   
-  // Load rates from Firebase
+  // Load rates
   db.ref('exchange_rates').on('value', (snapshot) => {
     const data = snapshot.val();
     if (data) {
@@ -157,8 +155,6 @@
   function updatePreview() {
     let amt = parseFloat(document.getElementById('amountInput').value);
     if (isNaN(amt)) amt = 0;
-    if (amt < 0) amt = 0;
-    
     document.getElementById('displayAmount').innerText = amt.toFixed(2) + ' ৳';
     const cfg = getConfig(currentDirection);
     const fee = (amt * cfg.percent / 100) + cfg.fixed;
@@ -182,46 +178,22 @@
   }
   
   async function performExchange() {
-    // Check if user is logged in
     if (!currentUser) {
-      alert('❌ Please login first!');
+      alert('Please login first');
       window.location.href = 'index.html';
       return;
     }
     
-    // Get amount
     let amt = parseFloat(document.getElementById('amountInput').value);
-    if (isNaN(amt) || amt <= 0) {
-      alert('❌ সঠিক পরিমাণ লিখুন!');
-      return;
-    }
-    if (amt < 10) {
-      alert('❌ নূন্যতম এক্সচেঞ্জ পরিমাণ ১০ টাকা');
-      return;
-    }
-    if (amt > 500000) {
-      alert('⚠️ সর্বোচ্চ সীমা 500,000 টাকা');
+    if (isNaN(amt) || amt < 10) {
+      alert('❌ নূন্যতম ১০ টাকা লিখুন!');
       return;
     }
     
-    // Check if user is banned
-    try {
-      const snap = await db.ref('users/' + currentUser.uid).once('value');
-      const userData = snap.val();
-      if (userData && userData.status === 'banned') {
-        alert('⚠️ আপনার অ্যাকাউন্ট ব্লক করা হয়েছে! এক্সচেঞ্জ করতে পারবেন না।');
-        return;
-      }
-    } catch(e) {
-      console.error("Error checking user status:", e);
-    }
-    
-    // Calculate fee and received amount
     const cfg = getConfig(currentDirection);
     const fee = (amt * cfg.percent / 100) + cfg.fixed;
     const rec = amt - fee;
     
-    // Prepare exchange data
     const exchangeData = {
       amount: amt,
       received: rec > 0 ? rec : 0,
@@ -234,7 +206,6 @@
       userEmail: currentUser.email
     };
     
-    // Save to localStorage
     localStorage.setItem('pendingExchange', JSON.stringify(exchangeData));
     
     // Redirect based on direction
@@ -264,20 +235,16 @@
   const supportOptions = document.getElementById('supportOptions');
   const overlayClose = document.getElementById('overlayClose');
   
-  if (supportBtn) {
-    supportBtn.onclick = (e) => {
-      e.stopPropagation();
-      supportOptions.classList.toggle('show');
-      overlayClose.classList.toggle('show');
-    };
-  }
+  supportBtn.onclick = (e) => {
+    e.stopPropagation();
+    supportOptions.classList.toggle('show');
+    overlayClose.classList.toggle('show');
+  };
   
-  if (overlayClose) {
-    overlayClose.onclick = () => {
-      supportOptions.classList.remove('show');
-      overlayClose.classList.remove('show');
-    };
-  }
+  overlayClose.onclick = () => {
+    supportOptions.classList.remove('show');
+    overlayClose.classList.remove('show');
+  };
   
   document.querySelectorAll('.support-option').forEach(opt => {
     opt.onclick = () => {
@@ -286,7 +253,6 @@
     };
   });
   
-  // Initialize
   updateDirectionUI();
 </script>
 </body>
