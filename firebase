@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Firebase Debug Tool | FlexExchanger</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    body {
+      background: linear-gradient(145deg, #0a2c26 0%, #07221e 100%);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .card {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    h1 {
+      color: #ff6b2c;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      color: #1f5a4c;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    .status-box {
+      background: #f1f8f5;
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      font-family: monospace;
+      overflow-x: auto;
+    }
+    .success {
+      color: green;
+      font-weight: bold;
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+    .data-table th, .data-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    .data-table th {
+      background: #1f5a4c;
+      color: white;
+    }
+    button {
+      background: #ff6b2c;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    button:hover {
+      background: #e55a1e;
+    }
+    .test-btn {
+      background: #1f5a4c;
+    }
+    .test-btn:hover {
+      background: #0e3d33;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+      font-size: 0.7rem;
+    }
+    .count-badge {
+      background: #ff6b2c;
+      color: white;
+      padding: 0.2rem 0.6rem;
+      border-radius: 1rem;
+      font-size: 0.8rem;
+      margin-left: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <h1><i class="fas fa-database"></i> Firebase Debug Tool</h1>
+    <p>Check if your Firebase database is receiving data from bkash-to-nagad.html and nagad-to-bkash.html pages.</p>
+  </div>
+
+  <div class="card">
+    <h2>📊 Firebase Connection Status</h2>
+    <div id="connectionStatus" class="status-box">
+      <i class="fas fa-spinner fa-pulse"></i> Checking connection...
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📋 Transactions Data <span id="transactionCount" class="count-badge">0</span></h2>
+    <button onclick="loadTransactions()"><i class="fas fa-sync-alt"></i> Refresh</button>
+    <button class="test-btn" onclick="addTestTransaction()"><i class="fas fa-plus"></i> Add Test Transaction</button>
+    <button class="test-btn" onclick="clearAllData()" style="background:#dc3545;"><i class="fas fa-trash"></i> Clear All (Caution!)</button>
+    <div id="transactionsData" class="status-box">
+      <i class="fas fa-spinner fa-pulse"></i> Click Refresh to load data...
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⚙️ Exchange Rates Data</h2>
+    <button onclick="loadRates()"><i class="fas fa-sync-alt"></i> Refresh</button>
+    <div id="ratesData" class="status-box">
+      <i class="fas fa-spinner fa-pulse"></i> Click Refresh to load data...
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🔧 How to Fix If No Data</h2>
+    <ul style="padding-left: 1.5rem; line-height: 1.8;">
+      <li>✅ Make sure you have completed a transaction from <strong>index.html</strong> first</li>
+      <li>✅ Go to <strong>index.html</strong>, select direction, enter amount, click "কনফার্ম করুন"</li>
+      <li>✅ Then go to <strong>bkash-to-nagad.html</strong> or <strong>nagad-to-bkash.html</strong></li>
+      <li>✅ Enter TrxID and Customer Number, click "পেমেন্ট কনফার্ম করুন"</li>
+      <li>✅ After confirmation, data will be saved to Firebase</li>
+      <li>✅ Then click "Refresh" button here to see the data</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  // Firebase Configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBm-u9hmjJtBRouEFIHifnkU_Zjn8llJqs",
+    authDomain: "takatotaka-49555.firebaseapp.com",
+    databaseURL: "https://takatotaka-49555-default-rtdb.firebaseio.com",
+    projectId: "takatotaka-49555",
+    storageBucket: "takatotaka-49555.appspot.com",
+    messagingSenderId: "321092793137",
+    appId: "1:321092793137:web:cc73a09d40f7c2b4eeb610"
+  };
+
+  // Initialize Firebase
+  let app, database;
+  
+  try {
+    app = firebase.initializeApp(firebaseConfig);
+    database = firebase.database();
+    document.getElementById('connectionStatus').innerHTML = '<span class="success">✅ Connected to Firebase successfully!</span>';
+  } catch (error) {
+    document.getElementById('connectionStatus').innerHTML = '<span class="error">❌ Connection failed: ' + error.message + '</span>';
+    console.error(error);
+  }
+
+  // Load Transactions
+  async function loadTransactions() {
+    const container = document.getElementById('transactionsData');
+    container.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Loading transactions...';
+    
+    try {
+      const snapshot = await database.ref('transactions').once('value');
+      const data = snapshot.val();
+      
+      if (!data || Object.keys(data).length === 0) {
+        container.innerHTML = '<span class="error">❌ No transactions found in Firebase. Please complete a transaction first.</span>';
+        document.getElementById('transactionCount').innerText = '0';
+        return;
+      }
+      
+      const count = Object.keys(data).length;
+      document.getElementById('transactionCount').innerText = count;
+      
+      // Create table
+      let html = '<table class="data-table">';
+      html += '<tr><th>ID</th><th>Type</th><th>Amount</th><th>Received</th><th>TrxID</th><th>Customer</th><th>Status</th><th>Date</th></tr>';
+      
+      // Get all transactions and sort by timestamp
+      const transactions = [];
+      Object.keys(data).forEach(key => {
+        const tx = data[key];
+        transactions.push({
+          id: key,
+          ...tx
+        });
+      });
+      transactions.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+      
+      transactions.forEach(tx => {
+        html += `<tr>
+          <td><small>${tx.id.substring(0, 8)}...</small></td>
+          <td>${tx.type || tx.direction || '-'}</td>
+          <td>${(tx.amount || 0).toFixed(2)} ৳</td>
+          <td>${(tx.received || 0).toFixed(2)} ৳</td>
+          <td><small>${tx.trxId || '-'}</small></td>
+          <td>${tx.customerNumber || '-'}</td>
+          <td><span style="background:#d4edda;padding:2px 8px;border-radius:12px;">${tx.status || 'pending'}</span></td>
+          <td><small>${tx.timestamp ? new Date(tx.timestamp).toLocaleString() : '-'}</small></td>
+        </tr>`;
+      });
+      html += '</table>';
+      container.innerHTML = html;
+      
+      // Also show raw data in console
+      console.log('Full Firebase Data:', data);
+      
+    } catch (error) {
+      container.innerHTML = '<span class="error">❌ Error loading data: ' + error.message + '</span>';
+      console.error(error);
+    }
+  }
+
+  // Load Rates
+  async function loadRates() {
+    const container = document.getElementById('ratesData');
+    container.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Loading rates...';
+    
+    try {
+      const snapshot = await database.ref('exchange_rates').once('value');
+      const data = snapshot.val();
+      
+      if (!data) {
+        container.innerHTML = '<span class="error">❌ No exchange rates found in Firebase. Default rates are used.</span>';
+        return;
+      }
+      
+      let html = '<table class="data-table">';
+      html += '<tr><th>Setting</th><th>Value</th></tr>';
+      html += `<tr><td>Bkash → Nagad Percent</td><td>${data.bkashToNagadPercent || 1.49} %</td></tr>`;
+      html += `<tr><td>Bkash → Nagad Fixed</td><td>${data.bkashToNagadFixed || 10} TK</td></tr>`;
+      html += `<tr><td>Nagad → Bkash Percent</td><td>${data.nagadToBkashPercent || 1.25} %</td></tr>`;
+      html += `<tr><td>Nagad → Bkash Fixed</td><td>${data.nagadToBkashFixed || 10} TK</td></tr>`;
+      html += `<tr><td>Last Updated</td><td>${data.updatedAt ? new Date(data.updatedAt).toLocaleString() : '-'}</td></tr>`;
+      html += '</table>';
+      container.innerHTML = html;
+      
+    } catch (error) {
+      container.innerHTML = '<span class="error">❌ Error loading rates: ' + error.message + '</span>';
+      console.error(error);
+    }
+  }
+
+  // Add Test Transaction
+  async function addTestTransaction() {
+    const testData = {
+      type: 'bkash_to_nagad',
+      amount: 500,
+      received: 482.55,
+      fee: 17.45,
+      feePercent: 1.49,
+      feeFixed: 10,
+      trxId: 'TEST' + Math.floor(Math.random() * 10000),
+      customerNumber: '01700000000',
+      merchantNumber: '01813210478',
+      status: 'pending',
+      direction: 'Bkash → Nagad',
+      timestamp: new Date().toISOString(),
+      createdAt: firebase.database.ServerValue.TIMESTAMP
+    };
+    
+    try {
+      const newRef = database.ref('transactions').push();
+      await newRef.set(testData);
+      alert('✅ Test transaction added successfully!');
+      loadTransactions();
+    } catch (error) {
+      alert('❌ Error adding test transaction: ' + error.message);
+    }
+  }
+
+  // Clear All Data (Caution!)
+  async function clearAllData() {
+    if (confirm('⚠️ WARNING: This will delete ALL transactions from Firebase! Are you sure?')) {
+      if (confirm('⚠️ LAST WARNING: This action cannot be undone! Type "DELETE" to confirm')) {
+        const confirmation = prompt('Type "DELETE" to confirm:');
+        if (confirmation === 'DELETE') {
+          try {
+            await database.ref('transactions').remove();
+            alert('✅ All transactions deleted successfully!');
+            loadTransactions();
+          } catch (error) {
+            alert('❌ Error deleting data: ' + error.message);
+          }
+        } else {
+          alert('Deletion cancelled');
+        }
+      }
+    }
+  }
+
+  // Auto load on page load
+  window.onload = () => {
+    setTimeout(() => {
+      loadTransactions();
+      loadRates();
+    }, 1000);
+  };
+</script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Admin Panel | FlexExchanger</title>
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/FKPf7xFW/Gemini-Generated-Image-797iqg797iqg797i.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background: linear-gradient(145deg, #0a2c26 0%, #07221e 100%); min-height: 100vh; padding: 1.5rem; }
+    .admin-container { max-width: 1400px; margin: 0 auto; }
+    .admin-header { background: #1c2f2b; border-radius: 1.5rem; padding: 1rem 2rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .admin-header h1 { color: #ffde9c; font-size: 1.5rem; }
+    .admin-header h1 i { color: #ff6b2c; margin-right: 0.5rem; }
+    .logout-btn { background: #ff6b2c; border: none; padding: 0.5rem 1.2rem; border-radius: 2rem; color: white; cursor: pointer; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-card { background: white; border-radius: 1.2rem; padding: 1.2rem; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .stat-card i { font-size: 2rem; color: #ff6b2c; margin-bottom: 0.5rem; }
+    .stat-number { font-size: 1.8rem; font-weight: 800; color: #1f5a4c; }
+    .stat-label { font-size: 0.8rem; color: #7f8c8d; }
+    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .tab-btn { background: rgba(255,255,255,0.2); border: none; padding: 0.8rem 1.5rem; border-radius: 2rem; color: white; cursor: pointer; font-weight: 600; }
+    .tab-btn.active { background: #ff6b2c; }
+    .panel { display: none; background: white; border-radius: 1.5rem; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .panel.active { display: block; }
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2ece8; }
+    th { background: #f1f8f5; color: #1f5a4c; }
+    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
+    .status-completed { background: #d4edda; color: #155724; }
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-failed { background: #f8d7da; color: #721c24; }
+    .status-active { background: #d4edda; color: #155724; }
+    .status-banned { background: #f8d7da; color: #721c24; }
+    .action-btn { background: none; border: none; cursor: pointer; font-size: 1.1rem; margin: 0 4px; padding: 4px 8px; border-radius: 8px; }
+    .action-btn.approve { color: #28a745; }
+    .action-btn.fail { color: #dc3545; }
+    .action-btn.delete { color: #6c757d; }
+    .action-btn.ban { color: #dc3545; }
+    .action-btn.unban { color: #28a745; }
+    .search-box { margin-bottom: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .search-box input { flex: 1; padding: 0.8rem; border: 1px solid #e2ece8; border-radius: 1rem; outline: none; }
+    .refresh-btn { background: #1f5a4c; color: white; border: none; padding: 0.8rem 1.2rem; border-radius: 1rem; cursor: pointer; }
+    .rate-editor { background: #f1f8f5; border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .rate-row { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #d4e6df; flex-wrap: wrap; gap: 1rem; }
+    .save-rate-btn { background: #ff6b2c; color: white; border: none; padding: 0.5rem 1rem; border-radius: 1.5rem; cursor: pointer; }
+    .loading { text-align: center; padding: 2rem; color: #1f5a4c; }
+    .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 1000; }
+    .popup-box { background: white; border-radius: 1.5rem; padding: 2rem; text-align: center; max-width: 350px; }
+    @media (max-width: 768px) { th, td { padding: 8px; font-size: 0.75rem; } }
+  </style>
+</head>
+<body>
+<div id="loginContainer" class="login-container" style="display: flex; justify-content: center; align-items: center; min-height: 100vh; position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(145deg, #0a2c26 0%, #07221e 100%); z-index: 1000;">
+  <div class="login-box" style="background: white; border-radius: 2rem; padding: 2rem; width: 100%; max-width: 400px; text-align: center;">
+    <h2 style="color:#1f5a4c;"><i class="fas fa-lock"></i> Admin Login</h2>
+    <input type="password" id="adminPassword" class="login-input" style="width:100%; padding:1rem; margin:1rem 0; border:2px solid #e2ece8; border-radius:1rem;" placeholder="Enter Admin Password">
+    <button class="login-btn" onclick="login()" style="width:100%; background:#ff6b2c; padding:1rem; border:none; border-radius:1rem; color:white; font-weight:700;">Login</button>
+    <div id="loginError" style="color:#dc3545; margin-top:1rem; display:none;">❌ ভুল পাসওয়ার্ড!</div>
+  </div>
+</div>
+
+<div id="adminPanel" class="admin-container" style="display: none;">
+  <div class="admin-header"><h1><i class="fas fa-chart-line"></i> FlexExchanger Admin Panel</h1><button class="logout-btn" onclick="logout()">Logout</button></div>
+  <div class="stats-grid">
+    <div class="stat-card"><i class="fas fa-users"></i><div class="stat-number" id="totalUsers">0</div><div class="stat-label">মোট ইউজার</div></div>
+    <div class="stat-card"><i class="fas fa-exchange-alt"></i><div class="stat-number" id="totalTransactions">0</div><div class="stat-label">মোট লেনদেন</div></div>
+    <div class="stat-card"><i class="fas fa-check-circle"></i><div class="stat-number" id="completedCount">0</div><div class="stat-label">সফল</div></div>
+    <div class="stat-card"><i class="fas fa-clock"></i><div class="stat-number" id="pendingCount">0</div><div class="stat-label">Pending</div></div>
+    <div class="stat-card"><i class="fas fa-money-bill"></i><div class="stat-number" id="totalAmount">0</div><div class="stat-label">মোট পরিমাণ (৳)</div></div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('users')"><i class="fas fa-users"></i> Users</button>
+    <button class="tab-btn" onclick="showTab('transactions')"><i class="fas fa-list"></i> Transactions</button>
+    <button class="tab-btn" onclick="showTab('rates')"><i class="fas fa-percent"></i> Rates</button>
+  </div>
+  <div id="usersPanel" class="panel active">
+    <div class="search-box"><input type="text" id="userSearch" placeholder="Search by name, email, phone..." onkeyup="filterUsers()"><button class="refresh-btn" onclick="loadUsers()"><i class="fas fa-sync-alt"></i> Refresh</button></div>
+    <div class="table-container"><table id="usersTable"><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Transactions</th><th>Status</th><th>Actions</th></tr></thead><tbody id="usersList"><tr><td colspan="7" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading users...</td></tr></tbody></table></div>
+  </div>
+  <div id="transactionsPanel" class="panel">
+    <div class="search-box"><input type="text" id="txSearch" placeholder="Search by TrxID, Customer..." onkeyup="filterTransactions()"><button class="refresh-btn" onclick="loadTransactions()"><i class="fas fa-sync-alt"></i> Refresh</button></div>
+    <div class="table-container"><table id="transactionsTable"><thead><tr><th>ID</th><th>Type</th><th>Amount</th><th>Received</th><th>TrxID</th><th>Customer</th><th>User</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="transactionsList"><tr><td colspan="10" class="loading">Loading...</td></tr></tbody></table></div>
+  </div>
+  <div id="ratesPanel" class="panel">
+    <div class="rate-editor"><h3 style="color:#1f5a4c;"><i class="fas fa-edit"></i> Exchange Rate Settings</h3>
+      <div class="rate-row"><span>Bkash → Nagad (Percent)</span><input type="number" id="b2nPercent" step="0.01" value="1.49" style="width:80px; padding:0.5rem;"></div>
+      <div class="rate-row"><span>Bkash → Nagad (Fixed)</span><input type="number" id="b2nFixed" step="1" value="10" style="width:80px; padding:0.5rem;"></div>
+      <div class="rate-row"><span>Nagad → Bkash (Percent)</span><input type="number" id="n2bPercent" step="0.01" value="1.25" style="width:80px; padding:0.5rem;"></div>
+      <div class="rate-row"><span>Nagad → Bkash (Fixed)</span><input type="number" id="n2bFixed" step="1" value="10" style="width:80px; padding:0.5rem;"></div>
+      <div class="rate-row"><button class="save-rate-btn" onclick="saveRates()">Save Changes</button><span id="saveMsg" style="color:green; display:none;">✅ Saved!</span></div>
+    </div>
+  </div>
+</div>
+<div id="popupOverlay" class="popup-overlay"><div class="popup-box"><div class="popup-icon">✅</div><div class="popup-title">Success</div><div class="popup-message" id="popupMsg"></div><button class="popup-btn" onclick="closePopup()">OK</button></div></div>
+
+<script>
+  const firebaseConfig = { apiKey: "AIzaSyBm-u9hmjJtBRouEFIHifnkU_Zjn8llJqs", authDomain: "takatotaka-49555.firebaseapp.com", databaseURL: "https://takatotaka-49555-default-rtdb.firebaseio.com", projectId: "takatotaka-49555", storageBucket: "takatotaka-49555.appspot.com", messagingSenderId: "321092793137", appId: "1:321092793137:web:cc73a09d40f7c2b4eeb610" };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const database = firebase.database();
+  let allUsers = [], allTransactions = [];
+  const ADMIN_PASSWORD = "admin123";
+
+  function login() { let pwd = document.getElementById('adminPassword').value; if (pwd === ADMIN_PASSWORD) { document.getElementById('loginContainer').style.display = 'none'; document.getElementById('adminPanel').style.display = 'block'; loadUsers(); loadTransactions(); loadRates(); } else { document.getElementById('loginError').style.display = 'block'; setTimeout(() => { document.getElementById('loginError').style.display = 'none'; }, 3000); } }
+  function logout() { document.getElementById('loginContainer').style.display = 'flex'; document.getElementById('adminPanel').style.display = 'none'; }
+  function showPopup(msg) { document.getElementById('popupMsg').innerHTML = msg; document.getElementById('popupOverlay').style.display = 'flex'; setTimeout(() => { document.getElementById('popupOverlay').style.display = 'none'; }, 3000); }
+  function closePopup() { document.getElementById('popupOverlay').style.display = 'none'; }
+
+  async function loadUsers() {
+    const snapshot = await database.ref('users').once('value');
+    const data = snapshot.val(); allUsers = [];
+    if (data) { Object.keys(data).forEach(key => { allUsers.push({ id: key, ...data[key] }); }); }
+    updateStats(); displayUsers();
+  }
+  function displayUsers() { let search = document.getElementById('userSearch')?.value.toLowerCase() || ''; let filtered = allUsers.filter(u => (u.name || '').toLowerCase().includes(search) || (u.email || '').toLowerCase().includes(search) || (u.phone || '').includes(search)); let tbody = document.getElementById('usersList'); if (!tbody) return; if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No users found</td></tr>'; return; }
+    tbody.innerHTML = filtered.map(u => `<tr><td>${u.name || '-'}</td><td>${u.email || '-'}</td><td>${u.phone || '-'}</td><td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '-'}</td><td>${u.totalTransactions || 0}</td><td><span class="status-badge ${u.status === 'banned' ? 'status-banned' : 'status-active'}">${u.status === 'banned' ? 'Banned' : 'Active'}</span></td><td>${u.status !== 'banned' ? `<button class="action-btn ban" onclick="banUser('${u.id}')"><i class="fas fa-ban"></i> Ban</button>` : `<button class="action-btn unban" onclick="unbanUser('${u.id}')"><i class="fas fa-check-circle"></i> Unban</button>`}</td></tr>`).join('');
+  }
+  function filterUsers() { displayUsers(); }
+  async function banUser(id) { if (confirm('Ban this user?')) { await database.ref(`users/${id}`).update({ status: 'banned' }); showPopup('User banned successfully!'); loadUsers(); } }
+  async function unbanUser(id) { if (confirm('Unban this user?')) { await database.ref(`users/${id}`).update({ status: 'active' }); showPopup('User unbanned successfully!'); loadUsers(); } }
+
+  async function loadTransactions() { const snapshot = await database.ref('transactions').once('value'); const data = snapshot.val(); allTransactions = []; if (data) { Object.keys(data).forEach(key => { allTransactions.push({ id: key, ...data[key] }); }); allTransactions.sort((a,b) => (b.timestamp||0) - (a.timestamp||0)); } updateStats(); displayTransactions(); }
+  function displayTransactions() { let search = document.getElementById('txSearch')?.value.toLowerCase() || ''; let filtered = allTransactions.filter(t => (t.trxId || '').toLowerCase().includes(search) || (t.customerNumber || '').includes(search)); let tbody = document.getElementById('transactionsList'); if (!tbody) return; if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">No transactions</td></tr>'; return; }
+    tbody.innerHTML = filtered.map(t => `<tr><td><small>${t.id?.substring(0,6)}</small></td><td>${t.direction || (t.type === 'bkash_to_nagad' ? 'Bkash→Nagad' : 'Nagad→Bkash')}</td><td>${(t.amount||0).toFixed(2)}</td><td>${(t.received||0).toFixed(2)}</td><td><small>${t.trxId||'-'}</small></td><td>${t.customerNumber||'-'}</td><td>${t.userName || '-'}</td><td><span class="status-badge status-${t.status||'pending'}">${t.status||'pending'}</span></td><td><small>${t.timestamp ? new Date(t.timestamp).toLocaleString() : '-'}</small></td><td><button class="action-btn approve" onclick="updateStatus('${t.id}','completed')"><i class="fas fa-check"></i></button><button class="action-btn fail" onclick="updateStatus('${t.id}','failed')"><i class="fas fa-times"></i></button><button class="action-btn delete" onclick="deleteTransaction('${t.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+  }
+  function filterTransactions() { displayTransactions(); }
+  async function updateStatus(id, status) { if (confirm(`Mark as ${status}?`)) { await database.ref(`transactions/${id}`).update({ status }); showPopup(`Transaction marked as ${status}`); loadTransactions(); } }
+  async function deleteTransaction(id) { if (confirm('Delete?')) { await database.ref(`transactions/${id}`).remove(); showPopup('Deleted'); loadTransactions(); } }
+  function updateStats() { let totalTx = allTransactions.length; let completed = allTransactions.filter(t => t.status === 'completed').length; let pending = allTransactions.filter(t => t.status === 'pending' || !t.status).length; let totalAmount = allTransactions.reduce((s,t) => s + (t.amount||0), 0); document.getElementById('totalUsers').innerText = allUsers.length; document.getElementById('totalTransactions').innerText = totalTx; document.getElementById('completedCount').innerText = completed; document.getElementById('pendingCount').innerText = pending; document.getElementById('totalAmount').innerText = totalAmount.toFixed(2); }
+  async function loadRates() { const snapshot = await database.ref('exchange_rates').once('value'); const data = snapshot.val(); if (data) { document.getElementById('b2nPercent').value = data.bkashToNagadPercent || 1.49; document.getElementById('b2nFixed').value = data.bkashToNagadFixed || 10; document.getElementById('n2bPercent').value = data.nagadToBkashPercent || 1.25; document.getElementById('n2bFixed').value = data.nagadToBkashFixed || 10; } }
+  async function saveRates() { await database.ref('exchange_rates').set({ bkashToNagadPercent: parseFloat(document.getElementById('b2nPercent').value), bkashToNagadFixed: parseFloat(document.getElementById('b2nFixed').value), nagadToBkashPercent: parseFloat(document.getElementById('n2bPercent').value), nagadToBkashFixed: parseFloat(document.getElementById('n2bFixed').value), updatedAt: firebase.database.ServerValue.TIMESTAMP }); let msg = document.getElementById('saveMsg'); msg.style.display = 'block'; setTimeout(() => { msg.style.display = 'none'; }, 2000); showPopup('Rates saved!'); }
+  function showTab(tab) { document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); if (tab === 'users') { document.querySelector('.tab-btn:first-child').classList.add('active'); document.getElementById('usersPanel').classList.add('active'); loadUsers(); } else if (tab === 'transactions') { document.querySelector('.tab-btn:nth-child(2)').classList.add('active'); document.getElementById('transactionsPanel').classList.add('active'); loadTransactions(); } else { document.querySelector('.tab-btn:last-child').classList.add('active'); document.getElementById('ratesPanel').classList.add('active'); } }
+</script>
+</body>
+</html>
